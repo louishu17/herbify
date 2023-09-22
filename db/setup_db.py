@@ -2,8 +2,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Date, DateTime, F
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
-
-DATABASE_URL = 'postgresql://localhost/louishu'
+DATABASE_URL = 'postgresql://herbert123:picklesgalore@rds-postgresql-herbify.c0j4yuovxdsu.us-east-2.rds.amazonaws.com/postgres'
 
 engine = create_engine(DATABASE_URL, echo=True)
 
@@ -86,8 +85,9 @@ class Images(Base):
 
     imageID = Column(Integer, primary_key=True)
     recipeID = Column(Integer, ForeignKey('Recipes.recipeID'))
-    linkToImageInS3 = Column(String)
+    path = Column(String)
 
+# Create the tables
 Base.metadata.create_all(engine)
 
 # Create a session to interact with the database
