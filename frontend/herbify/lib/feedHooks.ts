@@ -12,5 +12,5 @@ const fetchFeed = async () : Promise<FeedData> => {
 
 
 export const useFetchFeed = () : UseQueryResult<FeedData> => {
-    return useQuery<FeedData>(["fetchFeed"], fetchFeed);
+    return useQuery<FeedData>("fetchFeed", fetchFeed, {staleTime : 6000000});
 }

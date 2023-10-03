@@ -42,7 +42,6 @@ interface FeedImageProps{
     imageSrc : string;
 }
 const ImageToDisplay : React.FC<FeedImageProps> = (props : FeedImageProps) => {
-    console.log("imageSrc is " + props.imageSrc);
     if (props.isLoading){
         return (
             <Box width={250} height={200}>

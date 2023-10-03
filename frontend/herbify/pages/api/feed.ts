@@ -19,6 +19,6 @@ export default function getFeedRecipeIDs(req: NextApiRequest, res: NextApiRespon
             {id : 4, title : "Louis special"}
         ]})
 
-    }, 200);
+    }, 5200);
 
 }
