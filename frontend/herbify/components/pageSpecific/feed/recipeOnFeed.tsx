@@ -8,6 +8,7 @@ import { HerbifyLoadingCircle } from "../../shared/loading";
 interface RecipeOnFeedProps {
     info : RecipeInfoFromFeed;
 }
+
 export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedProps) => {
     const {data : imageSrc, isLoading : isLoadingImg, isError : isErrorLoadingImg} = useImageForRecipe(props.info.id);
     return (
@@ -23,7 +24,7 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                     justifyContent={"center"}
                     marginTop={2}
                     width={275}
-        
+                    marginLeft={50}
                 >
 
                     <Typography variant="h5">{props.info.title}</Typography>
