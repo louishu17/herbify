@@ -1,7 +1,9 @@
 from decouple import config
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
+from db import DB
 
-def establish_db_connection(app):
+def setup_db_connection(app):
 
 # Load database configuration from the .env file
     db_config = {
@@ -19,6 +21,6 @@ def establish_db_connection(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # Create a SQLAlchemy database object
-    db = SQLAlchemy(app)
-    return db
+    app.db = DB(app)
+
+    return app

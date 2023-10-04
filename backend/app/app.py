@@ -1,38 +1,31 @@
 from flask import Flask
 from flask_swagger_ui import get_swaggerui_blueprint
-from connection import establish_db_connection
+from connection import setup_db_connection
+from sqlalchemy.ext.automap import automap_base
+from models.recipes import Recipes
+from swagger_setup import setup_swagger
 
-
+Base = automap_base()
 
 
 app = Flask(__name__)
 
-SWAGGER_URL = '/swagger'
-API_URL = '/static/swagger.json'
-SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
-    SWAGGER_URL,
-    API_URL,
-    config={
-        'app_name': "herbify-swagger"
-    }
-)
-app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
-
-db = establish_db_connection(app)
+setup_db_connection(app)
+setup_swagger(app)
 
 @app.route('/data/list', methods=['GET'])
-def hello():
-    print(db.query.all())
-    return '<h1>Hello, World!</h1>'
+def return_top_recipes():
+    return Recipes.get_x_most_recent(5)
 
 @app.route('/')
 def hell():
-    # users = db.session.execute(db.select(User).order_by(User.username)).scalars()
-    return '<h1>Hello, World!</h1>'
+    rows = app.db.execute("""
+SELECT * FROM \"Likes\";
+""")
+    for row in rows:
+        print(row)
 
-# create recipe
-# list ten recipes
-# search for recipes
-# login info
+    return rows
+
 
 
