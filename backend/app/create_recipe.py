@@ -9,7 +9,6 @@ create_recipe_blueprint = Blueprint('create-recipe', __name__)
 @cross_origin()
 def create_recipe():
     print("creating recipe")
-
     try:
         data = request.get_json()
 
