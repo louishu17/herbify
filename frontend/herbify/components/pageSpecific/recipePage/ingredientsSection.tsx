@@ -33,6 +33,8 @@ const IngredientsBody : React.FC = () => {
                 </List>
             </Container>
         )
+    } else {
+        return null;
     }
    
 }
