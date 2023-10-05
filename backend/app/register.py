@@ -1,8 +1,6 @@
 from flask import request, jsonify, Blueprint
-from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 from werkzeug.security import generate_password_hash
-from flask import current_app as app
 from models.users import Users
 from flask_cors import cross_origin
 
@@ -21,8 +19,6 @@ def register():
         # Check if the email is already registered
         # existing_user = Users.query.filter_by(email=email).first()
         existing_user = Users.get(email=email)
-
-        print(existing_user)
 
         if existing_user:
             return jsonify({'message': 'Email already registered'}), 400

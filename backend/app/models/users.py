@@ -16,7 +16,7 @@ class Users:
         self.bio = bio
     
     @staticmethod
-    def get_from_email(email):
+    def get(email):
         rows = app.db.execute('''
         SELECT *
         FROM \"Users\"
@@ -24,6 +24,17 @@ class Users:
         ''',
                         email=email)
         return Users(*(rows[0])) if rows else None
+    
+    @staticmethod
+    def get_password_from_user(email):
+        password = app.db.execute('''
+        SELECT password
+        FROM \"Users\"
+        WHERE email = :email
+        ''',
+                        email=email)
+        
+        return password[0][0] if password else None
 
     @staticmethod
     def get_last_uid():

@@ -16,7 +16,6 @@ const initialValues: RegisterFormValues = {
 };
 
 const registerValidationSchema = YupObject({
-    username : YupString().nonNullable().required('Required'),
 	email: YupString().email('Invalid email address').required('Required'),
 	password: YupString().required('Required'),
 });
@@ -31,8 +30,8 @@ export default function RegisterPage(){
     const registerUser = async (values: RegisterFormValues) => {
         try {
             const response = await axios.post('http://127.0.0.1:5000/register', values);
-            
-            console.log(response);
+
+            setErrorMessage("User created");
         } catch (error) {
             console.error(error);
 
@@ -51,8 +50,6 @@ export default function RegisterPage(){
     const handleSubmit = (values: RegisterFormValues) => {
         registerUser(values);
     };
-
-    //                    { name : "username", type : "username"},
 
     return (
         <BaseHerbifyLayoutWithTitle title="Register">
