@@ -3,7 +3,7 @@ import { API_ROUTE } from "./API_CONFIG";
 import { FeedData } from "@/pages/api/feed";
 
 const fetchFeed = async () : Promise<FeedData> => {
-    const response = await fetch(API_ROUTE + 'feed');
+    const response = await fetch('http://localhost:5000/feed');
 
     if (!response.ok){
         throw new Error("Error fetching feed");
@@ -13,5 +13,5 @@ const fetchFeed = async () : Promise<FeedData> => {
 
 
 export const useFetchFeed = () : UseQueryResult<FeedData> => {
-    return useQuery<FeedData>("fetchFeed", fetchFeed, {staleTime : 6000000});
+    return useQuery<FeedData>("fetchFeed", fetchFeed, {staleTime : 6000});
 }
