@@ -3,6 +3,8 @@ import {Typography} from "@mui/material";
 import { HerbifyForm } from "@/components/shared/textForm";
 import React, {useState} from "react";
 import {object as YupObject, string as YupString} from 'yup';
+import axios from 'axios';
+
 interface RegisterFormValues {
     email: string;
     password: string;
@@ -21,9 +23,25 @@ const registerValidationSchema = YupObject({
 
 export default function RegisterPage(){
     const [errorMessage, setErrorMessage] = useState<string>("");
-    const handleSubmit = (values : RegisterFormValues) => {
-        setErrorMessage("Register functionality is not finished yet");
-    }
+
+    // const handleSubmit = (values : RegisterFormValues) => {
+    //    setErrorMessage("Register functionality is not finished yet");
+    // }
+
+    const registerUser = async (values: RegisterFormValues) => {
+        try {
+            const response = await axios.post('http://127.0.0.1:5000/register', values);
+        } catch (error) {
+            console.error(error);
+            setErrorMessage("An error occurred during registration");
+        }
+        setErrorMessage("It worked!");
+    };
+
+    const handleSubmit = (values: RegisterFormValues) => {
+        registerUser(values);
+    };
+
     return (
         <BaseHerbifyLayoutWithTitle title="Register">
             <HerbifyForm

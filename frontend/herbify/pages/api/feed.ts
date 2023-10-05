@@ -7,8 +7,8 @@ export interface FeedData{
 
 export interface RecipeInfoFromFeed {
     id : number;
-    title: string;
-    caption: string;
+    title : string;
+    caption : string;
 }
 
 export default function getFeedRecipeIDs(req: NextApiRequest, res: NextApiResponse<FeedData>) {
