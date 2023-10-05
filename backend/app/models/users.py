@@ -16,7 +16,7 @@ class Users:
         self.bio = bio
     
     @staticmethod
-    def get(email):
+    def get_from_email(email):
         rows = app.db.execute('''
         SELECT *
         FROM \"Users\"
@@ -24,7 +24,6 @@ class Users:
         ''',
                         email=email)
         return Users(*(rows[0])) if rows else None
-    
 
     @staticmethod
     def get_last_uid():
@@ -38,28 +37,29 @@ class Users:
     @staticmethod
     def add_user(uid, firstName=None, middleName=None, lastName=None, suffix=None, dateOfBirth=None, pronouns=None, email=None, password=None, phoneNumber=None, creationDate=None, bio=None):
         print('adding users')
-        
-        app.db.execute('''
-        INSERT INTO \"Users\"
-                       VALUES (:uid, :firstName, :middleName, :lastName, :suffix, :dateOfBirth, :pronouns, :email, :password, :phoneNumber, :creationDate, :bio)
-        ''', 
-            uid=uid,
-            firstName=firstName,
-            middleName=middleName,
-            lastName=lastName,
-            suffix=suffix,
-            dateOfBirth=dateOfBirth,
-            pronouns=pronouns,
-            email=email,
-            password=password,
-            phoneNumber=phoneNumber,
-            creationDate=creationDate,
-            bio=bio)
+        try:
+            app.db.execute('''
+            INSERT INTO \"Users\"
+                        VALUES (:uid, :firstName, :middleName, :lastName, :suffix, :dateOfBirth, :pronouns, :email, :password, :phoneNumber, :creationDate, :bio)
+            ''', 
+                uid=uid,
+                firstName=firstName,
+                middleName=middleName,
+                lastName=lastName,
+                suffix=suffix,
+                dateOfBirth=dateOfBirth,
+                pronouns=pronouns,
+                email=email,
+                password=password,
+                phoneNumber=phoneNumber,
+                creationDate=creationDate,
+                bio=bio)
 
-        print('added users')
+            print('added users')
 
-        app.db.commit()
-
-        return
+            return {"message": "User added successfully"}, 201
+        except Exception as e:
+            print(f"Error adding user: {str(e)}")
+            return {"error": "Failed to add user"}, 500 
 
 

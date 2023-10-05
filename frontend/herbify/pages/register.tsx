@@ -35,14 +35,24 @@ export default function RegisterPage(){
             console.log(response);
         } catch (error) {
             console.error(error);
-            setErrorMessage("An error occurred during registration");
+
+            if ((error as any).response) {
+                if ((error as any).response.status === 400) {
+                    setErrorMessage("User with this email already exists");
+                } else if ((error as any).response.status === 500) {
+                    setErrorMessage("An error occurred during registration");
+                }
+            } else {
+                setErrorMessage("An unexpected error occurred");
+            }
         }
-        setErrorMessage("It worked!");
     };
 
     const handleSubmit = (values: RegisterFormValues) => {
         registerUser(values);
     };
+
+    //                    { name : "username", type : "username"},
 
     return (
         <BaseHerbifyLayoutWithTitle title="Register">
@@ -51,7 +61,6 @@ export default function RegisterPage(){
                 initialValues={initialValues}
                 validationSchema={registerValidationSchema}
                 textFields={[
-                    { name : "username", type : "username"},
                     { name: "email", type: "email" },
                     { name: "password", type: "password" },
                 ]}

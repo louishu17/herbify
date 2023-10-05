@@ -44,6 +44,8 @@ def register():
         # app.db.session.commit()
         Users.add_user(uid=new_uid, email=email, password=generate_password_hash(password, method='sha256'), creationDate=datetime.now())
 
+        print("test")
+
         return jsonify({'message': 'Registration successful'}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
