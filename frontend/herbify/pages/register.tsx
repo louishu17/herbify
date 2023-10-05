@@ -31,6 +31,8 @@ export default function RegisterPage(){
     const registerUser = async (values: RegisterFormValues) => {
         try {
             const response = await axios.post('http://127.0.0.1:5000/register', values);
+            
+            console.log(response);
         } catch (error) {
             console.error(error);
             setErrorMessage("An error occurred during registration");
