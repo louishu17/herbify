@@ -7,7 +7,17 @@ export default function pictureAPI(req: NextApiRequest, res: NextApiResponse) {
     setTimeout(() => {
         let { recipeID } = req.query;
         if (typeof recipeID === 'string' && parseInt(recipeID) > 4){
-            recipeID = '4';
+            let x = Math.random();
+            if ( x < 0.25){
+                recipeID = '1';
+            } else if (x < 0.5){
+                recipeID = '2';
+            } else if (x < 0.75) {
+                recipeID = '3';
+            } else {
+                recipeID = '4';
+            }
+            
 
         }
 
