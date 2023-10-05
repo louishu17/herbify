@@ -1,14 +1,22 @@
 from flask import current_app as app
-
+import json
 
 class Recipes:
-    def __init__(self, recipeID, postedByUserID, fullRecipeString, createdDate, user):
+    def __init__(self, recipeID, postedByUserID, fullRecipeString, createdDate, title, caption):
         self.recipeID = recipeID
         self.postedByUserID = postedByUserID
         self.fullRecipeString = fullRecipeString
         self.createdDate = createdDate
+        self.title = title
+        self.caption = caption
         
-        self.user = user
+
+    def to_json(self):
+        return {
+            "id" : self.recipeID,
+            "title" : self.title,
+            "caption" : self.caption
+        }
 
     @staticmethod
     def get(recipeID: int):
@@ -30,3 +38,11 @@ LIMIT :x
 ''',
                               x=x)
         return [Recipes(*row) for row in rows]
+
+
+class RecipeJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Recipes):
+            # Define how to serialize the object
+            return obj.to_json()  # Assuming you have a to_json() method
+        return super(RecipeJSONEncoder, self).default(obj)
