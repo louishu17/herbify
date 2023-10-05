@@ -33,6 +33,8 @@ const DirectionsBody : React.FC = () => {
                 </List>
             </Container>
         )
+    } else {
+        return null;
     }
    
 }

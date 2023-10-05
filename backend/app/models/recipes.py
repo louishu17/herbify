@@ -37,7 +37,7 @@ LIMIT :x
 ''',
                               x=x)
         return [Recipes(*row) for row in rows]
-    
+      
     @staticmethod
     def get_last_recipe_id():
         print("getting last recipe id")
@@ -106,10 +106,10 @@ LIMIT :x
         
 
 
-
 class RecipeJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Recipes):
             # Define how to serialize the object
             return obj.to_json()  # Assuming you have a to_json() method
         return super(RecipeJSONEncoder, self).default(obj)
+
