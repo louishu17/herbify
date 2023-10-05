@@ -49,18 +49,56 @@ LIMIT :x
 
 
     @staticmethod
-    def add_recipe(recipeID, postedByUserID, createdDate):
+    def add_recipe(recipeID, postedByUserID, createdDate, title, caption):
         print('adding recipe')
         try:
             app.db.execute('''
             INSERT INTO \"Recipes\"
-                        VALUES (:recipeID, :postedByUserID, :fullRecipeString, :createdDate)
+                        VALUES (:recipeID, :postedByUserID, :fullRecipeString, :createdDate, :title, :caption)
             ''',
                            recipeID=recipeID,
                            postedByUserID=postedByUserID,
                            fullRecipeString="Cheeseburgers",
-                           createdDate=createdDate)
+                           createdDate=createdDate,
+                           title=title,
+                           caption=caption)
             print("added recipe")
+        except Exception as e:
+            print(e)
+            app.db.rollback()
+            raise e
+    
+    @staticmethod
+    def add_ingredients(recipeID, ingredients):
+        print('adding ingredients')
+        try:
+            for ingredient in ingredients:
+                app.db.execute('''
+                    INSERT INTO \"RecipeHasIngredients\"
+                                VALUES (:recipeID, :ingredient)
+                    ''',
+                                recipeID=recipeID,
+                                ingredient=ingredient)
+            print("added ingredients")
+
+        except Exception as e:
+            print(e)
+            app.db.rollback()
+            raise e
+    
+    @staticmethod
+    def add_steps(recipeID, steps):
+        print('adding steps')
+        try:
+            for i, step in enumerate(steps):
+                app.db.execute('''
+                    INSERT INTO \"RecipeHasSteps\"
+                                VALUES (:recipeID, :stepNum, :step)
+                    ''',
+                                recipeID=recipeID,
+                                stepNum=i,
+                                step=step)
+            print("added steps")
         except Exception as e:
             print(e)
             app.db.rollback()
