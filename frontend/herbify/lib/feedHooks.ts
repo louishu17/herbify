@@ -1,14 +1,15 @@
 import {useQuery, UseQueryResult} from "react-query";
 import { API_ROUTE } from "./API_CONFIG";
 import { FeedData } from "@/pages/api/feed";
+import axios from 'axios';
 
 const fetchFeed = async () : Promise<FeedData> => {
-    const response = await fetch('http://localhost:5000/feed');
+    const response = await axios.get('http://localhost:5000/feed')
 
-    if (!response.ok){
+    if (response.status > 300){
         throw new Error("Error fetching feed");
     } 
-    return response.json();
+    return response.data;
 }
 
 
