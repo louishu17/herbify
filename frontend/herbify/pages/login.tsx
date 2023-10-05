@@ -3,6 +3,8 @@ import {Typography} from "@mui/material";
 import { HerbifyForm } from "@/components/shared/textForm";
 import React, {useState} from "react";
 import {object as YupObject, string as YupString} from 'yup';
+import axios from 'axios';
+
 interface LoginFormValues {
     email: string;
     password: string;
@@ -20,8 +22,30 @@ const loginValidationSchema = YupObject({
 
 export default function LoginPage(){
     const [errorMessage, setErrorMessage] = useState<string>("");
+
+    const loginUser = async (values: LoginFormValues) => {
+        try {
+            const response = await axios.post('http://127.0.0.1:5000/login', values);
+            setErrorMessage("User logged in");
+        } catch (error) {
+            console.error(error);
+
+            if ((error as any).response) {
+                if ((error as any).response.status === 401) {
+                    setErrorMessage("Incorrect email or password");
+                } else if ((error as any).response.status === 500) {
+                    setErrorMessage("An error occurred during login");
+                } else if ((error as any).response.status === 402) {
+                    setErrorMessage("No user for this email");
+                }
+            } else {
+                setErrorMessage("An unexpected error occurred");
+            }
+        }
+    };
+
     const handleSubmit = (values : LoginFormValues) => {
-        setErrorMessage("Login functionality is not finished yet");
+        loginUser(values);
     }
     return (
         <BaseHerbifyLayoutWithTitle title="Login">

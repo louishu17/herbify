@@ -1,0 +1,92 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "herbify-swagger",
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "servers": [
+      {
+        "url": "/data"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Recipe Data",
+        "description": "Example API for getting Recipe Data"
+      }
+    ],
+    "paths": {
+      "/data/list": {
+        "get": {
+          "tags": [
+            "Recipe Data"
+          ],
+          "summary": "Returns recipeRequests",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/components/schemas/recipeRequests"
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "id": {
+          "properties": {
+            "uuid": {
+              "type": "string"
+            }
+          }
+        },
+        "bookRequestPostBody": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "format": "string"
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            }
+          }
+        },
+        "listRequest": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "format": "string"
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "number"
+            }
+          }
+        },
+        "bookRequests": {
+          "type": "object",
+          "properties": {
+            "bookRequest": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/components/schemas/listRequest"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
