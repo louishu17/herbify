@@ -11,10 +11,8 @@ def feed():
 
     try:
         recipes = Recipes.get_x_most_recent(8)
-        print("full recipe string below")
-        print(recipes[0].fullRecipeString)
         serialized_objects = [obj.to_json() for obj in recipes]
-        print(serialized_objects)
+
         return jsonify({'descriptions' : serialized_objects}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
