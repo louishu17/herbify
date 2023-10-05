@@ -8,6 +8,7 @@ from register import register_blueprint
 from login import login_blueprint
 from create_recipe import create_recipe_blueprint
 from feed import feed_blueprint
+from search import search_blueprint
 from flask_cors import CORS, cross_origin
 
 Base = automap_base()
@@ -21,6 +22,7 @@ app.register_blueprint(register_blueprint)
 app.register_blueprint(login_blueprint)
 app.register_blueprint(create_recipe_blueprint)
 app.register_blueprint(feed_blueprint)
+app.register_blueprint(search_blueprint)
 
 setup_db_connection(app)
 setup_swagger(app)

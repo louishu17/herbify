@@ -26,6 +26,15 @@ WHERE recipeID = :recipeID
 ''',
                               id=recipeID)
         return Recipes(*(rows[0])) if rows else None
+    
+    @staticmethod
+    def get_by_term(term: str):
+        rows = app.db.execute(f'''
+SELECT *
+FROM \"Recipes\"
+WHERE LOWER(title) LIKE LOWER(\'%{term}%\')
+''')
+        return [Recipes(*row) for row in rows]
 
     @staticmethod
     def get_x_most_recent(x: int):
