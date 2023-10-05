@@ -6,6 +6,7 @@ import { NewRecipeContext } from '@/lib/createRecipePage/newRecipeContext';
 
 export const AddTitleForm: React.FC = () => {
   const {title, setTitle} = useContext(NewRecipeContext);
+  const {caption, setCaption} = useContext(NewRecipeContext);
 
   const handleDirectionChange = (value: string) => {
     setTitle(value); 
@@ -18,7 +19,12 @@ export const AddTitleForm: React.FC = () => {
           value={title}
           onChange={(e) => handleDirectionChange( e.target.value)}
           fullWidth
-          
+        />
+        <TextField
+          label= {"Caption"}
+          value={caption}
+          onChange={(e) => setCaption(e.target.value)}
+          fullWidth
         />
       </Container>
   );
