@@ -38,8 +38,6 @@ class Users:
     @staticmethod
     def add_user(uid, firstName=None, middleName=None, lastName=None, suffix=None, dateOfBirth=None, pronouns=None, email=None, password=None, phoneNumber=None, creationDate=None, bio=None):
         print('adding users')
-
-        print(uid)
         
         app.db.execute('''
         INSERT INTO \"Users\"
