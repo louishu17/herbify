@@ -5,7 +5,11 @@ import path from 'path';
 
 export default function pictureAPI(req: NextApiRequest, res: NextApiResponse) {
     setTimeout(() => {
-        const { recipeID } = req.query;
+        let { recipeID } = req.query;
+        if (typeof recipeID === 'string' && parseInt(recipeID) > 4){
+            recipeID = '4';
+
+        }
 
         // Construct the path to the image
         const imagePath = path.join(process.cwd(), 'public',`Pic${recipeID}.jpg`); // Adjust the path and file extension as needed
