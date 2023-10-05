@@ -32,6 +32,10 @@ export default function RegisterPage(){
             const response = await axios.post('http://127.0.0.1:5000/register', values);
 
             setErrorMessage("User created");
+
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 1000);
         } catch (error) {
             console.error(error);
 
