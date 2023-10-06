@@ -6,6 +6,7 @@ import { createContext, useState } from "react";
 import { NewRecipeContext } from "@/lib/createRecipePage/newRecipeContext";
 import { AddTitleForm } from "@/components/pageSpecific/create/addTitleForm";
 import axios from 'axios';
+import { useRouter } from "next/router";
 
 export default function CreateRecipePage() {
     const [errorMessage, setErrorMessage] = useState<string>("");
@@ -13,6 +14,7 @@ export default function CreateRecipePage() {
     const [directions, setDirections] = useState<string[]>(['']);
     const [title, setTitle] = useState<string>('');
     const [caption, setCaption] = useState<string>('');
+    const router = useRouter();
 
     const createRecipe = async () => {
         try {
@@ -25,6 +27,8 @@ export default function CreateRecipePage() {
             }
 
             const response = await axios.post('http://127.0.0.1:5000/create-recipe', recipe_data);
+
+            router.push("/feed");
         }
         catch (error) {
             console.error(error);

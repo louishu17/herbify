@@ -4,6 +4,7 @@ import { HerbifyForm } from "@/components/shared/textForm";
 import React, {useState} from "react";
 import {object as YupObject, string as YupString} from 'yup';
 import axios from 'axios';
+import { useRouter } from "next/router";
 
 interface RegisterFormValues {
     email: string;
@@ -22,6 +23,7 @@ const registerValidationSchema = YupObject({
 
 export default function RegisterPage(){
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const router = useRouter();
 
     // const handleSubmit = (values : RegisterFormValues) => {
     //    setErrorMessage("Register functionality is not finished yet");
@@ -34,7 +36,7 @@ export default function RegisterPage(){
             setErrorMessage("User created");
 
             setTimeout(() => {
-                window.location.href = '/login';
+                router.push("/login")
             }, 1000);
         } catch (error) {
             console.error(error);
