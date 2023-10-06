@@ -16,6 +16,15 @@ class Recipes:
             "title" : self.title,
             "caption" : self.caption
         }
+    
+    def to_json_recipe(self):
+        return {
+            "recipeID" : self.recipeID,
+            "postedByUserID" : self.postedByUserID,
+            "createdDate" : self.createdDate,
+            "title" : self.title,
+            "caption" : self.caption
+        }
 
     @staticmethod
     def get(recipeID: int):
@@ -34,6 +43,7 @@ SELECT *
 FROM \"Recipes\"
 WHERE LOWER(title) LIKE LOWER(\'%{term}%\')
 ''')
+        print("rows are " + str(rows))
         return [Recipes(*row) for row in rows]
 
     @staticmethod

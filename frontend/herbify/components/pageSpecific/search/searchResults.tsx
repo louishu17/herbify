@@ -1,5 +1,6 @@
 import React from 'react';
 import { List, ListItem, ListItemText, Typography } from '@mui/material';
+import Link from "next/link";
 
 
 interface Recipe {
@@ -23,10 +24,12 @@ const SearchResults: React.FC<SearchResultsProps> = ({ results }) => {
     (results && <List style={{marginLeft: '20%'}}>
       {results.map(recipe => (
         <ListItem key={recipe.recipeID} divider >
-          <ListItemText 
-            primary={recipe.title}
-            secondary={recipe.caption}
-          />
+            <Link href={"/recipes/"+recipe.recipeID} passHref>
+                <ListItemText 
+                    primary={recipe.title}
+                    secondary={recipe.caption}
+                />
+          </Link>
         </ListItem>
       ))}
     </List>)

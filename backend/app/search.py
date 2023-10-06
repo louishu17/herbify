@@ -13,8 +13,7 @@ def search():
         args = request.args
         term = args.get('term')
         recipes = Recipes.get_by_term(term)
-        serialized_objects = [obj.to_json() for obj in recipes]
-        print(serialized_objects)
+        serialized_objects = [obj.to_json_recipe() for obj in recipes]
         return jsonify({'results' : serialized_objects}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500

@@ -20,6 +20,7 @@ export default function SearchPage(){
         try {
             const response = await axios.get(`http://127.0.0.1:5000/search`, {params: {term: term}});
             setSearchResults(response.data.results);
+            console.log(response.data.results)
         } catch (error) {
         console.error("Failed to fetch search results:", error);
         }
