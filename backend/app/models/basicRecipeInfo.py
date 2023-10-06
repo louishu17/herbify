@@ -1,21 +1,28 @@
 from flask import current_app as app
 import json
-from models.basicRecipeInfo import BasicRecipeInfo
 
 class BasicRecipeInfo:
-    def __init__(self, title, author, dateCreated):
+    def __init__(self, recipeID, postedByUserID, fullRecipeString, createdDate, title, caption):
+        self.recipeID = recipeID
+        self.postedByUserID = postedByUserID
+        self.createdDate = createdDate
         self.title = title
-        self.author = author
-        self.dateCreated = dateCreated
+        self.caption = caption
+        
+
+    def to_json(self):
+        return {
+            "id" : self.recipeID,
+            "title" : self.title,
+            "caption" : self.caption
+        }
 
     @staticmethod
-    def getBasicRecipeInfo(recipeID: int):
+    def get(recipeID: int):
         rows = app.db.execute('''
 SELECT *
-FROM \"Recipes\", \"Users\"
-WHERE \"recipeID\" = :recipeID AND \"postedByUserID\" = \"uid\"
-                              
+FROM \"Recipes\"
+WHERE \"recipeID\" = :recipeID
 ''',
                               recipeID=recipeID)
-        print(rows)
-        return BasicRecipeInfo(rows[0].title, rows[0].firstName + rows[0].lastName) if rows else None
+        return BasicRecipeInfo(*(rows[0])) if rows else None

@@ -1,5 +1,6 @@
 from flask import request, jsonify, Blueprint
 from models.recipes import Recipes
+from models.basicRecipeInfo import BasicRecipeInfo
 from flask_cors import cross_origin
 
 # Create a Blueprint with a dynamic parameter 'recipeID'
@@ -18,8 +19,8 @@ def feed(recipeID):
 
 
     try:
-        recipe = Recipes.get(recipeID)
-
+        recipe = BasicRecipeInfo.get(recipeID)
+        
         return jsonify({'title' : recipe.title, 'author' : 'User ' + str(recipe.postedByUserID), 'dateCreated' : recipe.createdDate}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
