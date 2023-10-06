@@ -4,7 +4,7 @@ import { FeedData } from "@/pages/api/feed";
 import axios from 'axios';
 
 const fetchFeed = async () : Promise<FeedData> => {
-    const response = await axios.get('http://localhost:5000/feed')
+    const response = await axios.get('http://127.0.0.1:5000/feed')
 
     if (response.status > 300){
         throw new Error("Error fetching feed");

@@ -9,9 +9,11 @@ interface BaseLayoutProps {
 
 export const BaseHerbifyLayout : React.FC<BaseLayoutProps> = (props:BaseLayoutProps) => {
     return (
-        <Container maxWidth={false} style={{alignItems : 'center', justifyContent : 'center'}} component="main">
+        <Container maxWidth={false} style={{alignItems : 'center', display: 'flex', flexDirection: 'row', justifyContent : 'center'}} component="main">
             <BasicHerbifyNavBar/>
-            {props.children ? props.children : null}
+            <div>
+                {props.children ? props.children : null}
+            </div>
             <Footer/>
         </Container>
     )
