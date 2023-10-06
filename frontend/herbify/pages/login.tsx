@@ -27,6 +27,10 @@ export default function LoginPage(){
         try {
             const response = await axios.post('http://127.0.0.1:5000/login', values);
             setErrorMessage("User logged in");
+
+            setTimeout(() => {
+                window.location.href = '/feed';
+            }, 1000);
         } catch (error) {
             console.error(error);
 
