@@ -38,11 +38,13 @@ WHERE recipeID = :recipeID
     
     @staticmethod
     def get_by_term(term: str):
+        search_term = '%' + term + '%'
         rows = app.db.execute(f'''
 SELECT *
 FROM \"Recipes\"
-WHERE LOWER(title) LIKE LOWER(\'%{term}%\')
-''')
+WHERE LOWER(title) LIKE LOWER(:term)
+''', 
+                        term=search_term)
         print("rows are " + str(rows))
         return [Recipes(*row) for row in rows]
 
