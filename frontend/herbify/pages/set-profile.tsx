@@ -31,9 +31,9 @@ const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2
 
 const setUserProfileValidationSchema = YupObject({
     firstName: YupString().required('Required'),
-    middleName: YupString(),
+    middleName: YupString().notRequired(),
     lastName: YupString().required('Required'),
-    suffix: YupString(),
+    suffix: YupString().notRequired(),
     dateOfBirth: YupString().required('Required'),
     pronouns: YupString().required('Required'),
     phoneNumber: YupString().matches(phoneRegExp, 'Phone number is not valid').required('Required'),
@@ -48,14 +48,15 @@ export default function SetProfilePage(){
     // }
 
     const setUserProfile = async (values: SetUserProfileFormValues) => {
+
         try {
             const response = await axios.post('http://127.0.0.1:5000/set-profile', values);
 
             setErrorMessage("User updated");
 
-            setTimeout(() => {
-                window.location.href = '/feed';
-            }, 1000);
+            // setTimeout(() => {
+            //     window.location.href = '/login';
+            // }, 1000);
         } catch (error) {
             console.error(error);
 
@@ -63,7 +64,7 @@ export default function SetProfilePage(){
                 if ((error as any).response.status === 400) {
                     setErrorMessage("User with this email already exists");
                 } else if ((error as any).response.status === 500) {
-                    setErrorMessage("An error occurred during registration");
+                    setErrorMessage("An error occurred during updating user");
                 }
             } else {
                 setErrorMessage("An unexpected error occurred");
@@ -82,14 +83,14 @@ export default function SetProfilePage(){
                 initialValues={initialValues}
                 validationSchema={setUserProfileValidationSchema}
                 textFields={[
-                    { name: "First Name", type: "firstName" },
-                    { name: "Middle Name", type: "middleName" },
-                    { name: "Last Name", type: "lastName" },
-                    { name: "Suffix", type: "suffix" },
-                    { name: "Date Of Birth", type: "dateOfBirth" },
-                    { name: "Pronouns", type: "pronouns" },
-                    { name: "Phone Number", type: "phoneNumber" },
-                    { name: "Bio", type: "bio" },
+                    { name: "firstName", type: "text" },
+                    { name: "middleName", type: "text" },
+                    { name: "lastName", type: "text" },
+                    { name: "suffix", type: "text" },
+                    { name: "dateOfBirth", type: "text" },
+                    { name: "pronouns", type: "text" },
+                    { name: "phoneNumber", type: "text" },
+                    { name: "bio", type: "text" },
                 ]}
                 errorMessage={errorMessage}
             />

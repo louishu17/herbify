@@ -1,4 +1,5 @@
 from flask import current_app as app
+from datetime import datetime
 
 
 class Users:
@@ -110,59 +111,34 @@ class Users:
             return {"error": "Failed to add user"}, 500
 
     @staticmethod
-    def update_user(
-        uid,
-        firstName=None,
-        middleName=None,
-        lastName=None,
-        suffix=None,
-        dateOfBirth=None,
-        pronouns=None,
-        email=None,
-        password=None,
-        phoneNumber=None,
-        creationDate=None,
-        bio=None,
-    ):
-        print("updating users")
+    def update_user(uid, **kwargs):
+        print("updating user")
+
+        if "dateOfBirth" in kwargs:
+            # Parse dateOfBirth and format it for PostgreSQL
+            date_of_birth = datetime.strptime(
+                kwargs["dateOfBirth"], "%m/%d/%Y"
+            ).strftime("%Y-%m-%d")
+            kwargs["dateOfBirth"] = date_of_birth
+
         try:
-            update_query = """
-                UPDATE "Users"
-                SET firstName = COALESCE(:firstName, firstName),
-                    middleName = COALESCE(:middleName, middleName),
-                    lastName = COALESCE(:lastName, lastName),
-                    suffix = COALESCE(:suffix, suffix),
-                    dateOfBirth = COALESCE(:dateOfBirth, dateOfBirth),
-                    pronouns = COALESCE(:pronouns, pronouns),
-                    email = COALESCE(:email, email),
-                    password = COALESCE(:password, password),
-                    phoneNumber = COALESCE(:phoneNumber, phoneNumber),
-                    creationDate = COALESCE(:creationDate, creationDate),
-                    bio = COALESCE(:bio, bio)
-                WHERE uid = :uid
+            update_fields = []
+            for column, value in kwargs.items():
+                if value is not None:
+                    update_fields.append(f'"{column}" = :{column}')
+
+            if update_fields:
+                update_query = f"""
+                    UPDATE \"Users\"
+                    SET {', '.join(update_fields)}
+                    WHERE \"uid\" = :uid
                 """
-
-            app.db.execute(
-                update_query,
-                uid=uid,
-                firstName=firstName,
-                middleName=middleName,
-                lastName=lastName,
-                suffix=suffix,
-                dateOfBirth=dateOfBirth,
-                pronouns=pronouns,
-                email=email,
-                password=password,
-                phoneNumber=phoneNumber,
-                creationDate=creationDate,
-                bio=bio,
-            )
-
-            print("updated user")
-
-            print("added users")
-
-            return {"message": "User added successfully"}, 200
+                app.db.execute(update_query, uid=uid, **kwargs)
+                print("updated user")
+                return {"message": "User updated successfully"}, 200
+            else:
+                print("No fields to update")
+                return {"message": "No fields to update"}, 200
         except Exception as e:
-            print(f"Error adding user: {str(e)}")
-            return {"error": "Failed to add user"}, 500
+            print(f"Error updating user: {str(e)}")
+            return {"error": "Failed to update user"}, 500

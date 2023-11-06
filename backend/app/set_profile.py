@@ -4,17 +4,18 @@ from werkzeug.security import generate_password_hash
 from models.users import Users
 from flask_cors import cross_origin
 
-register_blueprint = Blueprint("set-profile", __name__)
+set_profile_blueprint = Blueprint("set-profile", __name__)
 
 
-@register_blueprint.route("/set-profile", methods=["POST"])
+@set_profile_blueprint.route("/set-profile", methods=["POST"])
 @cross_origin()
 def set_profile():
     print("setting profile")
 
     try:
         # Get current uid from user session
-        uid = session.get("uid")
+        # uid = session.get("uid")
+        uid = 1
 
         data = request.get_json()
         firstName = data.get("firstName")
