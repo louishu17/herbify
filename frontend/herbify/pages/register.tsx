@@ -34,7 +34,7 @@ export default function RegisterPage(){
             setErrorMessage("User created");
 
             setTimeout(() => {
-                window.location.href = '/login';
+                window.location.href = '/set-profile';
             }, 1000);
         } catch (error) {
             console.error(error);
