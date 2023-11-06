@@ -11,7 +11,7 @@ import { QueryClient } from 'react-query';
 
 export default function App({ Component, pageProps }: AppProps) {
   const queryClient = new QueryClient();
-
+  /*
   if (typeof localStorage !== 'undefined'){
     const localStoragePersistor = createWebStoragePersistor({
       storage : localStorage
@@ -21,7 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
       persistor : localStoragePersistor,
   
     })
-  }
+  }*/
   
   return(
     <QueryClientProvider client={queryClient}>

@@ -20,6 +20,6 @@ export default function getFeedRecipeIDs(req: NextApiRequest, res: NextApiRespon
             {id : 4, title: "Louis special", caption: "Louis better than Herb"}
         ]})
 
-    }, 5200);
+    }, 200);
 
 }
