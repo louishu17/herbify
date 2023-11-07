@@ -24,7 +24,7 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = config('SECRET_KEY')
 
-cors = CORS(app)
+cors = CORS(app, supports_credentials=True) 
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['SESSION_TYPE'] = 'redis'
 app.config['SESSION_PERMANENT'] = False
