@@ -34,7 +34,7 @@ def create_recipe():
             print("image file is defined")
             image_file = request.files['imageFile']
             print(image_file.filename)
-            s3_filename = "recipe-" + str(new_recipe_id) + "." + image_file.filename.split(".")[-1]
+            s3_filename = "recipes/recipe-" + str(new_recipe_id) + "." + image_file.filename.split(".")[-1]
             s3.upload_fileobj(image_file, "herbify-images", s3_filename)
         
 
