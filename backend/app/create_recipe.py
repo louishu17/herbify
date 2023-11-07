@@ -12,8 +12,6 @@ create_recipe_blueprint = Blueprint('create-recipe', __name__)
 def create_recipe():
     print("creating recipe")
     try:
-        print("secret key: ")
-        print(config('SECRET_KEY'))
         data = request.get_json()
         if 'user' not in session:
             print("User not in session")
