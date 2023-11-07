@@ -3,8 +3,6 @@ from models.recipes import Recipes
 from models.users import Users
 from datetime import datetime
 from flask_cors import cross_origin
-from decouple import config
-
 create_recipe_blueprint = Blueprint('create-recipe', __name__)
 
 @create_recipe_blueprint.route('/create-recipe', methods=['POST'])
