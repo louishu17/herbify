@@ -1,5 +1,4 @@
 from flask import Flask
-from flask_swagger_ui import get_swaggerui_blueprint
 from connection import setup_db_connection
 from sqlalchemy.ext.automap import automap_base
 from models.recipes import Recipes

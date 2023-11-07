@@ -3,6 +3,8 @@ import { createContext } from 'react';
 interface NewRecipeContextType {
     title : string;
     setTitle : (newTitle : string) => void;
+    imageFile : File | null;
+    setImageFile : (image : File) => void;
     caption: string;
     setCaption : (newCaption: string) => void;
     ingredients : string[];
@@ -14,6 +16,8 @@ interface NewRecipeContextType {
 export const NewRecipeContext = createContext<NewRecipeContextType>({
     title : '',
     setTitle : (newTitle : string) => {},
+    imageFile : null,
+    setImageFile : (image : File) => {},
     caption: '',
     setCaption : (newCaption: string) => {},
     ingredients : [''],

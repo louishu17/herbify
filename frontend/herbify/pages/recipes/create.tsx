@@ -1,8 +1,9 @@
-import { BaseHerbifyLayout, BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
-import {Typography, Stack, Container, Button, Grid} from "@mui/material";
+import { BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
+import {Stack, Container, Button} from "@mui/material";
 import {IngredientsForm} from "@/components/pageSpecific/create/addIngredientsForm";
 import {DirectionsForm} from "@/components/pageSpecific/create/addDirectionsForm";
-import { createContext, useState } from "react";
+import { ImageForm } from "@/components/pageSpecific/create/addImageForm";
+import { useState } from "react";
 import { NewRecipeContext } from "@/lib/createRecipePage/newRecipeContext";
 import { AddTitleForm } from "@/components/pageSpecific/create/addTitleForm";
 import axios from 'axios';
@@ -13,6 +14,7 @@ export default function CreateRecipePage() {
     const [ingredients, setIngredients] = useState<string[]>(['']);
     const [directions, setDirections] = useState<string[]>(['']);
     const [title, setTitle] = useState<string>('');
+    const [imageFile, setImageFile] = useState<File | null>(null);
     const [caption, setCaption] = useState<string>('');
     const router = useRouter();
 
@@ -25,8 +27,18 @@ export default function CreateRecipePage() {
                 ingredients: ingredients,
                 steps: directions
             }
+            const formData = new FormData();
 
-            const response = await axios.post('http://127.0.0.1:5000/create-recipe', recipe_data);
+            // Append recipe data fields to the FormData object
+            formData.append("nonImageData", JSON.stringify(recipe_data));
+
+            // Append the selected file to the FormData object
+            if (imageFile){
+                formData.append('imageFile', imageFile);
+            }
+            
+
+            const response = await axios.post('http://127.0.0.1:5000/create-recipe', formData);
 
             router.push("/feed");
         }
@@ -42,10 +54,14 @@ export default function CreateRecipePage() {
 
     return (
         <BaseHerbifyLayoutWithTitle title="Create Recipe">
-            <NewRecipeContext.Provider value={{title, setTitle, caption, setCaption, ingredients, setIngredients, directions, setDirections}}>
+            <NewRecipeContext.Provider value={{title, setTitle, imageFile, setImageFile, caption, setCaption, ingredients, setIngredients, directions, setDirections}}>
                 <Container maxWidth="lg" >
-                    <AddTitleForm/>
-                    <Stack direction={"row"} spacing={6} >
+                    <Stack direction={"row"} spacing={6} style={{paddingBottom:6}}>
+                        <AddTitleForm/>
+                        <ImageForm/>
+                    </Stack>
+                    
+                    <Stack direction={"row"} spacing={6} style={{paddingBottom:6}}>
                         <IngredientsForm/>
                         <DirectionsForm/>
                     </Stack>
