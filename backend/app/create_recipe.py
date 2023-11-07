@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
 from models.recipes import Recipes
+from models.users import Users
 from datetime import datetime
 from flask_cors import cross_origin
-
 create_recipe_blueprint = Blueprint('create-recipe', __name__)
 
 @create_recipe_blueprint.route('/create-recipe', methods=['POST'])
@@ -11,7 +11,7 @@ def create_recipe():
     print("creating recipe")
     try:
         data = request.get_json()
-        userID = data.get('postedByUserID')
+        userID = Users.get_current_user_id()
         title = data.get('title')
         caption = data.get('caption')
         ingredients = data.get('ingredients')

@@ -43,3 +43,9 @@ def login():
 def logout():
     session.pop('user', None)
     return jsonify({'message': 'Logout successful'}), 200
+
+
+@login_blueprint.route('/@me', methods=['GET'])
+def get_current_user():
+    current_user_id = Users.get_current_user_id()
+    return jsonify({'user_id': current_user_id}), 200

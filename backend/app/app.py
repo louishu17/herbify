@@ -1,4 +1,5 @@
 from flask import Flask, session
+from decouple import config
 from flask_swagger_ui import get_swaggerui_blueprint
 from connection import setup_db_connection
 from sqlalchemy.ext.automap import automap_base
@@ -21,14 +22,14 @@ Base = automap_base()
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['SECRET_KEY'] = config('SECRET_KEY')
 
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['SESSION_TYPE'] = 'redis'
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_USE_SIGNER'] = True
-app.config['SESSION_REDIS'] = redis.from_url('redis://127.0.0.1:6379')
+app.config['SESSION_REDIS'] = redis.from_url('redis://localhost:6379')
 
 app.register_blueprint(register_blueprint)
 app.register_blueprint(login_blueprint)
@@ -42,9 +43,11 @@ app.register_blueprint(basicInfo_blueprint)
 setup_db_connection(app)
 setup_swagger(app)
 
-server_session = Session(app)
+sess = Session()
+sess.init_app(app)
 
 @app.route('/data/list', methods=['GET'])
 def return_top_recipes():
     return Recipes.get_x_most_recent(5)
+
 
