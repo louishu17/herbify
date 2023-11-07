@@ -6,7 +6,7 @@ from flask_cors import cross_origin
 login_blueprint = Blueprint('login', __name__)
 
 @login_blueprint.route('/login', methods=['POST'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def login():
 
     print("Logging in")
@@ -43,3 +43,11 @@ def login():
 def logout():
     session.pop('user', None)
     return jsonify({'message': 'Logout successful'}), 200
+
+@login_blueprint.route('/@me', methods=['GET'])
+@cross_origin()
+def get_user():
+    if 'user' in session:
+        return jsonify({'user': session['user']}), 200
+    else:
+        return jsonify({'user': None}), 200
