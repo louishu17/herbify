@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, session
+from flask_swagger_ui import get_swaggerui_blueprint
 from connection import setup_db_connection
 from sqlalchemy.ext.automap import automap_base
 from models.recipes import Recipes
@@ -12,13 +13,22 @@ from recipeDetailsRoutes.ingredients import ingredients_blueprint
 from feed import feed_blueprint
 from search import search_blueprint
 from flask_cors import CORS, cross_origin
+from flask_session import Session
+import redis
+import os
 
 Base = automap_base()
 
 app = Flask(__name__)
 
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+app.config['SESSION_TYPE'] = 'redis'
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_USE_SIGNER'] = True
+app.config['SESSION_REDIS'] = redis.from_url('redis://127.0.0.1:6379')
 
 app.register_blueprint(register_blueprint)
 app.register_blueprint(login_blueprint)
@@ -31,6 +41,8 @@ app.register_blueprint(basicInfo_blueprint)
 
 setup_db_connection(app)
 setup_swagger(app)
+
+server_session = Session(app)
 
 @app.route('/data/list', methods=['GET'])
 def return_top_recipes():
