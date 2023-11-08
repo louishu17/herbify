@@ -31,6 +31,7 @@ class Recipes(Base):
     postedByUserID = Column(Integer, ForeignKey('Users.uid'))
     fullRecipeString = Column(String)
     createdDate = Column(DateTime)
+    imageS3Filename = Column(String)
     
     user = relationship('Users', back_populates='recipes')
 
