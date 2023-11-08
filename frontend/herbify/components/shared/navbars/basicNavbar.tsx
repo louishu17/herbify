@@ -5,7 +5,7 @@ import { HerbifyNavBarGivenOptionDescriptions, OptionDescription } from './navba
 export const BasicHerbifyNavBar : React.FC = () => {
     let optionDescriptions : OptionDescription[] = [
         {text : "Home", route : "/feed", icon: 'home-icon.svg'},
-        {text : "Search", route : "/feed", icon: 'search-icon.svg'},
+        {text : "Search", route : "/search", icon: 'search-icon.svg'},
         {text : "Notifications", route : "/feed", icon: 'notifications-icon.svg'},
         {text : "Create", route : "/recipes/create", icon: 'create-icon.svg'},
         {text : "Profile", route : "/recipes/create", icon: 'profile-icon.svg'},

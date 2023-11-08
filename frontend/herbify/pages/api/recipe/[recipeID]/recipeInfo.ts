@@ -1,4 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { INVALID_S3_FILENAME } from '@/lib/imageHooks';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export interface BasicRecipeInfo{
@@ -6,6 +7,7 @@ export interface BasicRecipeInfo{
     author : string;
     dateCreated : Date;
     cookTime : number;
+    imageS3Filename : string;
 }
 
 
@@ -16,7 +18,8 @@ export default function getBasicRecipeInfo(req: NextApiRequest, res: NextApiResp
             title : "Cool Recipe ",
             author : "Keith Cressman",
             dateCreated : new Date(2023, 5, 1, 0, 39),
-            cookTime : 30
+            cookTime : 30,
+            imageS3Filename : INVALID_S3_FILENAME
         })
 
     }, 100);

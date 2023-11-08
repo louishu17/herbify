@@ -11,7 +11,7 @@ def feed():
 
     try:
         recipes = Recipes.get_x_most_recent(8)
-        serialized_objects = [obj.to_json() for obj in recipes]
+        serialized_objects = [obj.to_feed_json() for obj in recipes]
 
         return jsonify({'descriptions' : serialized_objects}), 201
     except Exception as e:

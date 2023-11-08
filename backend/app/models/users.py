@@ -1,6 +1,6 @@
 from flask import current_app as app
 from datetime import datetime
-
+from flask import session
 
 class Users:
     def __init__(
@@ -31,6 +31,16 @@ class Users:
         self.creationDate = creationDate
         self.bio = bio
 
+    @staticmethod
+    def get_current_user_id():
+        user_email = session.get('user')
+
+        if not user_email:
+            return None
+        
+        user = Users.get(email=user_email)  
+        return user.uid
+    
     @staticmethod
     def get(email):
         rows = app.db.execute(
