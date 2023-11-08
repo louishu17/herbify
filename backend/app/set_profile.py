@@ -3,6 +3,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash
 from models.users import Users
 from flask_cors import cross_origin
+from flask import session
 
 set_profile_blueprint = Blueprint("set-profile", __name__)
 
@@ -15,7 +16,7 @@ def set_profile():
     try:
         # Get current uid from user session
         # uid = session.get("uid")
-        uid = 1
+        email = session["email"]
 
         data = request.get_json()
         firstName = data.get("firstName")
@@ -31,7 +32,7 @@ def set_profile():
         # Password can be reset using the reset password endpoint
 
         Users.update_user(
-            uid=uid,
+            email=email,
             firstName=firstName,
             middleName=middleName,
             lastName=lastName,

@@ -48,7 +48,8 @@ setup_swagger(app)
 sess = Session()
 sess.init_app(app)
 
-@app.route('/data/list', methods=['GET'])
+
+@app.route("/data/list", methods=["GET"])
 def return_top_recipes():
     return Recipes.get_x_most_recent(5)
 

@@ -37,16 +37,18 @@ def login():
         return jsonify({'error': str(e)}), 500
     
 
-@login_blueprint.route('/logout', methods=['POST'])
+
+@login_blueprint.route("/logout", methods=["POST"])
 @cross_origin()
 def logout():
-    session.pop('user', None)
-    return jsonify({'message': 'Logout successful'}), 200
+    session.pop("user", None)
+    return jsonify({"message": "Logout successful"}), 200
 
-@login_blueprint.route('/@me', methods=['GET'])
+
+@login_blueprint.route("/@me", methods=["GET"])
 @cross_origin()
 def get_user():
-    if 'user' in session:
-        return jsonify({'user': session['user']}), 200
+    if "user" in session:
+        return jsonify({"user": session["user"]}), 200
     else:
         return jsonify({'user': None}), 200
