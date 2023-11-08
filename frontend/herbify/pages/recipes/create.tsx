@@ -38,7 +38,7 @@ export default function CreateRecipePage() {
             }
             
 
-            const response = await axios.post('http://127.0.0.1:5000/create-recipe', formData);
+            const response = await axios.post('http://127.0.0.1:5000/create-recipe', formData, {withCredentials: true});
 
             router.push("/feed");
         }

@@ -5,7 +5,7 @@ import { IngredientsData } from "@/pages/api/recipe/[recipeID]/ingredients";
 import { DirectionsData } from "@/pages/api/recipe/[recipeID]/directions";
 
 const fetchBasicRecipeInfo = async (recipeID : number) : Promise<BasicRecipeInfo> => {
-    let route = 'http://localhost:5000/recipe/' + recipeID + '/basicInfo';
+    let route = 'http://127.0.0.1:5000/recipe/' + recipeID + '/basicInfo';
     const response = await fetch(route);
     if (response.ok) {
         return response.json();
@@ -20,7 +20,7 @@ export const useBasicRecipeInfo = (recipeID : number) : UseQueryResult<BasicReci
 }
 
 const fetchIngredients = async (recipeID : number) : Promise<IngredientsData> => {
-    let route = 'http://localhost:5000/recipe/' + recipeID + '/ingredients';
+    let route = 'http://127.0.0.1:5000/recipe/' + recipeID + '/ingredients';
     const response = await fetch(route);
     if (response.ok) {
         return response.json();
@@ -35,7 +35,7 @@ export const useIngredients = (recipeID : number) : UseQueryResult<IngredientsDa
 }
 
 const fetchDirections = async (recipeID : number) : Promise<DirectionsData> => {
-    let route = 'http://localhost:5000/recipe/' + recipeID + '/directions';
+    let route = 'http://127.0.0.1:5000/recipe/' + recipeID + '/directions';
     const response = await fetch(route);
     if (response.ok) {
         return response.json();
