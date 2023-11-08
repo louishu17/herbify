@@ -4,6 +4,7 @@ import { HerbifyForm } from "@/components/shared/textForm";
 import React, {useState} from "react";
 import {object as YupObject, string as YupString} from 'yup';
 import axios from 'axios';
+import { useRouter } from "next/router";
 
 interface LoginFormValues {
     email: string;
@@ -22,6 +23,7 @@ const loginValidationSchema = YupObject({
 
 export default function LoginPage(){
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const router = useRouter();
 
     const loginUser = async (values: LoginFormValues) => {
         try {
@@ -29,7 +31,7 @@ export default function LoginPage(){
             setErrorMessage("User logged in");
 
             setTimeout(() => {
-                window.location.href = '/feed';
+                router.push("/feed");
             }, 1000);
         } catch (error) {
             console.error(error);

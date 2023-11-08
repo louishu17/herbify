@@ -1,5 +1,6 @@
 from flask import current_app as app
 from datetime import datetime
+from flask import session
 
 
 class Users:
@@ -30,6 +31,16 @@ class Users:
         self.phoneNumber = phoneNumber
         self.creationDate = creationDate
         self.bio = bio
+
+    @staticmethod
+    def get_current_user_id():
+        user_email = session.get("user")
+
+        if not user_email:
+            return None
+
+        user = Users.get(email=user_email)
+        return user.uid
 
     @staticmethod
     def get(email):
@@ -111,7 +122,7 @@ class Users:
             return {"error": "Failed to add user"}, 500
 
     @staticmethod
-    def update_user(uid, **kwargs):
+    def update_user(email, **kwargs):
         print("updating user")
 
         if "dateOfBirth" in kwargs:
@@ -131,9 +142,9 @@ class Users:
                 update_query = f"""
                     UPDATE \"Users\"
                     SET {', '.join(update_fields)}
-                    WHERE \"uid\" = :uid
+                    WHERE \"email\" = :email
                 """
-                app.db.execute(update_query, uid=uid, **kwargs)
+                app.db.execute(update_query, email=email, **kwargs)
                 print("updated user")
                 return {"message": "User updated successfully"}, 200
             else:

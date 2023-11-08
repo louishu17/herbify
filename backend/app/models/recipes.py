@@ -2,19 +2,31 @@ from flask import current_app as app
 import json
 
 class Recipes:
-    def __init__(self, recipeID, postedByUserID, fullRecipeString, createdDate, title, caption):
+    def __init__(self, recipeID, postedByUserID, fullRecipeString, createdDate, title, caption, imageS3Filename="none"):
         self.recipeID = recipeID
         self.postedByUserID = postedByUserID
         self.createdDate = createdDate
         self.title = title
         self.caption = caption
+        self.imageS3Filename = imageS3Filename
         
 
-    def to_json(self):
+    def to_feed_json(self):
         return {
             "id" : self.recipeID,
             "title" : self.title,
-            "caption" : self.caption
+            "caption" : self.caption,
+            "imageS3Filename" : self.imageS3Filename
+        }
+    
+    def to_json_recipe(self):
+        return {
+            "recipeID" : self.recipeID,
+            "postedByUserID" : self.postedByUserID,
+            "createdDate" : self.createdDate,
+            "title" : self.title,
+            "caption" : self.caption,
+            "imageS3Filename": self.imageS3Filename
         }
 
     @staticmethod
@@ -26,6 +38,18 @@ WHERE recipeID = :recipeID
 ''',
                               id=recipeID)
         return Recipes(*(rows[0])) if rows else None
+    
+    @staticmethod
+    def get_by_term(term: str):
+        search_term = '%' + term + '%'
+        rows = app.db.execute(f'''
+SELECT *
+FROM \"Recipes\"
+WHERE LOWER(title) LIKE LOWER(:term)
+''', 
+                        term=search_term)
+        print("rows are " + str(rows))
+        return [Recipes(*row) for row in rows]
 
     @staticmethod
     def get_x_most_recent(x: int):
@@ -49,19 +73,21 @@ LIMIT :x
 
 
     @staticmethod
-    def add_recipe(recipeID, postedByUserID, createdDate, title, caption):
+    def add_recipe(recipeID, postedByUserID, createdDate, title, caption, imageS3Filename):
         print('adding recipe')
+
         try:
             app.db.execute('''
             INSERT INTO \"Recipes\"
-                        VALUES (:recipeID, :postedByUserID, :fullRecipeString, :createdDate, :title, :caption)
+                        VALUES (:recipeID, :postedByUserID, :fullRecipeString, :createdDate, :title, :caption, :imageS3Filename)
             ''',
                            recipeID=recipeID,
                            postedByUserID=postedByUserID,
                            fullRecipeString="Cheeseburgers",
                            createdDate=createdDate,
                            title=title,
-                           caption=caption)
+                           caption=caption,
+                           imageS3Filename=imageS3Filename)
             print("added recipe")
         except Exception as e:
             print(e)
@@ -110,6 +136,6 @@ class RecipeJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Recipes):
             # Define how to serialize the object
-            return obj.to_json()  # Assuming you have a to_json() method
+            return obj.to_feed_json()
         return super(RecipeJSONEncoder, self).default(obj)
 
