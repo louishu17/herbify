@@ -1,6 +1,4 @@
 from decouple import config
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
 from db import DB
 
 def setup_db_connection(app):

@@ -4,6 +4,7 @@ from datetime import datetime
 from flask_cors import cross_origin
 import json
 import boto3
+import random
 
 
 s3 = boto3.client('s3',
@@ -29,18 +30,17 @@ def create_recipe():
         new_recipe_id = 1 if not last_recipe_id else last_recipe_id + 1
 
         # Get the uploaded image file
-        
+        imageS3Filename = "none"
         if 'imageFile' in request.files:
-            print("image file is defined")
             image_file = request.files['imageFile']
-            print(image_file.filename)
-            s3_filename = "recipes/recipe-" + str(new_recipe_id) + "." + image_file.filename.split(".")[-1]
-            s3.upload_fileobj(image_file, "herbify-images", s3_filename)
+
+            imageS3Filename = "recipes/recipe-" + str(new_recipe_id) + "-" + str(int(random.random() * 10000)) + "." + image_file.filename.split(".")[-1]
+            s3.upload_fileobj(image_file, "herbify-images", imageS3Filename)
         
 
         
 
-        Recipes.add_recipe(recipeID=new_recipe_id, postedByUserID=userID, createdDate=datetime.now(), title=title, caption=caption)
+        Recipes.add_recipe(recipeID=new_recipe_id, postedByUserID=userID, createdDate=datetime.now(), title=title, caption=caption, imageS3Filename=imageS3Filename)
         Recipes.add_ingredients(recipeID=new_recipe_id, ingredients=ingredients)
         Recipes.add_steps(recipeID=new_recipe_id, steps=steps)
 

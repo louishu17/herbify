@@ -10,7 +10,7 @@ interface RecipeOnFeedProps {
 }
 
 export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedProps) => {
-    const {data : imageSrc, isLoading : isLoadingImg, isError : isErrorLoadingImg} = useImageForRecipe(props.info.id);
+    const {data : imageSrc, isLoading : isLoadingImg, isError : isErrorLoadingImg} = useImageForRecipe(props.info.imageS3Filename);
     
     return (
         <Link href={"/recipes/"+props.info.id} passHref>

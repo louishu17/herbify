@@ -28,3 +28,5 @@ export default function pictureAPI(req: NextApiRequest, res: NextApiResponse) {
     }, Math.random() * 5000)
     
 };
+
+
