@@ -14,6 +14,7 @@ from recipeDetailsRoutes.ingredients import ingredients_blueprint
 from feed import feed_blueprint
 from set_profile import set_profile_blueprint
 from search import search_blueprint
+from profile import profile_blueprint
 from flask_cors import CORS, cross_origin
 from flask_session import Session
 import redis
@@ -43,6 +44,7 @@ app.register_blueprint(search_blueprint)
 app.register_blueprint(ingredients_blueprint)
 app.register_blueprint(directions_blueprint)
 app.register_blueprint(basicInfo_blueprint)
+app.register_blueprint(profile_blueprint)
 
 setup_db_connection(app)
 setup_swagger(app)
