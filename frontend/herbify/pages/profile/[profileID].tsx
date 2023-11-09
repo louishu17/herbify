@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { RecipeOnFeed } from "@/components/pageSpecific/feed/recipeOnFeed";
-import { BaseHerbifyLayout, BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
-import axios from 'axios';
+import React from 'react';
+import {  BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
 import { Grid, Paper, Typography, Box, Avatar } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useUserID } from '@/lib/profileHooks';
-import { useImageForRecipe } from "@/lib/imageHooks";
-import { ImageToDisplay } from "@/components/pageSpecific/feed/recipeOnFeed";
+import { useFetchProfile, useUserID } from '@/lib/profileHooks';
+import { RecipesSection } from '@/components/pageSpecific/profile/recipesSection';
+import { HerbifyLoadingContainer } from '@/components/shared/loading';
+
 
 
 const ProfileGrid = styled(Grid)(({ theme }) => ({
@@ -30,61 +29,37 @@ const RecipeThumbnail = styled('img')({
 });
 
 export default function ProfilePage() {
-  const [profileData, setProfileData] = useState({
-    name: '',
-    bio: '',
-    followers: 0,
-    following: 0,
-    recipes: [],
-  });
 
   const userId = useUserID();
-  useEffect(() => {
-    // Replace with your actual API endpoint
-    const fetchProfileData = async () => {
-      try {
-        const response = await axios.get(`http://127.0.0.1:5000/profile/${userId}`, {withCredentials: true});
-        console.log(response.data)
-        const responseData = response.data;
-        setProfileData({name: responseData.user[0].firstName + " " + responseData.user[0].lastName, bio: responseData.user[0].bio, followers: responseData.followers, following: responseData.following, recipes: responseData.recipes});
-      } catch (error) {
-        console.error('Error fetching profile data:', error);
-      }
-    };
+  const {data : profileData, isLoading, isError} = useFetchProfile(userId);
+  let body = null;
+  if (isLoading){
+    body = <HerbifyLoadingContainer/>
+  } else if (isError) {
+    body = <Typography>Error</Typography>
+  } else if (profileData){
+    body = (
 
-    fetchProfileData();
-  }, [userId]);
-
-  const recipeCheck = profileData && Array.isArray(profileData.recipes) && profileData.recipes && profileData.recipes.length !== 0
-  console.log(profileData)
-
-  
+      <ProfileGrid container spacing={2}>
+      <ProfileGrid item xs={12}>
+          <ProfilePaper elevation={4}>
+          <Avatar alt={profileData.user[0].firstName} src="/static/images/avatar/1.jpg" />
+          <Typography variant="h4">{profileData.user[0].firstName}</Typography>
+          <Typography>{profileData.user[0].bio}</Typography>
+          <Typography variant="body1">Followers: {profileData.followers}</Typography>
+          <Typography variant="body1">Following: {profileData.following}</Typography>
+          </ProfilePaper>
+      </ProfileGrid>
+        <RecipesSection/>
+      </ProfileGrid>
+    );
+  } else {
+    body = <Typography>Error</Typography>
+  }
   return (
-    <BaseHerbifyLayoutWithTitle title="Search">
-        <ProfileGrid container spacing={2}>
-        <ProfileGrid item xs={12}>
-            <ProfilePaper elevation={4}>
-            <Avatar alt={profileData.name} src="/static/images/avatar/1.jpg" />
-            <Typography variant="h4">{profileData.name}</Typography>
-            <Typography>{profileData.bio}</Typography>
-            <Typography variant="body1">Followers: {profileData.followers}</Typography>
-            <Typography variant="body1">Following: {profileData.following}</Typography>
-            </ProfilePaper>
-        </ProfileGrid>
-        
-        {recipeCheck && <RecipesGrid container spacing={2}>
-            {profileData.recipes.map((recipe, index) => (
-            <Grid item xs={4} key={index}>
-                
-                <Paper>
-                <Box p={1}>
-                
-                </Box>
-                </Paper>
-            </Grid>
-            ))}
-        </RecipesGrid>}
-        </ProfileGrid>
+    <BaseHerbifyLayoutWithTitle title="Profile">
+      {body}
     </BaseHerbifyLayoutWithTitle>
   );
+  
 }
