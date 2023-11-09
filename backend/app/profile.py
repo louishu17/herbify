@@ -6,7 +6,7 @@ from models.users import Users
 profile_blueprint = Blueprint('profile', __name__)
 
 @profile_blueprint.route('/profile/<path:userId>', methods=['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def profile(userId):
     print("getting profile")
     userId = int(userId)
@@ -14,10 +14,11 @@ def profile(userId):
     try:
         if userId == -1:
             print("hiii")
-            # user_email = session['user']
-            
-            # user = Users.get(user_email)
-            user = Users.get_by_uid(3)
+            print(session)
+            user_email = session['user']
+            print(user_email)
+            user = Users.get(user_email)
+            # user = Users.get_by_uid(3)
             user_info = Users.to_json(user)
 
         else:
@@ -32,10 +33,10 @@ def profile(userId):
 
         recipes = Recipes.get_by_user(user.uid)
         print("the recipes are" + str(recipes))
-        serialized_recipies = [obj.to_json_recipe() for obj in recipes]
+        serialized_recipes = [obj.to_json_recipe() for obj in recipes]
         return jsonify({'user': [user_info], 
                         'followers': num_followers, 
                         'following': num_following, 
-                        'recipies' : serialized_recipies}), 201
+                        'recipes' : serialized_recipes}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500

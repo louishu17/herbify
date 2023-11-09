@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { RecipeOnFeed } from "@/components/pageSpecific/feed/recipeOnFeed";
 import { BaseHerbifyLayout, BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
 import axios from 'axios';
 import { Grid, Paper, Typography, Box, Avatar } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useUserID } from '@/lib/profileHooks';
+import { useImageForRecipe } from "@/lib/imageHooks";
+import { ImageToDisplay } from "@/components/pageSpecific/feed/recipeOnFeed";
+
 
 const ProfileGrid = styled(Grid)(({ theme }) => ({
   marginTop: theme.spacing(3),
@@ -40,9 +44,10 @@ export default function ProfilePage() {
     // Replace with your actual API endpoint
     const fetchProfileData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:5000/profile/${userId}`);
+        const response = await axios.get(`http://127.0.0.1:5000/profile/${userId}`, {withCredentials: true});
         console.log(response.data)
-        setProfileData(response.data);
+        const responseData = response.data;
+        setProfileData({name: responseData.user[0].firstName + " " + responseData.user[0].lastName, bio: responseData.user[0].bio, followers: responseData.followers, following: responseData.following, recipes: responseData.recipes});
       } catch (error) {
         console.error('Error fetching profile data:', error);
       }
@@ -51,6 +56,10 @@ export default function ProfilePage() {
     fetchProfileData();
   }, [userId]);
 
+  const recipeCheck = profileData && Array.isArray(profileData.recipes) && profileData.recipes && profileData.recipes.length !== 0
+  console.log(profileData)
+
+  
   return (
     <BaseHerbifyLayoutWithTitle title="Search">
         <ProfileGrid container spacing={2}>
@@ -63,18 +72,19 @@ export default function ProfilePage() {
             <Typography variant="body1">Following: {profileData.following}</Typography>
             </ProfilePaper>
         </ProfileGrid>
-        {/* <RecipesGrid container spacing={2}>
+        
+        {recipeCheck && <RecipesGrid container spacing={2}>
             {profileData.recipes.map((recipe, index) => (
             <Grid item xs={4} key={index}>
+                
                 <Paper>
                 <Box p={1}>
-                    <RecipeThumbnail src={recipe.thumbnailUrl} alt={recipe.title} />
-                    <Typography variant="subtitle1">{recipe.title}</Typography>
+                
                 </Box>
                 </Paper>
             </Grid>
             ))}
-        </RecipesGrid> */}
+        </RecipesGrid>}
         </ProfileGrid>
     </BaseHerbifyLayoutWithTitle>
   );
