@@ -13,20 +13,12 @@ def profile(userId):
 
     try:
         if userId == -1:
-            print("hiii")
-            print(session)
             user_email = session['user']
-            print(user_email)
             user = Users.get(user_email)
-            # user = Users.get_by_uid(3)
-            user_info = Users.to_json(user)
-
         else:
-            print('blah')
-            user_email = session['user']
-            user = Users.get(user_email)
-            user_info = user.to_json()
-        print("hi")
+            user = Users.get_by_uid(userId)
+        
+        user_info = Users.to_json(user)
         num_followers = Users.get_followers(user.uid)
         num_following = Users.get_following(user.uid)
         

@@ -39,7 +39,6 @@ export default function ProfilePage() {
   });
 
   const userId = useUserID();
-
   useEffect(() => {
     // Replace with your actual API endpoint
     const fetchProfileData = async () => {
