@@ -1,0 +1,131 @@
+.box {
+    height: 272px;
+    width: 251px;
+  }
+  
+  .box .group {
+    height: 272px;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 251px;
+  }
+  
+  .box .overlap-group-wrapper {
+    height: 272px;
+    width: 253px;
+  }
+  
+  .box .overlap-group {
+    background: linear-gradient(180deg, rgba(231, 249, 253, 0) 0%, rgb(231, 249, 253) 100%);
+    border-radius: 30px;
+    height: 272px;
+    position: relative;
+    width: 251px;
+  }
+  
+  .box .group-wrapper {
+    height: 15px;
+    left: 15px;
+    position: absolute;
+    top: 237px;
+    width: 103px;
+  }
+  
+  .box .div {
+    height: 15px;
+    position: relative;
+    width: 105px;
+  }
+  
+  .box .img {
+    height: 15px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 15px;
+  }
+  
+  .box .text-wrapper {
+    color: #00000099;
+    font-family: "Inter-Medium", Helvetica;
+    font-size: 14px;
+    font-weight: 500;
+    left: 21px;
+    letter-spacing: -0.28px;
+    line-height: normal;
+    position: absolute;
+    top: 2px;
+    white-space: nowrap;
+    width: 82px;
+  }
+  
+  .box .div-wrapper {
+    height: 15px;
+    left: 141px;
+    position: absolute;
+    top: 237px;
+    width: 95px;
+  }
+  
+  .box .group-2 {
+    height: 15px;
+    position: relative;
+    width: 97px;
+  }
+  
+  .box .text-wrapper-2 {
+    color: #00000099;
+    font-family: "Inter-Medium", Helvetica;
+    font-size: 14px;
+    font-weight: 500;
+    left: 21px;
+    letter-spacing: -0.28px;
+    line-height: normal;
+    position: absolute;
+    top: 2px;
+    white-space: nowrap;
+    width: 74px;
+  }
+  
+  .box .overlap {
+    background-image: url(./mask-group.png);
+    background-size: 100% 100%;
+    height: 157px;
+    left: 10px;
+    position: absolute;
+    top: 10px;
+    width: 231px;
+  }
+  
+  .box .heart-wrapper {
+    background-color: #ffffff;
+    border-radius: 15.04px;
+    height: 30px;
+    left: 188px;
+    position: relative;
+    top: 13px;
+    width: 30px;
+  }
+  
+  .box .heart {
+    height: 31px;
+    left: -1px;
+    position: absolute;
+    top: 4px;
+    width: 33px;
+  }
+  
+  .box .p {
+    color: #000000;
+    font-family: "Inter-SemiBold", Helvetica;
+    font-size: 15px;
+    font-weight: 600;
+    left: 15px;
+    letter-spacing: -0.6px;
+    line-height: 32px;
+    position: absolute;
+    top: 182px;
+    width: 221px;
+  }
+  

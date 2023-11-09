@@ -50,6 +50,20 @@ WHERE LOWER(title) LIKE LOWER(:term)
                         term=search_term)
         print("rows are " + str(rows))
         return [Recipes(*row) for row in rows]
+    
+    
+    @staticmethod
+    def get_by_user(uid: int):
+        print('getting by user ' + str(uid))
+        rows = app.db.execute(f'''
+SELECT *
+FROM \"Recipes\"
+WHERE \"postedByUserID\" = :uid
+''', 
+                        uid=uid)
+        print(rows)
+        print("rows are " + str(rows))
+        return [Recipes(*row) for row in rows]
 
     @staticmethod
     def get_x_most_recent(x: int):
