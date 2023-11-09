@@ -9,15 +9,20 @@ set_profile_blueprint = Blueprint("set-profile", __name__)
 
 
 @set_profile_blueprint.route("/set-profile", methods=["POST"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def set_profile():
     print("setting profile")
 
     try:
         # Get current uid from user session
         # uid = session.get("uid")
-        email = session["email"]
+        print("getting user from session")
 
+        if 'user' not in session:
+            print("User not in session")
+            return jsonify({"message": "You must be logged in to set your profile"}), 401
+        email = session["user"]
+        print("grabbing data of user " + email)
         data = request.get_json()
         firstName = data.get("firstName")
         middleName = data.get("middleName")
@@ -30,7 +35,7 @@ def set_profile():
 
         # Do not update email, password, or creationDate
         # Password can be reset using the reset password endpoint
-
+        print("updating user")
         Users.update_user(
             email=email,
             firstName=firstName,

@@ -25,12 +25,14 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = config('SECRET_KEY')
 
-cors = CORS(app, supports_credentials=True) 
+cors = CORS(app, supports_credentials=True, origins=["http://127.0.0.1:3000"]) 
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['SESSION_TYPE'] = 'redis'
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_USE_SIGNER'] = True
 app.config['SESSION_REDIS'] = redis.from_url('redis://localhost:6379')
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 
 app.register_blueprint(register_blueprint)
 app.register_blueprint(login_blueprint)

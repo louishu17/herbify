@@ -130,6 +130,8 @@ class Users:
                 kwargs["dateOfBirth"], "%m/%d/%Y"
             ).strftime("%Y-%m-%d")
             kwargs["dateOfBirth"] = date_of_birth
+        
+        print("date of birth parsed")
 
         try:
             update_fields = []
