@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { RecipeOnFeed } from "@/components/pageSpecific/feed/recipeOnFeed";
-import { BaseHerbifyLayout, BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
-import axios from 'axios';
+import React from 'react';
+import {  BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
 import { Grid, Paper, Typography, Box, Avatar } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useFetchProfile, useUserID } from '@/lib/profileHooks';
