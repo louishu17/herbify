@@ -2,6 +2,7 @@ import { BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayo
 import {Stack, Container, Button} from "@mui/material";
 import {IngredientsForm} from "@/components/pageSpecific/create/addIngredientsForm";
 import {DirectionsForm} from "@/components/pageSpecific/create/addDirectionsForm";
+import { TagsForm } from "@/components/pageSpecific/create/addTagsForm";
 import { ImageForm } from "@/components/pageSpecific/create/addImageForm";
 import { useState } from "react";
 import { NewRecipeContext } from "@/lib/createRecipePage/newRecipeContext";
@@ -16,6 +17,7 @@ export default function CreateRecipePage() {
     const [title, setTitle] = useState<string>('');
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [caption, setCaption] = useState<string>('');
+    const [tags, setTags] = useState<string[]>(['']);
     const router = useRouter();
 
     const createRecipe = async () => {
@@ -54,13 +56,14 @@ export default function CreateRecipePage() {
 
     return (
         <BaseHerbifyLayoutWithTitle title="Create Recipe">
-            <NewRecipeContext.Provider value={{title, setTitle, imageFile, setImageFile, caption, setCaption, ingredients, setIngredients, directions, setDirections}}>
+            <NewRecipeContext.Provider value={{title, setTitle, imageFile, setImageFile, caption, setCaption, ingredients, setIngredients, directions, setDirections, tags, setTags}}>
                 <Container maxWidth="lg">
                     <Stack width={400} spacing={6} style={{paddingBottom:6}}>
                         <AddTitleForm/>
                         <ImageForm/>
                         <IngredientsForm/>
                         <DirectionsForm/>
+                        <TagsForm/>
                     </Stack>
                     <Button variant="contained" onClick={handleSubmit} style={{backgroundColor: "Highlight", marginTop : 40, display: "block", margin: "0 auto"}}>Submit Recipe</Button>
                 </Container>
