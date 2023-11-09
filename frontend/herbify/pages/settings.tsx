@@ -50,7 +50,7 @@ export default function SetProfilePage(){
     const setUserProfile = async (values: SetUserProfileFormValues) => {
 
         try {
-            const response = await axios.post('http://127.0.0.1:5000/set-profile', values);
+            const response = await axios.post('http://127.0.0.1:5000/set-profile', values, {withCredentials: true});
 
             setErrorMessage("User updated");
 
