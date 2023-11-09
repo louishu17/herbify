@@ -27,7 +27,7 @@ export default function LoginPage(){
 
     const loginUser = async (values: LoginFormValues) => {
         try {
-            const response = await axios.post('http://127.0.0.1:5000/login', values);
+            const response = await axios.post('http://127.0.0.1:5000/login', values, {withCredentials: true});
             setErrorMessage("User logged in");
 
             setTimeout(() => {
