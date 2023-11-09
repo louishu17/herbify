@@ -55,13 +55,10 @@ export default function CreateRecipePage() {
     return (
         <BaseHerbifyLayoutWithTitle title="Create Recipe">
             <NewRecipeContext.Provider value={{title, setTitle, imageFile, setImageFile, caption, setCaption, ingredients, setIngredients, directions, setDirections}}>
-                <Container maxWidth="lg" >
-                    <Stack direction={"row"} spacing={6} style={{paddingBottom:6}}>
+                <Container maxWidth="lg">
+                    <Stack width={400} spacing={6} style={{paddingBottom:6}}>
                         <AddTitleForm/>
                         <ImageForm/>
-                    </Stack>
-                    
-                    <Stack direction={"row"} spacing={6} style={{paddingBottom:6}}>
                         <IngredientsForm/>
                         <DirectionsForm/>
                     </Stack>
