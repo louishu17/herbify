@@ -5,7 +5,7 @@ from flask_cors import cross_origin
 feed_blueprint = Blueprint('feed', __name__)
 
 @feed_blueprint.route('/feed', methods=['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def feed():
     print("getting feed")
 
