@@ -78,7 +78,7 @@ LIMIT :x
     
     def get_ith_set_of_feed_recipes(i : int):
         lower_limit = 8 * i
-        upper_limit = 8 * (i + 1)
+        upper_limit = 8 * (i + 1) -1
         rows = app.db.execute('''
 SELECT *
 FROM (
