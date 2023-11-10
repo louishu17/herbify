@@ -2,17 +2,15 @@ from flask import request, jsonify, Blueprint
 from models.recipes import Recipes, RecipeJSONEncoder
 from flask_cors import cross_origin
 
-feed_blueprint = Blueprint('feed', __name__)
+basic_feed_blueprint = Blueprint('basic feed', __name__)
 
-
-    
-@feed_blueprint.route('/feed/<int:pageNum>', methods=['GET'])
+@basic_feed_blueprint.route('/feed', methods=['GET'])
 @cross_origin()
-def feed(pageNum):
+def feed():
     print("getting feed")
 
     try:
-        recipes = Recipes.get_ith_set_of_feed_recipes(pageNum)
+        recipes = Recipes.get_x_most_recent(8)
         serialized_objects = [obj.to_feed_json() for obj in recipes]
 
         return jsonify({'descriptions' : serialized_objects}), 201

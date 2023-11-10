@@ -11,7 +11,8 @@ from create_recipe import create_recipe_blueprint
 from recipeDetailsRoutes.basicInfo import basicInfo_blueprint
 from recipeDetailsRoutes.directions import directions_blueprint
 from recipeDetailsRoutes.ingredients import ingredients_blueprint
-from feed import feed_blueprint
+from feedRoutes.basicFeed import basic_feed_blueprint
+from feedRoutes.paginatedFeed import paginated_feed_blueprint
 from set_profile import set_profile_blueprint
 from search import search_blueprint
 from profile import profile_blueprint
@@ -38,7 +39,9 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.register_blueprint(register_blueprint)
 app.register_blueprint(login_blueprint)
 app.register_blueprint(create_recipe_blueprint)
-app.register_blueprint(feed_blueprint)
+#app.register_blueprint(feed_blueprint)
+app.register_blueprint(basic_feed_blueprint)
+app.register_blueprint(paginated_feed_blueprint)
 app.register_blueprint(set_profile_blueprint)
 app.register_blueprint(search_blueprint)
 app.register_blueprint(ingredients_blueprint)

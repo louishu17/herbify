@@ -2,11 +2,11 @@ from flask import request, jsonify, Blueprint
 from models.recipes import Recipes, RecipeJSONEncoder
 from flask_cors import cross_origin
 
-feed_blueprint = Blueprint('feed', __name__)
+paginated_feed_blueprint = Blueprint('paginated feed', __name__)
 
 
     
-@feed_blueprint.route('/feed/<int:pageNum>', methods=['GET'])
+@paginated_feed_blueprint.route('/feed/<int:pageNum>', methods=['GET'])
 @cross_origin()
 def feed(pageNum):
     print("getting feed")
