@@ -11,6 +11,8 @@ interface NewRecipeContextType {
     setIngredients : (newIngredients : string[]) => void;
     directions : string[];
     setDirections : (newDirections : string[]) => void;
+    tags: string[];
+    setTags: (newTags: string[]) => void;
 };
 
 export const NewRecipeContext = createContext<NewRecipeContextType>({
@@ -23,5 +25,7 @@ export const NewRecipeContext = createContext<NewRecipeContextType>({
     ingredients : [''],
     setIngredients : (newIngredients : string[]) => {},
     directions : [''],
-    setDirections : (newDirections : string[]) => {}
+    setDirections : (newDirections : string[]) => {},
+    tags: [''],
+    setTags: (newTags: string[]) => {}
 });
