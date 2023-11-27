@@ -17,7 +17,7 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
     return (
         <Link href={`/recipes/${info.id}`} passHref>
             <MuiLink underline="none">
-                <Card sx={{ maxWidth: 275, m: 2, boxShadow: 3, borderRadius: borderRadiusValue }}>
+                <Card sx={{ width: 275, m: 2, boxShadow: 3, borderRadius: borderRadiusValue }}>
                     <CardActionArea>
                         <CardMedia sx={{ borderRadius: borderRadiusValue }}>
                             <ImageToDisplay imageSrc={imageSrc ?? ""} isLoading={isLoadingImg} isError={isErrorLoadingImg} />

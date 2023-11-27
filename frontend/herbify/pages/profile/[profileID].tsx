@@ -32,6 +32,9 @@ export default function ProfilePage() {
 
   const userId = useUserID();
   const {data : profileData, isLoading, isError} = useFetchProfile(userId);
+  
+  const avatarStyle = { width: '100px', height: '100px' };
+
   let body = null;
   if (isLoading){
     body = <HerbifyLoadingContainer/>
@@ -40,16 +43,45 @@ export default function ProfilePage() {
   } else if (profileData){
     body = (
 
-      <ProfileGrid container spacing={2}>
-      <ProfileGrid item xs={12}>
-          <ProfilePaper elevation={4}>
-          <Avatar alt={profileData.user[0].firstName} src="/static/images/avatar/1.jpg" />
-          <Typography variant="h4">{profileData.user[0].firstName}</Typography>
-          <Typography>{profileData.user[0].bio}</Typography>
-          <Typography variant="body1">Followers: {profileData.followers}</Typography>
-          <Typography variant="body1">Following: {profileData.following}</Typography>
-          </ProfilePaper>
-      </ProfileGrid>
+      <ProfileGrid spacing={2}>
+        <ProfileGrid item xs={10}>
+        <ProfilePaper elevation={0}>
+          <Grid container alignItems="center" spacing={2}>
+            <Grid item>
+              <Avatar 
+                alt={profileData.user[0].firstName} 
+                src="/static/images/avatar/1.jpg" 
+                style={avatarStyle} 
+              />
+            </Grid>
+            <Grid item xs>
+              <Grid container alignItems="center" spacing={2}>
+              <Grid item xs={4} sm={2.5} marginLeft={10}>
+                <Grid container direction="column" alignItems="flex-start" spacing={2}>
+                  <Grid item>
+                    <Typography variant="h5">{profileData.user[0].firstName}</Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="body1"><b>0</b> Posts</Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography>{profileData.user[0].bio}</Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+                <Grid item xs={4} sm={2.5} marginTop={1}>
+                  <Typography variant="body1"><b>{profileData.followers}</b> Followers</Typography>
+                </Grid>
+                <Grid item xs={4} sm={2.5} marginTop={1}>
+                  <Typography variant="body1"><b>{profileData.following}</b> Following</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </ProfilePaper>
+
+
+        </ProfileGrid>
         <RecipesSection/>
       </ProfileGrid>
     );
@@ -57,7 +89,7 @@ export default function ProfilePage() {
     body = <Typography>Error</Typography>
   }
   return (
-    <BaseHerbifyLayoutWithTitle title="Profile">
+    <BaseHerbifyLayoutWithTitle title="">
       {body}
     </BaseHerbifyLayoutWithTitle>
   );
