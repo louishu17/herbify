@@ -59,7 +59,7 @@ const DirectionsBody: React.FC = () => {
                                         color: checked.indexOf(index) !== -1 ? 'gray' : 'inherit'
                                     }}
                                 >
-                                    {direction}
+                                    {index + 1}. {direction}
                                 </Typography>
                             </ListItemButton>
                         </ListItem>
