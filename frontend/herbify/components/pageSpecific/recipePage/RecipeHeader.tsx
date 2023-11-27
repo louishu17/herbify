@@ -47,7 +47,7 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = (props: RecipeHeaderPro
                             style={{ 
                                 borderRadius: '50%', 
                                 padding: '10px', 
-                                backgroundColor: '#ADD8E6',
+                                backgroundColor: '#E7FAFE',
                                 marginBottom: '5px',
                                 width: '50px',
                                 height: '50px'
@@ -63,7 +63,7 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = (props: RecipeHeaderPro
                             style={{ 
                                 borderRadius: '50%', 
                                 padding: '10px', 
-                                backgroundColor: shared ? '#60D8BA' : '#ADD8E6',
+                                backgroundColor: shared ? '#60D8BA' : '#E7FAFE',
                                 marginBottom: '5px',
                                 width: '50px',
                                 height: '50px'
