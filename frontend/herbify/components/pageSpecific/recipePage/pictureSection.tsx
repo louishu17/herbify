@@ -10,7 +10,7 @@ export const PictureSection : React.FC = () => {
     const {data : recipeData, isLoading : isLoadingRecipeData, isError : isErrorWithRecipeData} = useBasicRecipeInfo(recipeID);
     let imageS3Filename = recipeData ? recipeData.imageS3Filename : "none";
     const {data : imageSrc, isLoading : isLoadingImg, isError : isErrorWithImg} = useImageForRecipe(imageS3Filename)
-    if (imageSrc) {
+    if (!isLoadingRecipeData && imageSrc) {
         return (
             <Image src={imageSrc ? imageSrc : ""} alt="pic" width={250} height={200} ></Image>
         );

@@ -3,3 +3,5 @@ env
 .env
 __pycache__
 .DS_Store
+food_images
+Food_Ingredients_and_Recipe_Dataset_with_Image_Name_Mapping.csv

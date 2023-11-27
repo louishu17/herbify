@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Typography, Container, Button, Box } from "@mui/material";
 import { useBasicRecipeInfo, useRecipeID } from "@/lib/recipePage/basicRecipeInfoHooks";
 import { HerbifyLoadingCircle } from "@/components/shared/loading";
-
+import Link from "next/link";
 interface RecipeHeaderProps {
 
 }
@@ -38,7 +38,9 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = (props: RecipeHeaderPro
         return (
             <Container>
                 <Typography variant="h2">{data.title}</Typography>
-                <Typography variant="h6">{data.author}</Typography>
+                <Link href={'/profile/'+data.author.split(" ")[1]}>
+                    <Typography variant="h6">{data.author}</Typography>
+                </Link>        
                 <Box display="flex" justifyContent="flex-end" alignItems="center">
                     <Box display="flex" flexDirection="column" alignItems="center" marginRight="15px">
                         <Button 
