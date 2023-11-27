@@ -2,7 +2,7 @@ from flask import current_app as app
 import json
 
 class Recipes:
-    def __init__(self, recipeID, postedByUserID, fullRecipeString, createdDate, title, caption, imageS3Filename="none"):
+    def __init__(self, recipeID, postedByUserID, fullRecipeString, createdDate, title, caption, imageS3Filename="none", row_num=0):
         self.recipeID = recipeID
         self.postedByUserID = postedByUserID
         self.createdDate = createdDate
@@ -74,6 +74,21 @@ ORDER BY "Recipes"."createdDate" DESC
 LIMIT :x
 ''',
                               x=x)
+        return [Recipes(*row) for row in rows]
+    
+    def get_ith_set_of_feed_recipes(i : int):
+        lower_limit = 8 * i
+        upper_limit = 8 * (i + 1) -1
+        rows = app.db.execute('''
+SELECT *
+FROM (
+    SELECT *, ROW_NUMBER() OVER (ORDER BY "Recipes"."createdDate" DESC) AS row_num
+    FROM "Recipes"
+) AS ranked_posts
+WHERE row_num BETWEEN :lower_limit AND :upper_limit;
+                              ''',
+                              lower_limit = lower_limit,
+                              upper_limit = upper_limit)
         return [Recipes(*row) for row in rows]
       
     @staticmethod
