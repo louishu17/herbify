@@ -22,6 +22,7 @@ interface TextFieldProps {
 export const NO_ERROR_MESSAGE = "";
 
 export const HerbifyForm: React.FC<HerbifyFormProps<any>> = (props:HerbifyFormProps<any>) => {
+
     return (
         <Container maxWidth="sm">
             <Formik
@@ -31,6 +32,7 @@ export const HerbifyForm: React.FC<HerbifyFormProps<any>> = (props:HerbifyFormPr
                     console.log("form was submitted");
                     props.handleSubmit(values);
                 }}
+                enableReinitialize={true}
             >
                 {() => (
                     <Form>
