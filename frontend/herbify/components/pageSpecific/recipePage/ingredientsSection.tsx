@@ -43,7 +43,7 @@ const IngredientsBody: React.FC = () => {
     } else if (ingredients) {
         return (
             <Container maxWidth="md">
-                <List>
+                <List sx={{ marginLeft: '-35px' }}>
                     {ingredients.ingredients.map((ingredient, index) => (
                         <ListItem key={index} disablePadding>
                             <ListItemButton role={undefined} onClick={handleToggle(ingredient)} dense>

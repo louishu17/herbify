@@ -2,6 +2,7 @@ from flask import current_app as app
 from datetime import datetime
 from flask import session
 
+
 class Users:
     def __init__(
         self,
@@ -55,24 +56,28 @@ class Users:
 
     @staticmethod
     def get_by_uid(uid):
-        rows = app.db.execute('''
+        rows = app.db.execute(
+            """
         SELECT *
         FROM \"Users\"
         WHERE uid = :uid
-        ''',
-                        uid=uid)
+        """,
+            uid=uid,
+        )
         return Users(*(rows[0])) if rows else None
-    
+
     @staticmethod
     def get_by_uid(uid):
-        rows = app.db.execute('''
+        rows = app.db.execute(
+            """
         SELECT *
         FROM \"Users\"
         WHERE uid = :uid
-        ''',
-                        uid=uid)
+        """,
+            uid=uid,
+        )
         return Users(*(rows[0])) if rows else None
-    
+
     @staticmethod
     def get_password_from_user(email):
         password = app.db.execute(
@@ -96,45 +101,49 @@ class Users:
         """
         )
         return max_uid[0][0] if max_uid[0][0] else None
-    
+
     @staticmethod
     def get_followers(curr_uid):
         print("getting num followers")
-        num_followers = app.db.execute('''
+        num_followers = app.db.execute(
+            """
         SELECT COUNT(*)
         FROM \"Follows\"
         WHERE \"followerID\" = :curr_uid
-        ''',
-                        curr_uid=curr_uid)
-        
+        """,
+            curr_uid=curr_uid,
+        )
+
         return num_followers[0][0] if num_followers else None
 
     @staticmethod
     def get_following(curr_uid):
         print("getting num following")
-        num_following = app.db.execute('''
+        num_following = app.db.execute(
+            """
         SELECT COUNT(*)
         FROM \"Follows\"
         WHERE \"followedID\" = :curr_uid
-        ''',
-                        curr_uid=curr_uid)
+        """,
+            curr_uid=curr_uid,
+        )
         return num_following[0][0] if num_following else None
 
     @staticmethod
     def to_json(curr_user):
         print("hi")
         return {
-            "uid" : curr_user.uid,
-            "firstName" : curr_user.firstName,
-            "middleName" : curr_user.middleName,
-            "lastName" : curr_user.lastName,
-            "suffix" : curr_user.suffix,
-            "dateOfBirth" : curr_user.dateOfBirth,
-            "pronouns" : curr_user.pronouns,
-            "email" : curr_user.email,
-            "phoneNumber" : curr_user.phoneNumber,
-            "creationDate" : curr_user.creationDate,
-            "bio" : curr_user.bio
+            "uid": curr_user.uid,
+            "firstName": curr_user.firstName,
+            "middleName": curr_user.middleName,
+            "lastName": curr_user.lastName,
+            "suffix": curr_user.suffix,
+            "dateOfBirth": curr_user.dateOfBirth,
+            "pronouns": curr_user.pronouns,
+            "email": curr_user.email,
+            "phoneNumber": curr_user.phoneNumber,
+            "creationDate": curr_user.creationDate,
+            "bio": curr_user.bio,
         }
 
     @staticmethod
@@ -190,7 +199,7 @@ class Users:
                 kwargs["dateOfBirth"], "%m/%d/%Y"
             ).strftime("%Y-%m-%d")
             kwargs["dateOfBirth"] = date_of_birth
-        
+
         print("date of birth parsed")
 
         try:
@@ -214,3 +223,17 @@ class Users:
         except Exception as e:
             print(f"Error updating user: {str(e)}")
             return {"error": "Failed to update user"}, 500
+
+    @staticmethod
+    def get_by_term(term: str):
+        search_term = "%" + term + "%"
+        rows = app.db.execute(
+            f"""
+SELECT *
+FROM \"Users\"
+WHERE LOWER(\"firstName\") LIKE LOWER(:term)
+        """,
+            term=search_term,
+        )
+        print("rows are " + str(rows))
+        return [Users(*row) for row in rows]

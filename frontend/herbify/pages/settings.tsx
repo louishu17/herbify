@@ -1,69 +1,97 @@
-import { BaseHerbifyLayout, BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
-import {Typography} from "@mui/material";
-import { HerbifyForm } from "@/components/shared/textForm";
-import React, {useState} from "react";
-import {object as YupObject, string as YupString} from 'yup';
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
+import { Typography } from "@mui/material";
+import { HerbifyForm } from "@/components/shared/textForm";
+import { BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
+import { HerbifyLoadingContainer } from '@/components/shared/loading';
+import { object as YupObject, string as YupString, number as YupNumber } from 'yup';
+import { useFetchProfile } from '@/lib/profileHooks';
 
 interface SetUserProfileFormValues {
     firstName: string;
     middleName: string;
     lastName: string;
     suffix: string;
-    dateOfBirth: string;
+    birthMonth: string;
+    birthDay: string;
+    birthYear: string;
     pronouns: string;
     phoneNumber: string;
     bio: string;
 }
-  
-const initialValues: SetUserProfileFormValues = {
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    suffix: "",
-    dateOfBirth: "",
-    pronouns: "",
-    phoneNumber: "",
-    bio: "",
-};
 
-const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 const setUserProfileValidationSchema = YupObject({
     firstName: YupString().required('Required'),
     middleName: YupString().notRequired(),
     lastName: YupString().required('Required'),
     suffix: YupString().notRequired(),
-    dateOfBirth: YupString().required('Required'),
+    birthMonth: YupNumber().min(1).max(12).required('Month is required'),
+    birthDay: YupNumber().min(1).max(31).required('Day is required'),
+    birthYear: YupNumber().min(1900).max(new Date().getFullYear()).required('Year is required')
+        .test('dateOfBirth', 'Date of Birth is not valid', function(value) {
+            const { birthMonth, birthDay, birthYear } = this.parent;
+            return new Date(birthYear, birthMonth - 1, birthDay).getFullYear() === birthYear;
+        }),
     pronouns: YupString().required('Required'),
     phoneNumber: YupString().matches(phoneRegExp, 'Phone number is not valid').required('Required'),
     bio: YupString().required('Required'),
 });
 
-export default function SetProfilePage(){
+export default function SetProfilePage() {
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const [initialValues, setInitialValues] = useState<SetUserProfileFormValues>({
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        suffix: '',
+        birthMonth: '',
+        birthDay: '',
+        birthYear: '',
+        pronouns: '',
+        phoneNumber: '',
+        bio: '',
+    });
 
-    // const handleSubmit = (values : RegisterFormValues) => {
-    //    setErrorMessage("Register functionality is not finished yet");
-    // }
+    const userId = 455;
+    const { data: profileData, isLoading, isError } = useFetchProfile(userId);
+
+    useEffect(() => {
+        if (profileData && profileData.user && profileData.user.length > 0) {
+            const date = new Date(profileData.user[0].dateOfBirth);
+            setInitialValues({
+                firstName: profileData.user[0].firstName,
+                middleName: profileData.user[0].middleName,
+                lastName: profileData.user[0].lastName,
+                suffix: profileData.user[0].suffix,
+                birthMonth: (date.getMonth()).toString(),
+                birthDay: date.getDate().toString(),
+                birthYear: date.getFullYear().toString(),
+                pronouns: profileData.user[0].pronouns,
+                phoneNumber: profileData.user[0].phoneNumber,
+                bio: profileData.user[0].bio,
+            });
+        }
+    }, [profileData]);
 
     const setUserProfile = async (values: SetUserProfileFormValues) => {
+        const combinedDate = `${values.birthYear}-${values.birthMonth.padStart(2, '0')}-${values.birthDay.padStart(2, '0')}`;
+        const modifiedValues = {
+            ...values,
+            dateOfBirth: combinedDate,
+        };
 
         try {
-            const response = await axios.post('http://127.0.0.1:5000/set-profile', values, {withCredentials: true});
-
+            await axios.post('http://127.0.0.1:5000/set-profile', modifiedValues, { withCredentials: true });
             setErrorMessage("User updated");
-
-            // setTimeout(() => {
-            //     window.location.href = '/login';
-            // }, 1000);
         } catch (error) {
             console.error(error);
 
-            if ((error as any).response) {
-                if ((error as any).response.status === 400) {
+            if (axios.isAxiosError(error) && error.response) {
+                if (error.response.status === 400) {
                     setErrorMessage("User with this email already exists");
-                } else if ((error as any).response.status === 500) {
+                } else if (error.response.status === 500) {
                     setErrorMessage("An error occurred during updating user");
                 }
             } else {
@@ -76,8 +104,13 @@ export default function SetProfilePage(){
         setUserProfile(values);
     };
 
-    return (
-        <BaseHerbifyLayoutWithTitle title="Set Profile">
+    let body = null;
+    if (isLoading) {
+        body = <HerbifyLoadingContainer />
+    } else if (isError) {
+        body = <Typography>Error</Typography>
+    } else if (profileData && profileData.user && profileData.user.length > 0) {
+        body = (
             <HerbifyForm
                 handleSubmit={handleSubmit}
                 initialValues={initialValues}
@@ -87,13 +120,23 @@ export default function SetProfilePage(){
                     { name: "middleName", type: "text" },
                     { name: "lastName", type: "text" },
                     { name: "suffix", type: "text" },
-                    { name: "dateOfBirth", type: "text" },
+                    { name: "birthMonth", type: "text" },
+                    { name: "birthDay", type: "text" },
+                    { name: "birthYear", type: "text" },
                     { name: "pronouns", type: "text" },
                     { name: "phoneNumber", type: "text" },
                     { name: "bio", type: "text" },
                 ]}
                 errorMessage={errorMessage}
             />
+        )
+    } else {
+        body = <Typography>No user data available</Typography>
+    }
+
+    return (
+        <BaseHerbifyLayoutWithTitle title="Set Profile">
+            {body}
         </BaseHerbifyLayoutWithTitle>
-    )
+    );
 }

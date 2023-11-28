@@ -41,7 +41,7 @@ const DirectionsBody: React.FC = () => {
     } else if (Directions) {
         return (
             <Container maxWidth="md">
-                <List>
+                <List sx={{ marginLeft: '-35px' }}>
                     {Directions.directions.map((direction, index) => (
                         <ListItem key={index} disablePadding>
                             <ListItemButton role={undefined} onClick={handleToggle(index)} dense>
