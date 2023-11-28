@@ -54,7 +54,7 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = (props: RecipeHeaderPro
                     </Link> 
                 </Box>
                 <Box display="flex" justifyContent="flex-end" alignItems="center" marginTop={-8}>
-                    <Box display="flex" flexDirection="column" alignItems="center" marginRight="15px">
+                    <Box display="flex" flexDirection="column" alignItems="center">
                         <Button 
                             style={{ 
                                 borderRadius: '50%', 
@@ -84,7 +84,8 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = (props: RecipeHeaderPro
                         >
                         <img src={shared ? '/icons/check-icon.svg' : '/icons/share-icon.svg'} alt={shared ? "Check" : "Share"} style={iconStyle}/>
                         </Button>
-                        <Typography variant="caption">
+                        <Typography variant="caption" width={140} style={{
+                            textAlign: 'center'}}>
                             {shared ? "Copied\nto\nclipboard" : "Share"}
                         </Typography>
                     </Box>
