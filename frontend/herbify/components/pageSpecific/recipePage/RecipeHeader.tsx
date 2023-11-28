@@ -16,7 +16,7 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = (props: RecipeHeaderPro
     const { data, isLoading, isError } = useBasicRecipeInfo(recipeID);
 
     
-    const avatarStyle = { width: '50px', height: '50px' };
+    const avatarStyle = { width: '50px', height: '50px', marginRight: '15px' };
 
     const iconStyle = { width: '24px', height: '24px' };
 
@@ -44,15 +44,17 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = (props: RecipeHeaderPro
         return (
             <Container>
                 <Typography variant="h2">{data.title}</Typography>
-                <Avatar 
-                    src="/static/images/avatar/1.jpg" 
-                    style={avatarStyle} 
-                />
-                <Link href={'/profile/'+data.author.split(" ")[1]}>
-                    <Typography variant="h6">{data.author}</Typography>
-                </Link>        
-                <Box display="flex" justifyContent="flex-end" alignItems="center">
-                    <Box display="flex" flexDirection="column" alignItems="center" marginRight="15px">
+                <Box display="flex" flexDirection="row">
+                    <Avatar 
+                        src="/static/images/avatar/1.jpg" 
+                        style={avatarStyle} 
+                    />
+                    <Link href={'/profile/'+data.author.split(" ")[1]}>
+                        <Typography variant="h6">{data.author}</Typography>
+                    </Link> 
+                </Box>
+                <Box display="flex" justifyContent="flex-end" alignItems="center" marginTop={-8}>
+                    <Box display="flex" flexDirection="column" alignItems="center">
                         <Button 
                             style={{ 
                                 borderRadius: '50%', 
@@ -82,7 +84,8 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = (props: RecipeHeaderPro
                         >
                         <img src={shared ? '/icons/check-icon.svg' : '/icons/share-icon.svg'} alt={shared ? "Check" : "Share"} style={iconStyle}/>
                         </Button>
-                        <Typography variant="caption">
+                        <Typography variant="caption" width={140} style={{
+                            textAlign: 'center'}}>
                             {shared ? "Copied\nto\nclipboard" : "Share"}
                         </Typography>
                     </Box>
