@@ -32,7 +32,7 @@ export const HerbifyForm: React.FC<HerbifyFormProps<any>> = ({ handleSubmit, ini
                 {() => (
                     <Form>
                         {textFields?.map((fieldProps, index) => (
-                            <div key={index} style={{ marginBottom: 4 }}>
+                            <div key={index} style={{ marginBottom: 10 }}>
                                 <Field
                                     as={TextField}
                                     type={fieldProps.type}
