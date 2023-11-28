@@ -1,6 +1,6 @@
 import React from 'react';
 import {  BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
-import { Grid, Paper, Typography, Box, Avatar } from '@mui/material';
+import { Grid, Paper, Typography, Box, Avatar, Button} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useFetchProfile, useUserID } from '@/lib/profileHooks';
 import { RecipesSection } from '@/components/pageSpecific/profile/recipesSection';
@@ -35,6 +35,17 @@ export default function ProfilePage() {
   
   const avatarStyle = { width: '100px', height: '100px' };
 
+  const { isFollowing, toggleFollow } = useFollow(userId, profileData?.user[0].id);
+
+  let followButton = null;
+  if (userId !== getSessionId()) {
+    followButton = (
+      <Button variant="contained" color="primary" onClick={toggleFollow}>
+        {isFollowing ? 'Unfollow' : 'Follow'}
+      </Button>
+    );
+  }
+
   let body = null;
   if (isLoading){
     body = <HerbifyLoadingContainer/>
@@ -62,7 +73,7 @@ export default function ProfilePage() {
                     <Typography variant="h5">{profileData.user[0].firstName}</Typography>
                   </Grid>
                   <Grid item>
-                    <Typography variant="body1"><b>0</b> Posts</Typography>
+                    <Typography variant="body1"><b>{profileData.recipes.length}</b> Posts</Typography>
                   </Grid>
                   <Grid item>
                     <Typography>{profileData.user[0].bio}</Typography>
@@ -75,6 +86,9 @@ export default function ProfilePage() {
                 <Grid item xs={4} sm={2.5} marginTop={1}>
                   <Typography variant="body1"><b>{profileData.following}</b> Following</Typography>
                 </Grid>
+              </Grid>
+              <Grid item>
+                {followButton}
               </Grid>
             </Grid>
           </Grid>
