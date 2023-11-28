@@ -32,28 +32,39 @@ const RecipeThumbnail = styled('img')({
 export default function ProfilePage() {
 
   const userId = useUserID();
-  const {data : profileData, isLoading, isError} = useFetchProfile(userId);
+  const {data : profileData, isLoading, isError, refetch } = useFetchProfile(userId);
+  const currFollowers = profileData ? profileData.followers : 0
   
   const avatarStyle = { width: '100px', height: '100px' };
 
   const { isFollowing, toggleFollow } = useFollow(userId);
   const [sessionUserId, setSessionUserId] = useState(-1);
+  const [numFollowers, setNumFollowers] = useState(0);
 
   let followButton = null;
 
   useEffect(() => {
     const getSessionId = async () => {
-      const id = 15;
+      // const id = await fetchSessionId();
+      const id = 3;
       setSessionUserId(id);
     };
 
     getSessionId();
   }, []);
 
+  const handleFollowClick = async () => {
+    // Assuming toggleFollow makes the API call and returns a promise
+    await toggleFollow();
+    // Trigger re-fetch of profile data
+    refetch();
+    console.log(profileData?.followers)
+  };
+
   
   if (userId !== -1 && sessionUserId && userId !== sessionUserId) {
     followButton = (
-      <Button variant="contained" color="primary" onClick={toggleFollow}>
+      <Button variant="contained" color="primary" onClick={handleFollowClick}>
         {isFollowing ? 'Unfollow' : 'Follow'}
       </Button>
     );
@@ -93,9 +104,9 @@ export default function ProfilePage() {
                   </Grid>
                 </Grid>
               </Grid>
-                <Grid item xs={4} sm={2.5} marginTop={1}>
-                  <Typography variant="body1"><b>{profileData.followers}</b> Followers</Typography>
-                </Grid>
+              <Grid item xs={4} sm={2.5} marginTop={1}>
+                  <Typography variant="body1"><b>{numFollowers}</b> Followers</Typography>
+              </Grid>
                 <Grid item xs={4} sm={2.5} marginTop={1}>
                   <Typography variant="body1"><b>{profileData.following}</b> Following</Typography>
                 </Grid>

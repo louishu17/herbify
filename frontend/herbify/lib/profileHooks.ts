@@ -58,21 +58,34 @@ export const useFetchProfile = (userID : number) : UseQueryResult<ProfileData> =
     return useQuery<ProfileData>("fetchProfile" + userID, () => fetchProfileData(userID));
 }
 
-// export const fetchSessionId = async () : Promise<number> => {
-//     const response = await axios.get(`http://127.0.0.1:5000/profile/session`, {withCredentials: true});
-//     if (response.status > 300){
-//         throw new Error("Error session id");
-//     } 
-//     return response.data.session_id;
-// };
+export const fetchSessionId = async () : Promise<number> => {
+    const response = await axios.get(`http://127.0.0.1:5000/session`, {withCredentials: true});
+    if (response.status > 300){
+        throw new Error("Error session id");
+    } 
+    return response.data.session_id;
+};
 
-// const fetchFollowStatus = async (profileUserId: number) : Promise<boolean> => {
-//     const response = await axios.get(`http://127.0.0.1:5000/profile/following/${profileUserId}`, {withCredentials: true});
-//     if (response.status > 300){
-//         throw new Error("Error follow status");
-//     } 
-//     return response.data;
-// };
+const fetchFollowStatus = async (profileUserId: number) : Promise<boolean> => {
+    const response = await axios.get(`http://127.0.0.1:5000/following/${profileUserId}`, {withCredentials: true});
+    if (response.status > 300){
+        throw new Error("Error follow status");
+    } 
+    return response.data.is_following;
+};
+
+const updateFollowStatus = async (profileUserId: number, newFollowStatus: boolean) => {
+    if (newFollowStatus) {
+        const response = await axios.post(`http://127.0.0.1:5000/follow/${profileUserId}`, {withCredentials: true});
+    }
+    else {
+        const response = await axios.post(`http://127.0.0.1:5000/unfollow/${profileUserId}`, {withCredentials: true});
+    }
+    // if (response.status > 300){
+    //     throw new Error("Error updating follow status");
+    // }
+};
+
 
 export const useFollow = (profileUserId: number) => {
   const [isFollowing, setIsFollowing] = useState(false);
@@ -81,8 +94,8 @@ export const useFollow = (profileUserId: number) => {
     // Initialize follow status
     // Replace this with your actual logic to check if the user is following
     const checkIfFollowing = async () => {
-    //   const followingStatus = await fetchFollowStatus(profileUserId);
-      setIsFollowing(true);
+      const followingStatus = await fetchFollowStatus(profileUserId);
+      setIsFollowing(followingStatus);
     };
 
     checkIfFollowing();
@@ -92,7 +105,7 @@ export const useFollow = (profileUserId: number) => {
     const newFollowStatus = !isFollowing;
     setIsFollowing(newFollowStatus);
     // Update the follow status in the backend
-    // await updateFollowStatus(profileUserId, newFollowStatus);
+    await updateFollowStatus(profileUserId, newFollowStatus);
   };
 
   return { isFollowing, toggleFollow };
