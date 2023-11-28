@@ -1,16 +1,22 @@
-import { useState } from 'react';
-import { Typography, Container, Button, Box } from "@mui/material";
+import React, { useEffect, useState } from 'react';
+import { Typography, Container, Button, Box, Avatar } from "@mui/material";
 import { useBasicRecipeInfo, useRecipeID } from "@/lib/recipePage/basicRecipeInfoHooks";
 import { HerbifyLoadingCircle } from "@/components/shared/loading";
 import Link from "next/link";
+import { useFetchProfile } from '@/lib/profileHooks';
+
 interface RecipeHeaderProps {
 
 }
 
 export const RecipeHeader: React.FC<RecipeHeaderProps> = (props: RecipeHeaderProps) => {
     const [shared, setShared] = useState(false);
+
     const recipeID = useRecipeID();
     const { data, isLoading, isError } = useBasicRecipeInfo(recipeID);
+
+    
+    const avatarStyle = { width: '50px', height: '50px' };
 
     const iconStyle = { width: '24px', height: '24px' };
 
@@ -38,6 +44,10 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = (props: RecipeHeaderPro
         return (
             <Container>
                 <Typography variant="h2">{data.title}</Typography>
+                <Avatar 
+                    src="/static/images/avatar/1.jpg" 
+                    style={avatarStyle} 
+                />
                 <Link href={'/profile/'+data.author.split(" ")[1]}>
                     <Typography variant="h6">{data.author}</Typography>
                 </Link>        
