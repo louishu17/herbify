@@ -1,8 +1,9 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
 import {  BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
 import { Grid, Paper, Typography, Box, Avatar, Button} from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useFetchProfile, useUserID } from '@/lib/profileHooks';
+import { useFetchProfile, useUserID, fetchSessionId, useFollow } from '@/lib/profileHooks';
 import { RecipesSection } from '@/components/pageSpecific/profile/recipesSection';
 import { HerbifyLoadingContainer } from '@/components/shared/loading';
 
@@ -35,10 +36,22 @@ export default function ProfilePage() {
   
   const avatarStyle = { width: '100px', height: '100px' };
 
-  const { isFollowing, toggleFollow } = useFollow(userId, profileData?.user[0].id);
+  const { isFollowing, toggleFollow } = useFollow(userId);
+  const [sessionUserId, setSessionUserId] = useState(-1);
 
   let followButton = null;
-  if (userId !== getSessionId()) {
+
+  useEffect(() => {
+    const getSessionId = async () => {
+      const id = 15;
+      setSessionUserId(id);
+    };
+
+    getSessionId();
+  }, []);
+
+  
+  if (userId !== -1 && sessionUserId && userId !== sessionUserId) {
     followButton = (
       <Button variant="contained" color="primary" onClick={toggleFollow}>
         {isFollowing ? 'Unfollow' : 'Follow'}

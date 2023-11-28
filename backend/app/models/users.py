@@ -130,6 +130,21 @@ class Users:
         return num_following[0][0] if num_following else None
 
     @staticmethod
+    def check_following(profile_uid):
+        print(f"checking if {profile_uid} is followed")
+        session_id = Users.get_current_user_id()
+        num_following = app.db.execute(
+            """
+        SELECT COUNT(*)
+        FROM \"Follows\"
+        WHERE \"followedID\" = :profile_uid AND \"followerID\" = :session_id
+        """,
+            profile_uid=profile_uid,
+            session_id=session_id,
+        )
+        return True if num_following else False
+
+    @staticmethod
     def to_json(curr_user):
         print("hi")
         return {

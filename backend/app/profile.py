@@ -32,3 +32,27 @@ def profile(userId):
                         'recipes' : serialized_recipes}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+
+# @profile_blueprint.route('/profile/session', methods=['GET'])
+# @cross_origin(supports_credentials=True)
+# def session():
+#     print("getting sessionID")
+#     try:
+#         user_id = Users.get_current_user_id()
+            
+#         return jsonify({'session_id': user_id}), 201
+#     except Exception as e:
+#         return jsonify({'error': str(e)}), 500
+
+
+# @profile_blueprint.route('/profile/following/<path:profileId>', methods=['GET'])
+# @cross_origin(supports_credentials=True)
+# def following(profileId):
+#     print("checking following")
+#     try:
+#         is_following = Users.check_following(profileId)
+        
+#         return jsonify({'is_following': is_following}), 201
+#     except Exception as e:
+#         return jsonify({'error': str(e)}), 500
