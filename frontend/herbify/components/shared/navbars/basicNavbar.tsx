@@ -10,8 +10,8 @@ export const BasicHerbifyNavBar : React.FC = () => {
         {text : "Create", route : "/recipes/create", icon: 'create-icon.svg'},
         {text : "Profile", route : "/profile/-1", icon: 'profile-icon.svg'},
         {text : "Settings", route : "/settings", icon: 'settings-icon.svg'},
-        {text : "Login", route : "/login", icon: 'home-icon.svg'},
-        {text : "Register", route : "/register", icon: 'home-icon.svg'}
+        {text : "Login", route : "/login", icon: 'login-icon.svg'},
+        {text : "Register", route : "/register", icon: 'register-icon.svg'}
     ];
 
     return <HerbifyNavBarGivenOptionDescriptions optionDescriptions={optionDescriptions}/>
