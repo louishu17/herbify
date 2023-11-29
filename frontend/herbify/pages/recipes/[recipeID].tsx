@@ -7,6 +7,7 @@ import {Container} from "@mui/material"
 import { IngredientsSection } from "@/components/pageSpecific/recipePage/ingredientsSection";
 import { DirectionsSection } from "@/components/pageSpecific/recipePage/directionsSection";
 import { PictureSection } from "@/components/pageSpecific/recipePage/pictureSection";
+
 export default function RecipePage() {
     const router = useRouter();
     const recipeID = useRecipeID();
