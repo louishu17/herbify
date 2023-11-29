@@ -71,7 +71,7 @@ export default function ProfilePage() {
   
   if (userId !== -1 && sessionUserId && userId !== sessionUserId) {
     followButton = (
-      <Button variant="contained" color="primary" onClick={handleFollowClick}>
+      <Button variant="outlined" color="primary" onClick={handleFollowClick}>
         {isFollowing ? 'Unfollow' : 'Follow'}
       </Button>
     );
@@ -97,25 +97,26 @@ export default function ProfilePage() {
               />
             </Grid>
             <Grid item xs>
-              <Grid container alignItems="center" spacing={2}>
-              <Grid item xs={4} sm={2.5} marginLeft={10}>
-                <Grid container direction="column" alignItems="flex-start" spacing={2}>
-                  <Grid item>
-                    <Typography variant="h5">{profileData.user[0].firstName}</Typography>
+              <Grid container direction="column" alignItems="flex-start" spacing={2}>
+                <Grid item>
+                  <Typography variant="h5">{profileData.user[0].firstName}</Typography>
+                </Grid>
+                <Grid item container justifyContent="center" spacing={2}>
+                  <Grid item xs={4} sm={2.5} container direction="column" alignItems="center">
+                    <Typography variant="h6"><b>{profileData.recipes.length}</b></Typography>
+                    <Typography variant="body2">Posts</Typography>
                   </Grid>
-                  <Grid item>
-                    <Typography variant="body1"><b>{profileData.recipes.length}</b> Posts</Typography>
+                  <Grid item xs={4} sm={2.5} container direction="column" alignItems="center">
+                    <Typography variant="h6"><b>{numFollowers}</b></Typography>
+                    <Typography variant="body2">Followers</Typography>
                   </Grid>
-                  <Grid item>
-                    <Typography>{profileData.user[0].bio}</Typography>
+                  <Grid item xs={4} sm={2.5} container direction="column" alignItems="center">
+                    <Typography variant="h6"><b>{profileData.following}</b></Typography>
+                    <Typography variant="body2">Following</Typography>
                   </Grid>
                 </Grid>
-              </Grid>
-              <Grid item xs={4} sm={2.5} marginTop={1}>
-                  <Typography variant="body1"><b>{numFollowers}</b> Followers</Typography>
-              </Grid>
-                <Grid item xs={4} sm={2.5} marginTop={1}>
-                  <Typography variant="body1"><b>{profileData.following}</b> Following</Typography>
+                <Grid item>
+                  <Typography>{profileData.user[0].bio}</Typography>
                 </Grid>
               </Grid>
               <Grid item>

@@ -46,8 +46,12 @@ export interface ProfileData {
     user : UserOnProfileData[];
 }
 
+const instance = axios.create({
+    withCredentials: true
+  })  
+
 const fetchProfileData = async (userId : number) :  Promise<ProfileData>=> {
-    const response = await axios.get(`http://127.0.0.1:5000/profile/${userId}`, {withCredentials: true});
+    const response = await instance.get(`http://127.0.0.1:5000/profile/${userId}`);
     if (response.status > 300){
         throw new Error("Error fetching profile data");
     } 
@@ -60,7 +64,7 @@ export const useFetchProfile = (userID : number) : UseQueryResult<ProfileData> =
 }
 
 export const fetchSessionId = async () : Promise<number> => {
-    const response = await axios.get(`http://127.0.0.1:5000/session`, {withCredentials: true});
+    const response = await instance.get(`http://127.0.0.1:5000/curr_session`);
     if (response.status > 300){
         throw new Error("Error session id");
     } 
@@ -68,7 +72,10 @@ export const fetchSessionId = async () : Promise<number> => {
 };
 
 const fetchFollowStatus = async (profileUserId: number) : Promise<boolean> => {
-    const response = await axios.get(`http://127.0.0.1:5000/following/${profileUserId}`, {withCredentials: true});
+    if (profileUserId === INVALID_USER_ID) {
+        return false;
+    }
+    const response = await instance.get(`http://127.0.0.1:5000/following/${profileUserId}`);
     if (response.status > 300){
         throw new Error("Error follow status");
     } 
@@ -77,10 +84,10 @@ const fetchFollowStatus = async (profileUserId: number) : Promise<boolean> => {
 
 const updateFollowStatus = async (profileUserId: number, newFollowStatus: boolean) => {
     if (newFollowStatus) {
-        const response = await axios.post(`http://127.0.0.1:5000/follow/${profileUserId}`, {withCredentials: true});
+        const response = await instance.post(`http://127.0.0.1:5000/follow/${profileUserId}`);
     }
     else {
-        const response = await axios.post(`http://127.0.0.1:5000/unfollow/${profileUserId}`, {withCredentials: true});
+        const response = await instance.post(`http://127.0.0.1:5000/unfollow/${profileUserId}`);
     }
     // if (response.status > 300){
     //     throw new Error("Error updating follow status");

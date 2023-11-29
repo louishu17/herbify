@@ -20,13 +20,7 @@ def profile(userId):
         
         user_info = Users.to_json(user)
         num_followers = Users.get_followers(user.uid)
-        print(f'user is {userId}')
-        print('num followers is:')
-        print(num_followers)
         num_following = Users.get_following(user.uid)
-        print('num following is:')
-        print(num_following)
-        
 
         recipes = Recipes.get_by_user(user.uid)
         serialized_recipes = [obj.to_json_recipe() for obj in recipes]
@@ -38,14 +32,12 @@ def profile(userId):
         return jsonify({'error': str(e)}), 500
     
 
-@profile_blueprint.route('/session', methods=['GET'])
+@profile_blueprint.route('/curr_session', methods=['GET'])
 @cross_origin(supports_credentials=True)
-def session():
+def curr_session():
     print("getting sessionID")
     try:
-        user_id = 3
-        # user_id = Users.get_current_user_id()
-        # print(user_id)
+        user_id = Users.get_current_user_id()
             
         return jsonify({'session_id': user_id}), 201
     except Exception as e:
