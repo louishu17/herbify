@@ -51,6 +51,7 @@ const fetchProfileData = async (userId : number) :  Promise<ProfileData>=> {
     if (response.status > 300){
         throw new Error("Error fetching profile data");
     } 
+    console.log(response.data);
     return response.data;
 }
 
@@ -87,7 +88,7 @@ const updateFollowStatus = async (profileUserId: number, newFollowStatus: boolea
 };
 
 
-export const useFollow = (profileUserId: number) => {
+export const useFollow = (profileUserId: number, prevNumFollowers: number, setNumFollowers: React.Dispatch<React.SetStateAction<number>>) => {
   const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
@@ -106,6 +107,11 @@ export const useFollow = (profileUserId: number) => {
     setIsFollowing(newFollowStatus);
     // Update the follow status in the backend
     await updateFollowStatus(profileUserId, newFollowStatus);
+
+    setNumFollowers((prevNumFollowers: number) =>
+        newFollowStatus ? prevNumFollowers + 1 : prevNumFollowers - 1
+    );
+
   };
 
   return { isFollowing, toggleFollow };

@@ -33,13 +33,14 @@ export default function ProfilePage() {
 
   const userId = useUserID();
   const {data : profileData, isLoading, isError, refetch } = useFetchProfile(userId);
+
   const currFollowers = profileData ? profileData.followers : 0
   
   const avatarStyle = { width: '100px', height: '100px' };
 
-  const { isFollowing, toggleFollow } = useFollow(userId);
   const [sessionUserId, setSessionUserId] = useState(-1);
   const [numFollowers, setNumFollowers] = useState(0);
+  const { isFollowing, toggleFollow } = useFollow(userId, numFollowers, setNumFollowers);
 
   let followButton = null;
 
@@ -53,12 +54,18 @@ export default function ProfilePage() {
     getSessionId();
   }, []);
 
+  useEffect(() => {
+    if (profileData) {
+      setNumFollowers(profileData.followers);
+    }
+  }, [profileData]);
+
   const handleFollowClick = async () => {
     // Assuming toggleFollow makes the API call and returns a promise
     await toggleFollow();
     // Trigger re-fetch of profile data
-    refetch();
-    console.log(profileData?.followers)
+    //refetch();
+    //console.log(profileData?.followers)
   };
 
   
