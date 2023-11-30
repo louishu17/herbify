@@ -46,8 +46,8 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const getSessionId = async () => {
-      // const id = await fetchSessionId();
-      const id = 3;
+      const id = await fetchSessionId();
+      
       setSessionUserId(id);
     };
 
