@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useQuery, UseQueryResult } from 'react-query';
+import { useState, useEffect } from 'react';
 
 const INVALID_USER_ID = -1; // Use a value that makes sense for invalid user ID in your system
 
@@ -45,14 +46,80 @@ export interface ProfileData {
     user : UserOnProfileData[];
 }
 
+const instance = axios.create({
+    withCredentials: true
+  })  
+
 const fetchProfileData = async (userId : number) :  Promise<ProfileData>=> {
-    const response = await axios.get(`http://127.0.0.1:5000/profile/${userId}`, {withCredentials: true});
+    const response = await instance.get(`http://127.0.0.1:5000/profile/${userId}`);
     if (response.status > 300){
-        throw new Error("Error fetching feed");
+        throw new Error("Error fetching profile data");
     } 
+    console.log(response.data);
     return response.data;
 }
 
 export const useFetchProfile = (userID : number) : UseQueryResult<ProfileData> => {
     return useQuery<ProfileData>("fetchProfile" + userID, () => fetchProfileData(userID));
 }
+
+export const fetchSessionId = async () : Promise<number> => {
+    const response = await instance.get(`http://127.0.0.1:5000/curr_session`);
+    if (response.status > 300){
+        throw new Error("Error session id");
+    } 
+    return response.data.session_id;
+};
+
+const fetchFollowStatus = async (profileUserId: number) : Promise<boolean> => {
+    if (profileUserId === INVALID_USER_ID) {
+        return false;
+    }
+    const response = await instance.get(`http://127.0.0.1:5000/following/${profileUserId}`);
+    if (response.status > 300){
+        throw new Error("Error follow status");
+    } 
+    return response.data.is_following;
+};
+
+const updateFollowStatus = async (profileUserId: number, newFollowStatus: boolean) => {
+    if (newFollowStatus) {
+        const response = await instance.post(`http://127.0.0.1:5000/follow/${profileUserId}`);
+    }
+    else {
+        const response = await instance.post(`http://127.0.0.1:5000/unfollow/${profileUserId}`);
+    }
+    // if (response.status > 300){
+    //     throw new Error("Error updating follow status");
+    // }
+};
+
+
+export const useFollow = (profileUserId: number, prevNumFollowers: number, setNumFollowers: React.Dispatch<React.SetStateAction<number>>) => {
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  useEffect(() => {
+    // Initialize follow status
+    // Replace this with your actual logic to check if the user is following
+    const checkIfFollowing = async () => {
+      const followingStatus = await fetchFollowStatus(profileUserId);
+      setIsFollowing(followingStatus);
+    };
+
+    checkIfFollowing();
+  }, [profileUserId]);
+
+  const toggleFollow = async () => {
+    const newFollowStatus = !isFollowing;
+    setIsFollowing(newFollowStatus);
+    // Update the follow status in the backend
+    await updateFollowStatus(profileUserId, newFollowStatus);
+
+    setNumFollowers((prevNumFollowers: number) =>
+        newFollowStatus ? prevNumFollowers + 1 : prevNumFollowers - 1
+    );
+
+  };
+
+  return { isFollowing, toggleFollow };
+};

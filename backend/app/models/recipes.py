@@ -48,7 +48,7 @@ FROM \"Recipes\"
 WHERE LOWER(title) LIKE LOWER(:term)
 ''', 
                         term=search_term)
-        print("rows are " + str(rows))
+        
         return [Recipes(*row) for row in rows]
     
     
@@ -61,8 +61,6 @@ FROM \"Recipes\"
 WHERE \"postedByUserID\" = :uid
 ''', 
                         uid=uid)
-        print(rows)
-        print("rows are " + str(rows))
         return [Recipes(*row) for row in rows]
 
     @staticmethod

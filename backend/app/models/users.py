@@ -109,7 +109,7 @@ class Users:
             """
         SELECT COUNT(*)
         FROM \"Follows\"
-        WHERE \"followerID\" = :curr_uid
+        WHERE \"followedID\" = :curr_uid
         """,
             curr_uid=curr_uid,
         )
@@ -123,15 +123,64 @@ class Users:
             """
         SELECT COUNT(*)
         FROM \"Follows\"
-        WHERE \"followedID\" = :curr_uid
+        WHERE \"followerID\" = :curr_uid
         """,
             curr_uid=curr_uid,
         )
         return num_following[0][0] if num_following else None
 
     @staticmethod
+    def check_following(profile_uid):
+        print(f"checking if {profile_uid} is followed")
+        session_id = Users.get_current_user_id()
+        num_following = app.db.execute(
+            """
+        SELECT COUNT(*)
+        FROM \"Follows\"
+        WHERE \"followedID\" = :profile_uid AND \"followerID\" = :session_id
+        """,
+            profile_uid=profile_uid,
+            session_id=session_id,
+        )
+        
+        return True if num_following[0][0] else False
+
+    @staticmethod
+    def follow(profile_uid):
+        print(f"following {profile_uid}")
+        session_id = Users.get_current_user_id()
+        if Users.check_following(profile_uid):
+            return False
+        num_following = app.db.execute(
+            """
+        INSERT INTO \"Follows\"
+                        VALUES (:session_id, :profile_uid)
+        """,
+            session_id=session_id,
+            profile_uid=profile_uid,
+        )
+        
+        return True
+    
+    @staticmethod
+    def unfollow(profile_uid):
+        print(f"following {profile_uid}")
+        session_id = Users.get_current_user_id()
+        if not Users.check_following(profile_uid):
+            return False
+        num_following = app.db.execute(
+            """
+        DELETE FROM \"Follows\"
+                        WHERE \"followedID\" = :profile_uid AND \"followerID\" = :session_id
+        """,
+            session_id=session_id,
+            profile_uid=profile_uid,
+        )
+        
+        return True
+
+    @staticmethod
     def to_json(curr_user):
-        print("hi")
         return {
             "uid": curr_user.uid,
             "firstName": curr_user.firstName,
@@ -235,5 +284,4 @@ WHERE LOWER(\"firstName\") LIKE LOWER(:term)
         """,
             term=search_term,
         )
-        print("rows are " + str(rows))
         return [Users(*row) for row in rows]
