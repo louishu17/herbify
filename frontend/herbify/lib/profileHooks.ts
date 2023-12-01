@@ -2,13 +2,13 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useQuery, UseQueryResult } from 'react-query';
 import { useState, useEffect } from 'react';
+import { User } from "@/components/pageSpecific/search/searchResultsUser";
 
 const INVALID_USER_ID = -1; // Use a value that makes sense for invalid user ID in your system
 
 export const useUserID = (): number => {
     const router = useRouter();
     const { profileID } = router.query; // Assuming the dynamic route segment is named `userId`
-    console.log(profileID);
     if (typeof profileID === 'string' && /^\d+$/.test(profileID)) {
         return parseInt(profileID);
     } else {
@@ -46,6 +46,7 @@ export interface ProfileData {
     user : UserOnProfileData[];
 }
 
+
 const instance = axios.create({
     withCredentials: true
   })  
@@ -65,6 +66,7 @@ export const useFetchProfile = (userID : number) : UseQueryResult<ProfileData> =
 
 export const fetchSessionId = async () : Promise<number> => {
     const response = await instance.get(`http://127.0.0.1:5000/curr_session`);
+    
     if (response.status > 300){
         throw new Error("Error session id");
     } 
@@ -76,6 +78,7 @@ const fetchFollowStatus = async (profileUserId: number) : Promise<boolean> => {
         return false;
     }
     const response = await instance.get(`http://127.0.0.1:5000/following/${profileUserId}`);
+    
     if (response.status > 300){
         throw new Error("Error follow status");
     } 
@@ -122,4 +125,20 @@ export const useFollow = (profileUserId: number, prevNumFollowers: number, setNu
   };
 
   return { isFollowing, toggleFollow };
+};
+
+export const fetchFollowing = async (profileUserId: number) : Promise<User[]> => {
+    const response = await instance.get(`http://127.0.0.1:5000/following_users/${profileUserId}`)
+    if (response.status > 300){
+        throw new Error("Error session id");
+    } 
+    return response.data.users;
+};
+
+export const fetchFollowedBy = async (profileUserId: number) : Promise<User[]> => {
+    const response = await instance.get(`http://127.0.0.1:5000/followed_by_users/${profileUserId}`)
+    if (response.status > 300){
+        throw new Error("Error session id");
+    } 
+    return response.data.users;
 };
