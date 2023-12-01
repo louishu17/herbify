@@ -82,7 +82,7 @@ def unfollow(profileId):
         return jsonify({'error': str(e)}), 500
     
 
-@profile_blueprint.route('/followed_by/<path:profileId>', methods=['GET'])
+@profile_blueprint.route('/followed_by_users/<path:profileId>', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def followed_by_users(profileId):
     try:
@@ -92,4 +92,16 @@ def followed_by_users(profileId):
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@profile_blueprint.route('/following_users/<path:profileId>', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def following_users(profileId):
+    try:
+        following_users = Follows.get_following_users(profileId)
+        return jsonify({'users': following_users}), 201
+        
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
     

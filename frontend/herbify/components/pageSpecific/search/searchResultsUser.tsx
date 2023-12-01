@@ -24,14 +24,14 @@ const SearchResultsUsers: React.FC<SearchResultsUsersProps> = ({ results, onClos
     return (
         <List style={{ marginLeft: '20%' }}>   
             {results.map(user => (
-                <ListItem key={user.uid} divider onClick={onClose ? () => onClose() : undefined}>
+                <ListItem key={user.uid} divider>
                     <Avatar 
                         alt={user.firstName} 
                         src="/static/images/avatar/1.jpg" 
                         style={avatarStyle}
                         sx={{ marginRight: 2 }}
                     />
-                    <Link href={`/profile/${user.uid}`} passHref>
+                    <Link onClick={onClose ? () => onClose() : undefined} href={`/profile/${user.uid}`} passHref>
                         <ListItemText primary={user.firstName} />
                     </Link>
                 </ListItem>

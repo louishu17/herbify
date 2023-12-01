@@ -85,12 +85,25 @@ class Follows:
         print(f"getting followed by {profile_uid}")
         followed_by = app.db.execute(
             '''
-        SELECT F."followerID", U."firstName"
-        FROM "Follows" F
-        JOIN "Users" U ON F."followerID" = U.uid
-        WHERE F."followedID" = :profile_uid
+        SELECT \"followerID\", \"firstName\"
+        FROM \"Follows\", \"Users\"
+        WHERE \"followedID\" = :profile_uid AND \"followerID\" = \"Users\".uid
         ''',
             profile_uid=profile_uid,
         )
         
         return [{"uid": follower.followerID, "firstName": follower.firstName} for follower in followed_by] if followed_by else None
+        
+    @staticmethod
+    def get_following_users(profile_uid):
+        print(f"getting following users for {profile_uid}")
+        following_users = app.db.execute(
+            '''
+        SELECT \"followedID\", \"firstName\"
+        FROM \"Follows\", \"Users\"
+        WHERE \"followerID\" = :profile_uid AND \"followedID\" = \"Users\".uid
+        ''',
+            profile_uid=profile_uid,
+        )
+        
+        return [{"uid": follower.followedID, "firstName": follower.firstName} for follower in following_users] if following_users else None
