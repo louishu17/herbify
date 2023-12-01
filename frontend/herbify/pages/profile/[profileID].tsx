@@ -1,13 +1,31 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import {  BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
-import { Grid, Paper, Typography, Box, Avatar, Button} from '@mui/material';
+import { Grid, Paper, Typography, Modal, Box, Avatar, Button} from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useFetchProfile, useUserID, fetchSessionId, useFollow } from '@/lib/profileHooks';
+import { useFetchProfile, useUserID, fetchSessionId, useFollow, fetchFollowedBy, fetchFollowing } from '@/lib/profileHooks';
 import { RecipesSection } from '@/components/pageSpecific/profile/recipesSection';
 import { HerbifyLoadingContainer } from '@/components/shared/loading';
+import { ProfileListModal } from '@/components/pageSpecific/profile/followModal';
+import { User } from "@/components/pageSpecific/search/searchResultsUser";
 
-
+const FollowersClickableArea = styled(Button)({
+  background: 'none',
+  border: 'none',
+  boxShadow: 'none',
+  padding: 0,
+  margin: 0,
+  textTransform: 'none',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: 'inherit', // Preserves the original text color
+  '&:hover': {
+    background: 'none',
+    color: 'inherit',
+  },
+});
 
 const ProfileGrid = styled(Grid)(({ theme }) => ({
   marginTop: theme.spacing(3),
@@ -42,6 +60,25 @@ export default function ProfilePage() {
   const [numFollowers, setNumFollowers] = useState(0);
   const { isFollowing, toggleFollow } = useFollow(userId, numFollowers, setNumFollowers);
 
+  const [openModal, setOpenModal] = useState(false);
+  const [followers, setFollowers] = useState<User[]>([]);
+
+  const handleOpenModal = async (getType: string) => {
+    let followersList: User[] = [];
+    const currId = userId === -1 ? sessionUserId : userId;
+
+    if (getType === "followers") { 
+      followersList = await fetchFollowedBy(currId)
+    }
+    if (getType === "following") { 
+      followersList = await fetchFollowing(currId)
+    }
+    setFollowers(followersList)
+    setOpenModal(true)
+  };
+  
+  const handleCloseModal = () => setOpenModal(false);
+
   let followButton = null;
 
   useEffect(() => {
@@ -61,11 +98,7 @@ export default function ProfilePage() {
   }, [profileData]);
 
   const handleFollowClick = async () => {
-    // Assuming toggleFollow makes the API call and returns a promise
     await toggleFollow();
-    // Trigger re-fetch of profile data
-    //refetch();
-    //console.log(profileData?.followers)
   };
 
   
@@ -107,12 +140,16 @@ export default function ProfilePage() {
                     <Typography variant="body2">Posts</Typography>
                   </Grid>
                   <Grid item xs={4} sm={2.5} container direction="column" alignItems="center">
-                    <Typography variant="h6"><b>{numFollowers}</b></Typography>
-                    <Typography variant="body2">Followers</Typography>
+                    <FollowersClickableArea onClick={() => handleOpenModal("followers")}>
+                      <Typography variant="h6"><b>{numFollowers}</b></Typography>
+                      <Typography variant="body2">Followers</Typography>
+                    </FollowersClickableArea>
                   </Grid>
                   <Grid item xs={4} sm={2.5} container direction="column" alignItems="center">
-                    <Typography variant="h6"><b>{profileData.following}</b></Typography>
-                    <Typography variant="body2">Following</Typography>
+                    <FollowersClickableArea onClick={() => handleOpenModal("following")}>
+                      <Typography variant="h6"><b>{profileData.following}</b></Typography>
+                      <Typography variant="body2">Following</Typography>
+                    </FollowersClickableArea>
                   </Grid>
                 </Grid>
                 <Grid item>
@@ -122,6 +159,11 @@ export default function ProfilePage() {
               <Grid item>
                 {followButton}
               </Grid>
+              <ProfileListModal 
+                open={openModal} 
+                handleClose={handleCloseModal} 
+                profiles={followers} 
+              />
             </Grid>
           </Grid>
         </ProfilePaper>
