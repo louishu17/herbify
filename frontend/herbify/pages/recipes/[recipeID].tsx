@@ -21,6 +21,24 @@ export default function RecipePage() {
     const [userLiked, setUserLiked] = useState(false);
     const [likes, setLikes] = useState(data?.numLikes || 0);
     
+    useEffect(() => {
+        // Fetch user's like status from the database
+        const fetchUserLikeStatus = async () => {
+            try {
+                const response = await getUserLikeStatusAPI(recipeID);
+                setUserLiked(response.userLiked);
+                setLikes(response.numLikes);
+            } catch (error) {
+                console.error("Failed to fetch user like status", error);
+                // Handle error appropriately
+            }
+        };
+
+        if (recipeID) {
+            fetchUserLikeStatus();
+        }
+    }, [recipeID]);
+    
     // Fetch user like status and total likes when component mounts or recipeID changes
     const handleLikeClick = async () => {
         if (userLiked) {
@@ -46,13 +64,13 @@ export default function RecipePage() {
             <Container maxWidth="lg">
                 <RecipeHeader />
                 <PictureSection/>
-                <IngredientsSection />
-                <DirectionsSection/>
-                <div>
                 <IconButton onClick={handleLikeClick} aria-label="like">
                     {userLiked ? <FavoriteIcon style={{color: "red"}} /> : <FavoriteBorderIcon />}
                 </IconButton>
                 <span>{likes} Likes</span>
+                <IngredientsSection />
+                <DirectionsSection/>
+                <div>
             </div>
             </Container>
         </BaseHerbifyLayout>

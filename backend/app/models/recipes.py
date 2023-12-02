@@ -174,6 +174,21 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
             print(e)
             app.db.rollback()
             raise e
+    
+    @staticmethod
+    def unlike_recipe(recipeID, userID):
+        print('unliking recipe')
+        try:
+            app.db.execute('''DELETE FROM \"Likes\"
+                            WHERE \"postID\" = :recipeID AND \"likedByUserID\" = :userID
+                ''',
+                            recipeID=recipeID,
+                            userID=userID)
+            print("unliked recipe")
+        except Exception as e:
+            print(e)
+            app.db.rollback()
+            raise e
 
 
 class RecipeJSONEncoder(json.JSONEncoder):

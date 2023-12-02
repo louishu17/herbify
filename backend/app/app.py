@@ -15,6 +15,7 @@ from feedRoutes.basicFeed import basic_feed_blueprint
 from feedRoutes.paginatedFeed import paginated_feed_blueprint
 from set_profile import set_profile_blueprint
 from like_recipe import like_recipe_blueprint
+from like_recipe import unlike_recipe_blueprint
 from search import search_blueprint
 from profile import profile_blueprint
 from flask_cors import CORS, cross_origin
@@ -50,6 +51,7 @@ app.register_blueprint(directions_blueprint)
 app.register_blueprint(basicInfo_blueprint)
 app.register_blueprint(profile_blueprint)
 app.register_blueprint(like_recipe_blueprint)
+app.register_blueprint(unlike_recipe_blueprint)
 
 setup_db_connection(app)
 setup_swagger(app)
