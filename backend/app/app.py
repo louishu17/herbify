@@ -15,10 +15,10 @@ from feedRoutes.basicFeed import basic_feed_blueprint
 from feedRoutes.paginatedFeed import paginated_feed_blueprint
 from leaderboard.leaderboardRoute import leaderboard_blueprint
 from searchRoutes.paginatedSearch import paginated_search_blueprint
+from searchRoutes.basicSearch import basic_search_blueprint
 from set_profile import set_profile_blueprint
 from like_recipe import like_recipe_blueprint
 from like_recipe import unlike_recipe_blueprint
-from search import search_blueprint
 from profile import profile_blueprint
 from flask_cors import CORS, cross_origin
 from flask_session import Session
@@ -47,7 +47,7 @@ app.register_blueprint(create_recipe_blueprint)
 app.register_blueprint(basic_feed_blueprint)
 app.register_blueprint(paginated_feed_blueprint)
 app.register_blueprint(set_profile_blueprint)
-app.register_blueprint(search_blueprint)
+app.register_blueprint(basic_search_blueprint)
 app.register_blueprint(ingredients_blueprint)
 app.register_blueprint(directions_blueprint)
 app.register_blueprint(basicInfo_blueprint)

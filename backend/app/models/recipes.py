@@ -66,7 +66,6 @@ WHERE recipeID = :recipeID
                 ''', 
                             term=search_term)
         
-        print(rows)
         return [Recipes(*row) for row in rows]
     
     
