@@ -21,7 +21,7 @@ def feed(pageNum):
         return jsonify({'error': str(e)}), 500
 
 @paginated_feed_blueprint.route('/customized_feed/<int:pageNum>', methods=['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def customized_feed(pageNum):
     print("getting customized feed")
 
