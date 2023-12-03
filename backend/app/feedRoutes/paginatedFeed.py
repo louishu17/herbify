@@ -13,6 +13,7 @@ def feed(pageNum):
 
     try:
         recipes = Recipes.get_ith_set_of_feed_recipes(pageNum)
+        print(recipes)
         serialized_objects = [obj.to_feed_json() for obj in recipes]
 
         return jsonify({'descriptions' : serialized_objects}), 201

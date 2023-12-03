@@ -24,34 +24,34 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
 
     const info = props.info;
 
-    // useEffect(() => {
-    //     if (data) {
-    //         setUserLiked(data.userLiked);
-    //         setLikes(data.numLikes);
-    //     }
-    // }, [data]);
+    useEffect(() => {
+        if (info) {
+            setUserLiked(info.userLiked);
+            setLikes(info.numLikes);
+        }
+    }, [info]);
 
-    // const handleLikeClick = () => {
-    //     if (userLiked) {
-    //         // User has already liked the recipe, so unlike it
-    //         unlike(info.id, {
-    //             onSuccess: () => {
-    //                 console.log("unliked");
-    //                 setUserLiked(false);
-    //                 setLikes(likes => likes - 1);
-    //             }
-    //         });
-    //     } else {
-    //         // User hasn't liked the recipe, so like it
-    //         like(info.id, {
-    //             onSuccess: () => {
-    //                 console.log("liked");
-    //                 setUserLiked(true);
-    //                 setLikes(likes => likes + 1);
-    //             }
-    //         });
-    //     }
-    // };
+    const handleLikeClick = () => {
+        if (userLiked) {
+            // User has already liked the recipe, so unlike it
+            unlike(info.id, {
+                onSuccess: () => {
+                    console.log("unliked");
+                    setUserLiked(false);
+                    setLikes(likes => likes - 1);
+                }
+            });
+        } else {
+            // User hasn't liked the recipe, so like it
+            like(info.id, {
+                onSuccess: () => {
+                    console.log("liked");
+                    setUserLiked(true);
+                    setLikes(likes => likes + 1);
+                }
+            });
+        }
+    };
 
     
     const borderRadiusValue = '5px'; 
@@ -78,9 +78,9 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                             <Typography variant="body2" color="text.secondary" noWrap>
                                 {info.caption}
                             </Typography>
-                            {/* <IconButton onClick={handleLikeClick}>
+                            <IconButton onClick={handleLikeClick}>
                                 <FavoriteBorderIcon />
-                            </IconButton> */}
+                            </IconButton>
                         </CardContent>
                     </CardActionArea>
                 </Card>

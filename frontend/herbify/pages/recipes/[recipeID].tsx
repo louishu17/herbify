@@ -20,7 +20,6 @@ export default function RecipePage() {
     const { mutate: like } = useLikeRecipe();
     const { mutate: unlike } = useUnlikeRecipe();
   
-
     const [userLiked, setUserLiked] = useState(false);
     const [likes, setLikes] = useState(0);
 

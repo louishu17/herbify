@@ -9,6 +9,8 @@ class Recipes:
         self.title = title
         self.caption = caption
         self.imageS3Filename = imageS3Filename
+        self.numLikes = numLikes
+        self.userLiked = userLiked
         
 
     def to_feed_json(self):
@@ -16,7 +18,9 @@ class Recipes:
             "id" : self.recipeID,
             "title" : self.title,
             "caption" : self.caption,
-            "imageS3Filename" : self.imageS3Filename
+            "imageS3Filename" : self.imageS3Filename,
+            "numLikes": self.numLikes,
+            "userLiked": self.userLiked
         }
     
     def to_json_recipe(self):
@@ -74,6 +78,7 @@ LIMIT :x
                               x=x)
         return [Recipes(*row) for row in rows]
     
+    @staticmethod
     def get_ith_set_of_feed_recipes(i : int):
         lower_limit = 8 * i
         upper_limit = 8 * (i + 1) -1
@@ -88,7 +93,24 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
                               lower_limit = lower_limit,
                               upper_limit = upper_limit)
         
-        return [Recipes(*row) for row in rows]
+        num_likes_results = app.db.execute('''
+SELECT COUNT(*)
+FROM \"Likes\"
+WHERE \"postID\" = :recipeID
+''',
+                              recipeID=recipeID)
+
+        # Extract the number of likes from the query result
+        num_likes = num_likes_results[0][0] if num_likes_results else 0
+        print("num likes is " + str(num_likes))
+
+        user_liked_recipe = Users.check_user_liked_recipe(recipeID=recipeID)
+        print("user liked recipe is " + str(user_liked_recipe))
+
+        if rows:
+            recipe = Recipes(*(rows[0]), numLikes = num_likes, userLiked = user_liked_recipe)
+        else:
+            return None
       
     @staticmethod
     def get_last_recipe_id():
@@ -133,7 +155,7 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
                     ''',
                                 recipeID=recipeID,
                                 ingredient=ingredient)
-            print("added ingredients")
+            ("added ingredients")
 
         except Exception as e:
             print(e)
