@@ -3,10 +3,10 @@ from models.recipes import Recipes, RecipeJSONEncoder
 from flask_cors import cross_origin
 from models.users import Users
 
-search_blueprint = Blueprint("search", __name__)
+basic_search_blueprint = Blueprint("search", __name__)
 
 
-@search_blueprint.route("/search", methods=["GET"])
+@basic_search_blueprint.route("/search", methods=["GET"])
 @cross_origin()
 def search():
     print("getting search")
@@ -21,7 +21,7 @@ def search():
         return jsonify({"error": str(e)}), 500
 
 
-@search_blueprint.route("/search_user", methods=["GET"])
+@basic_search_blueprint.route("/search_user", methods=["GET"])
 @cross_origin()
 def search_user():
     print("getting search for user")
