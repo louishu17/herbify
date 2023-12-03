@@ -1,6 +1,7 @@
 from flask import request, jsonify, Blueprint
 from models.recipes import Recipes, RecipeJSONEncoder
 from flask_cors import cross_origin
+from feedRoutes.feedFetcher import FeedFetcher
 
 basic_feed_blueprint = Blueprint('basic feed', __name__)
 
@@ -10,7 +11,7 @@ def feed():
     print("getting feed")
 
     try:
-        recipes = Recipes.get_x_most_recent(8)
+        recipes = FeedFetcher.get_x_most_recent(8)
         serialized_objects = [obj.to_feed_json() for obj in recipes]
 
         return jsonify({'descriptions' : serialized_objects}), 201
