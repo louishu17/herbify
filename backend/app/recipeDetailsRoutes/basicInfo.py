@@ -7,7 +7,7 @@ from flask_cors import cross_origin
 basicInfo_blueprint = Blueprint('basicInfo_blueprint', __name__)
 
 @basicInfo_blueprint.route('/recipe/<int:recipeID>/basicInfo', methods=['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def feed(recipeID):
     print(f"Getting basicInfo for recipe {recipeID}")
     # You can use 'recipeID' in your code to fetch specific basicInfo
@@ -21,6 +21,6 @@ def feed(recipeID):
     try:
         recipe = BasicRecipeInfo.get(recipeID)
         
-        return jsonify({'title' : recipe.title, 'author' : 'User ' + str(recipe.postedByUserID), 'dateCreated' : recipe.createdDate, 'imageS3Filename': recipe.imageS3Filename}), 201
+        return jsonify({'title' : recipe.title, 'author' : 'User ' + str(recipe.postedByUserID), 'dateCreated' : recipe.createdDate, 'imageS3Filename': recipe.imageS3Filename, 'numLikes': recipe.numLikes, 'userLiked': recipe.userLiked}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
