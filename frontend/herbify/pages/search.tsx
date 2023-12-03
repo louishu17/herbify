@@ -6,7 +6,7 @@ import {object as YupObject, string as YupString} from 'yup';
 import axios from 'axios';
 import { SearchBar } from "@/components/pageSpecific/search/searchBar"; 
 import { SearchResults } from "@/components/pageSpecific/search/searchResultsRecipe"; 
-import { SearchResultsUsers } from "@/components/pageSpecific/search/searchResultsUser"; 
+import { SearchPageUsersResults } from "@/components/pageSpecific/search/searchResultsUser"; 
 import { useFetchPaginatedSearchRecipeByTerm } from "@/lib/searchPage/searchByTermHooks";
 import { useFetchPaginatedSearchUserByTerm } from "@/lib/searchPage/searchUserByTermHooks";
 
@@ -38,7 +38,7 @@ export default function SearchPage(){
                 <Tab label="Search Users"/>
             </Tabs>
             <SearchBar onSearchSubmit={handleSearchSubmit}/>
-            {currentTabIndex === 0 ? <SearchResults  /> : <SearchResultsUsers />}   
+            {currentTabIndex === 0 ? <SearchResults  /> : <SearchPageUsersResults />}   
               
         </BaseHerbifyLayoutWithTitle>
     )

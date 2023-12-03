@@ -80,31 +80,6 @@ WHERE \"postedByUserID\" = :uid
                         uid=uid)
         return [Recipes(*row) for row in rows]
 
-    @staticmethod
-    def get_x_most_recent(x: int):
-        rows = app.db.execute('''
-SELECT *
-FROM "Recipes"
-ORDER BY "Recipes"."createdDate" DESC
-LIMIT :x
-''',
-                              x=x)
-        return [Recipes(*row) for row in rows]
-    
-    def get_ith_set_of_feed_recipes(i : int):
-        lower_limit = 8 * i
-        upper_limit = 8 * (i + 1) -1
-        rows = app.db.execute('''
-SELECT *
-FROM (
-    SELECT *, ROW_NUMBER() OVER (ORDER BY "Recipes"."createdDate" DESC) AS row_num
-    FROM "Recipes"
-) AS ranked_posts
-WHERE row_num BETWEEN :lower_limit AND :upper_limit;
-                              ''',
-                              lower_limit = lower_limit,
-                              upper_limit = upper_limit)
-        return [Recipes(*row) for row in rows]
       
     @staticmethod
     def get_last_recipe_id():
