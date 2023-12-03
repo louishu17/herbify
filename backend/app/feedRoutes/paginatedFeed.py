@@ -8,7 +8,7 @@ paginated_feed_blueprint = Blueprint('paginated feed', __name__)
 
     
 @paginated_feed_blueprint.route('/feed/<int:pageNum>', methods=['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def feed(pageNum):
     print("getting feed")
 

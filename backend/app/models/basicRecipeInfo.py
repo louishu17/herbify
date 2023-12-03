@@ -39,32 +39,15 @@ WHERE \"postID\" = :recipeID
 ''',
                               recipeID=recipeID)
 
-        # Check if the current user has liked the recipe
-        user_id = Users.get_current_user_id()
-        if user_id:
-            print("current user id is " + str(user_id))
-            user_liked_recipe_result = app.db.execute('''
-    SELECT * FROM \"Likes\"
-    WHERE \"postID\" = :recipeID AND \"likedByUserID\" = :userID
-    ''',
-                                recipeID=recipeID, userID=user_id)
-            # if there is a row from user_liked_recipe_result, then the user has liked the recipe
-            if user_liked_recipe_result:
-                user_liked_recipe_result = True
-            else:
-                user_liked_recipe_result = False
-            
-        else:
-            print("no current user")
-            user_liked_recipe_result = False
-
-
         # Extract the number of likes from the query result
         num_likes = num_likes_results[0][0] if num_likes_results else 0
 
+        # Check if User has liked message
+        user_liked_recipe = Users.check_user_liked_recipe(recipeID=recipeID)
+
         if rows:
             # Combine the recipe info with the number of likes
-            recipe_info = BasicRecipeInfo(*(rows[0]), numLikes = num_likes, userLiked = user_liked_recipe_result)
+            recipe_info = BasicRecipeInfo(*(rows[0]), numLikes = num_likes, userLiked = user_liked_recipe)
             return recipe_info
         else:
             return None
