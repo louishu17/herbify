@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import {Container, Typography} from '@mui/material';
+import {Container, Typography, Stack} from '@mui/material';
 import { BasicHerbifyNavBar } from '../navbars/basicNavbar';
 import Footer from '../footer';
 
@@ -9,13 +9,13 @@ interface BaseLayoutProps {
 
 export const BaseHerbifyLayout : React.FC<BaseLayoutProps> = (props:BaseLayoutProps) => {
     return (
-        <Container maxWidth={false} style={{alignItems : 'center', display: 'flex', flexDirection: 'row', justifyContent : 'center'}} component="main">
+        <Stack direction="row" style={{justifyContent : 'center'}} component="main">
             <BasicHerbifyNavBar/>
             <div>
                 {props.children ? props.children : null}
             </div>
             <Footer/>
-        </Container>
+        </Stack>
     )
 
 }
