@@ -40,7 +40,7 @@ WHERE \"postID\" = :recipeID
                               recipeID=recipeID)
 
         # Check if the current user has liked the recipe
-        current_user_email = session.get("user")
+        current_user_email = session['user']
         if current_user_email:
             current_user = Users.get(current_user_email).uid
             user_liked_recipe_result = app.db.execute('''

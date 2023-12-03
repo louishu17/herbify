@@ -9,6 +9,7 @@ export interface BasicRecipeInfo{
     cookTime : number;
     imageS3Filename : string;
     numLikes: number;
+    userLiked: boolean;
 }
 
 
@@ -21,7 +22,8 @@ export default function getBasicRecipeInfo(req: NextApiRequest, res: NextApiResp
             dateCreated : new Date(2023, 5, 1, 0, 39),
             cookTime : 30,
             imageS3Filename : INVALID_S3_FILENAME,
-            numLikes: 0
+            numLikes: 0,
+            userLiked: false
         })
 
     }, 100);
