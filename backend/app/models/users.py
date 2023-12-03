@@ -18,6 +18,7 @@ class Users:
         phoneNumber=None,
         creationDate=None,
         bio=None,
+        row_num=None
     ):
         self.uid = uid
         self.firstName = firstName
@@ -197,16 +198,31 @@ class Users:
             return {"error": "Failed to update user"}, 500
 
     @staticmethod
-    def get_by_term(term: str):
+    def get_by_term(term: str, paginated=False, pageNum=0):
         search_term = "%" + term + "%"
-        rows = app.db.execute(
-            f"""
-SELECT *
-FROM \"Users\"
-WHERE LOWER(\"firstName\") LIKE LOWER(:term)
-        """,
-            term=search_term,
-        )
+        if paginated:
+            lower_limit = 8 * pageNum
+            upper_limit = 8 * (pageNum + 1) -1
+            rows = app.db.execute('''
+                SELECT *
+                FROM (
+                    SELECT *, ROW_NUMBER() OVER (ORDER BY \"Users\".\"firstName\" DESC) AS row_num
+                    FROM \"Users\"
+                    WHERE LOWER(\"firstName\") LIKE LOWER(:term)
+                ) AS ranked_posts
+                WHERE row_num BETWEEN :lower_limit AND :upper_limit;
+                              ''',
+                              term=search_term,
+                              lower_limit = lower_limit,
+                              upper_limit = upper_limit)
+        else :
+            rows = app.db.execute(f"""
+                SELECT *
+                FROM \"Users\"
+                WHERE LOWER(\"firstName\") LIKE LOWER(:term)
+                        """,
+                            term=search_term,
+                        )
         return [Users(*row) for row in rows]
     
 
