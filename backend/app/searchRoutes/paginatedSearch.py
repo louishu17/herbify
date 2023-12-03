@@ -29,7 +29,7 @@ def search_user(pageNum):
     try:
         args = request.args
         term = args.get("term")
-        users = Users.get_by_term(term)
+        users = Users.get_by_term(term, paginated=True, pageNum=pageNum)
         serialized_users = [Users.to_json(obj) for obj in users]
         return jsonify({"results": serialized_users}), 201
     except Exception as e:

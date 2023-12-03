@@ -1,13 +1,15 @@
 import React from 'react';
-import { List, ListItem, ListItemText, Typography, Avatar } from '@mui/material';
+import { List, ListItem, ListItemText, Typography, Avatar, Button } from '@mui/material';
 import Link from "next/link";
+import { useFetchPaginatedSearchUserByTerm, INITIAL_TERM } from '@/lib/searchPage/searchUserByTermHooks';
+import { HerbifyLoadingCircle } from '@/components/shared/loading';
 
 export interface User {
     uid: number;
     firstName: string;
 }
 
-interface SearchResultsUsersProps {
+export interface SearchResultsUsersProps {
   results: User[];
   onClose?: () => void;
 }
@@ -16,27 +18,41 @@ const avatarStyle = {
     // Define your avatar styles here
 };
 
-const SearchResultsUsers: React.FC<SearchResultsUsersProps> = ({ results, onClose }) => {
-    if (results === null || results.length === 0) {
-        return <Typography>No users found.</Typography>;
+const SearchResultsUsers: React.FC = () => {
+    const {data : {results}, isLoading, isFetchingNextPage, loadMore, isError, term} = useFetchPaginatedSearchUserByTerm();
+    const atLeastOneLoad = term !== INITIAL_TERM && !isLoading && !isFetchingNextPage;
+    if (results.length === 0 && atLeastOneLoad) {
+        return <Typography>No Users found.</Typography>;
     }
 
+
     return (
-        <List style={{ marginLeft: '20%' }}>   
-            {results.map(user => (
-                <ListItem key={user.uid} divider>
-                    <Avatar 
-                        alt={user.firstName} 
-                        src="/static/images/avatar/1.jpg" 
-                        style={avatarStyle}
-                        sx={{ marginRight: 2 }}
-                    />
-                    <Link onClick={onClose ? () => onClose() : undefined} href={`/profile/${user.uid}`} passHref>
-                        <ListItemText primary={user.firstName} />
-                    </Link>
-                </ListItem>
-            ))}
-        </List>
+        <>
+            <List style={{ marginLeft: '20%' }}>   
+                {results.map(user => (
+                    <ListItem key={user.uid} divider>
+                        <Avatar 
+                            alt={user.firstName} 
+                            src="/static/images/avatar/1.jpg" 
+                            style={avatarStyle}
+                            sx={{ marginRight: 2 }}
+                        />
+                        <Link  href={`/profile/${user.uid}`} passHref>
+                            <ListItemText primary={user.firstName} />
+                        </Link>
+                    </ListItem>
+                ))}
+            </List>
+            {isLoading || isFetchingNextPage ? <Typography align="center"><HerbifyLoadingCircle/></Typography> : null}
+            {isError ? <Typography align="center">An Error Occurred</Typography> : null}
+            {atLeastOneLoad ? 
+                <Button onClick={() => loadMore()}>
+                    <Typography align="center">Load More</Typography>
+                </Button> 
+                : 
+                null
+            } 
+        </>
     );
 }
 

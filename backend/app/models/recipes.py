@@ -46,7 +46,6 @@ WHERE recipeID = :recipeID
         if paginated:
             lower_limit = 8 * pageNum
             upper_limit = 8 * (pageNum + 1) -1
-            print("limits: " + str(lower_limit) + str(upper_limit))
             rows = app.db.execute('''
                 SELECT *
                 FROM (
