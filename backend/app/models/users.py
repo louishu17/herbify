@@ -213,10 +213,8 @@ WHERE LOWER(\"firstName\") LIKE LOWER(:term)
     @staticmethod
     def check_user_liked_recipe(recipeID: int):
         # Check if the current user has liked the recipe
-        print("checking if user liked recipe " + str(recipeID))
         user_id = Users.get_current_user_id()
         if user_id:
-            print("current user id is " + str(user_id))
             user_liked_recipe_result = app.db.execute('''
     SELECT * FROM \"Likes\"
     WHERE \"postID\" = :recipeID AND \"likedByUserID\" = :userID
@@ -229,7 +227,6 @@ WHERE LOWER(\"firstName\") LIKE LOWER(:term)
                 user_liked_recipe_result = False
             
         else:
-            print("no current user")
             user_liked_recipe_result = False
         
         return user_liked_recipe_result

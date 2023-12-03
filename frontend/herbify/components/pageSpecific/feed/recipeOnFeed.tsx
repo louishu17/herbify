@@ -1,5 +1,5 @@
 import { RecipeInfoFromFeed } from "@/pages/api/feed";
-import { Avatar, Typography, Box, Stack, Link as MuiLink, Card, CardActionArea, CardContent, CardMedia, IconButton } from "@mui/material";
+import { Avatar, Typography, Box, Stack, Link as MuiLink, Card, CardActionArea, CardContent, CardMedia, IconButton, CardActions } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useImageForRecipe } from "@/lib/imageHooks";
@@ -56,36 +56,40 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
 
     
     const borderRadiusValue = '5px'; 
-
     return (
-        <Card sx={{ width: 275, m: 2, boxShadow: 3, borderRadius: borderRadiusValue }}>
-            <CardActionArea>
+        <Card sx={{ width: '100%', maxWidth: 345, m: 2, boxShadow: 3, borderRadius: borderRadiusValue }}>
+            <Box sx={{ position: 'relative' }}>
                 <Link href={`/recipes/${info.id}`} passHref>
                     <MuiLink underline="none">
                         <CardMedia sx={{ borderRadius: borderRadiusValue }}>
                             <ImageToDisplay imageSrc={imageSrc ?? ""} isLoading={isLoadingImg} isError={isErrorLoadingImg} />
                         </CardMedia>
+                        <CardContent>
+                            <Stack direction="row" spacing={2} marginBottom={2} alignItems="center">
+                                <Avatar
+                                    src={imageSrc}
+                                    alt="Profile Picture"
+                                    sx={{ width: 50, height: 50, borderRadius: borderRadiusValue }}
+                                />
+                                <Typography variant="h6" noWrap>
+                                    {info.title}
+                                </Typography>
+                            </Stack>
+                            <Typography variant="body2" color="text.secondary" noWrap>
+                                {info.caption}
+                            </Typography>
+                        </CardContent>
                     </MuiLink>
                 </Link>
-                <CardContent>
-                    <Stack direction="row" spacing={2} marginBottom={2} alignItems="center">
-                        <Avatar
-                            src={imageSrc}
-                            alt="Profile Picture"
-                            sx={{ width: 50, height: 50, borderRadius: borderRadiusValue }}
-                        />
-                        <Typography variant="h6" noWrap>
-                            {info.title}
-                        </Typography>
-                    </Stack>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                        {info.caption}
-                    </Typography>
-                    <IconButton onClick={handleLikeClick} aria-label="like" disabled={isLoadingImg}>
-                        {userLiked ? <FavoriteIcon style={{color: "red"}} /> : <FavoriteBorderIcon />}
-                    </IconButton>   
-                </CardContent>
-            </CardActionArea>
+                <CardActions disableSpacing>
+                            <IconButton onClick={handleLikeClick} aria-label="add to favorites" disabled={isLoadingImg}>
+                                {userLiked ? <FavoriteIcon style={{color: "red"}} /> : <FavoriteBorderIcon />}
+                            </IconButton>
+                            <Typography variant="body2" color="text.secondary">
+                                {likes} Likes
+                            </Typography>
+                </CardActions>
+            </Box>
         </Card>
     );
 

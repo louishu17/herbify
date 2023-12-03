@@ -99,7 +99,6 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
 
         for row in rows:
             recipeID = row[0]  #recipe ID is the first element in the row
-            print(recipeID)
 
             # Query for number of likes
             num_likes_results = app.db.execute('''
@@ -109,22 +108,16 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
     ''',
                                 recipeID=recipeID)
             num_likes = num_likes_results[0][0] if num_likes_results else 0
-            print("num likes")
-            print(num_likes)
 
             # Check if User has liked message
             try:
                 user_liked_recipe = Users.check_user_liked_recipe(recipeID)
-                print("User liked recipe:", user_liked_recipe)
+                # print("User liked recipe:", user_liked_recipe)
             except Exception as e:
                 print("Error checking if user liked recipe:", e)
 
-            print("user liked recipe")
-            print(user_liked_recipe)
-
             # Create a recipe object with likes and userLiked information
             recipe_info = Recipes(*row, numLikes=num_likes, userLiked=user_liked_recipe)
-            print("recipe info")
             recipe_list.append(recipe_info)
 
         return recipe_list
