@@ -97,47 +97,26 @@ LIMIT :x
         return [Recipes(*row) for row in rows]
     
     @staticmethod
-    def get_ith_set_of_feed_recipes(i : int):
-        print("getting ith set of feed recipes")
-        lower_limit = 8 * i
-        upper_limit = 8 * (i + 1) -1
-        rows = app.db.execute('''
-SELECT *
-FROM (
-    SELECT *, ROW_NUMBER() OVER (ORDER BY "Recipes"."createdDate" DESC) AS row_num
-    FROM "Recipes"
-) AS ranked_posts
-WHERE row_num BETWEEN :lower_limit AND :upper_limit;
-                              ''',
-                              lower_limit = lower_limit,
-                              upper_limit = upper_limit)
+    def get_likes_info(recipeID: int):
+        print("getting likes info")
+        # Query for number of likes
+        num_likes_results = app.db.execute('''
+SELECT COUNT(*)
+FROM \"Likes\"
+WHERE \"postID\" = :recipeID
+''',
+                            recipeID=recipeID)
+        num_likes = num_likes_results[0][0] if num_likes_results else 0
+        print("num likes:", num_likes)
 
-        recipe_list = []
-
-        for row in rows:
-            recipeID = row[0]  #recipe ID is the first element in the row
-
-            # Query for number of likes
-            num_likes_results = app.db.execute('''
-    SELECT COUNT(*)
-    FROM \"Likes\"
-    WHERE \"postID\" = :recipeID
-    ''',
-                                recipeID=recipeID)
-            num_likes = num_likes_results[0][0] if num_likes_results else 0
-
-            # Check if User has liked message
-            try:
-                user_liked_recipe = Users.check_user_liked_recipe(recipeID)
-                # print("User liked recipe:", user_liked_recipe)
-            except Exception as e:
-                print("Error checking if user liked recipe:", e)
-
-            # Create a recipe object with likes and userLiked information
-            recipe_info = Recipes(*row, numLikes=num_likes, userLiked=user_liked_recipe)
-            recipe_list.append(recipe_info)
-
-        return recipe_list
+        # Check if User has liked message
+        try:
+            user_liked_recipe = Users.check_user_liked_recipe(recipeID)
+            print("User liked recipe:", user_liked_recipe)
+        except Exception as e:
+            print("Error checking if user liked recipe:", e)
+            user_liked_recipe = False
+        return (num_likes, user_liked_recipe)
     @staticmethod
     def get_last_recipe_id():
         print("getting last recipe id")

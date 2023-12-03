@@ -22,6 +22,7 @@ class FeedFetcher:
             LIMIT :x
             ''',
                               x=x)
+
         return [Recipes(*row) for row in rows]
     
     def get_ith_set_of_most_recent_feed_recipes(i : int):
@@ -37,7 +38,20 @@ class FeedFetcher:
                               ''',
                               lower_limit = lower_limit,
                               upper_limit = upper_limit)
-        return [Recipes(*row) for row in rows]
+
+        recipe_info_list = []
+        for row in rows:
+            recipeID = row[0]
+
+            likes_info = Recipes.get_likes_info(recipeID)
+            num_likes = likes_info[0]
+            user_liked = likes_info[1]
+            print(likes_info)
+            recipe_info = Recipes(*row, numLikes=num_likes, userLiked=user_liked)
+            recipe_info_list.append(recipe_info)
+            print(row)
+
+        return recipe_info_list
 
     def get_ith_set_of_most_recent_feed_recipes_from_ppl_you_follow(i : int):
         uid = Users.get_current_user_id()
@@ -60,8 +74,20 @@ class FeedFetcher:
                               uid = uid,
                               lower_limit = lower_limit,
                               upper_limit = upper_limit)
-                              
-        return [Recipes(*row) for row in rows]
+
+        recipe_info_list = []
+        for row in rows:
+            recipeID = row[0]
+
+            likes_info = Recipes.get_likes_info(recipeID)
+            num_likes = likes_info[0]
+            user_liked = likes_info[1]
+            print(likes_info)
+
+            recipe_info = Recipes(*row, numLikes=num_likes, userLiked=user_liked)
+            recipe_info_list.append(recipe_info)
+
+        return recipe_info_list
     
 
     
