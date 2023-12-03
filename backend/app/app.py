@@ -13,6 +13,7 @@ from recipeDetailsRoutes.directions import directions_blueprint
 from recipeDetailsRoutes.ingredients import ingredients_blueprint
 from feedRoutes.basicFeed import basic_feed_blueprint
 from feedRoutes.paginatedFeed import paginated_feed_blueprint
+from leaderboard.leaderboardRoute import leaderboard_blueprint
 from set_profile import set_profile_blueprint
 from search import search_blueprint
 from profile import profile_blueprint
@@ -48,6 +49,7 @@ app.register_blueprint(ingredients_blueprint)
 app.register_blueprint(directions_blueprint)
 app.register_blueprint(basicInfo_blueprint)
 app.register_blueprint(profile_blueprint)
+app.register_blueprint(leaderboard_blueprint)
 
 setup_db_connection(app)
 setup_swagger(app)
