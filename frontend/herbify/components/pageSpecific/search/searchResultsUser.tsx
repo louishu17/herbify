@@ -18,7 +18,29 @@ const avatarStyle = {
     // Define your avatar styles here
 };
 
-const SearchResultsUsers: React.FC = () => {
+
+export const UsersList : React.FC<SearchResultsUsersProps>  = (props : SearchResultsUsersProps) => {
+    return (
+        <List style={{ marginLeft: '20%' }}>   
+            {props.results && props.results.map(user => (
+                <ListItem key={user.uid} divider>
+                    <Avatar 
+                        alt={user.firstName} 
+                        src="/static/images/avatar/1.jpg" 
+                        style={avatarStyle}
+                        sx={{ marginRight: 2 }}
+                    />
+                    <Link onClick={props.onClose ? props.onClose : () => {}} href={`/profile/${user.uid}`} passHref>
+                        <ListItemText primary={user.firstName} />
+                    </Link>
+                </ListItem>
+            ))}
+        </List>
+    );
+
+}
+
+export const SearchPageUsersResults: React.FC = () => {
     const {data : {results}, isLoading, isFetchingNextPage, loadMore, isError, term} = useFetchPaginatedSearchUserByTerm();
     const atLeastOneLoad = term !== INITIAL_TERM && !isLoading && !isFetchingNextPage;
     if (results.length === 0 && atLeastOneLoad) {
@@ -28,21 +50,7 @@ const SearchResultsUsers: React.FC = () => {
 
     return (
         <>
-            <List style={{ marginLeft: '20%' }}>   
-                {results.map(user => (
-                    <ListItem key={user.uid} divider>
-                        <Avatar 
-                            alt={user.firstName} 
-                            src="/static/images/avatar/1.jpg" 
-                            style={avatarStyle}
-                            sx={{ marginRight: 2 }}
-                        />
-                        <Link  href={`/profile/${user.uid}`} passHref>
-                            <ListItemText primary={user.firstName} />
-                        </Link>
-                    </ListItem>
-                ))}
-            </List>
+            <UsersList results={results ? results : []}/>
             {isLoading || isFetchingNextPage ? <Typography align="center"><HerbifyLoadingCircle/></Typography> : null}
             {isError ? <Typography align="center">An Error Occurred</Typography> : null}
             {atLeastOneLoad ? 
@@ -56,4 +64,4 @@ const SearchResultsUsers: React.FC = () => {
     );
 }
 
-export { SearchResultsUsers };
+export { UsersList as SearchResultsUsers };
