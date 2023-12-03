@@ -40,15 +40,33 @@ WHERE recipeID = :recipeID
         return Recipes(*(rows[0])) if rows else None
     
     @staticmethod
-    def get_by_term(term: str):
+    def get_by_term(term: str, paginated=False, pageNum=0):
         search_term = '%' + term + '%'
-        rows = app.db.execute(f'''
-SELECT *
-FROM \"Recipes\"
-WHERE LOWER(title) LIKE LOWER(:term)
-''', 
-                        term=search_term)
+        rows = []
+        if paginated:
+            lower_limit = 8 * pageNum
+            upper_limit = 8 * (pageNum + 1) -1
+            rows = app.db.execute('''
+                SELECT *
+                FROM (
+                    SELECT *, ROW_NUMBER() OVER (ORDER BY \"Recipes\".\"createdDate\" DESC) AS row_num
+                    FROM \"Recipes\"
+                    WHERE LOWER(title) LIKE(:term)
+                ) AS ranked_posts
+                WHERE row_num BETWEEN :lower_limit AND :upper_limit;
+                              ''',
+                              term=search_term,
+                              lower_limit = lower_limit,
+                              upper_limit = upper_limit)
+        else:
+            rows = app.db.execute(f'''
+                SELECT *
+                FROM \"Recipes\"
+                WHERE LOWER(title) LIKE LOWER(:term)
+                ''', 
+                            term=search_term)
         
+        print(rows)
         return [Recipes(*row) for row in rows]
     
     

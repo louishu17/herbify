@@ -42,7 +42,6 @@ class Leaderboard:
 
 
 
-
 class LeaderJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Leader):
