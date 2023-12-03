@@ -213,6 +213,7 @@ WHERE LOWER(\"firstName\") LIKE LOWER(:term)
     @staticmethod
     def check_user_liked_recipe(recipeID: int):
         # Check if the current user has liked the recipe
+        print("checking if user liked recipe " + str(recipeID))
         user_id = Users.get_current_user_id()
         if user_id:
             print("current user id is " + str(user_id))
