@@ -143,7 +143,7 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
     
     @staticmethod
     def add_steps(recipeID, steps):
-        print('adding steps')
+        print('INSIDE RECIPE, adding steps')
         try:
             for i, step in enumerate(steps):
                 app.db.execute('''
@@ -161,7 +161,7 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
     
     @staticmethod
     def like_recipe(recipeID, userID):
-        print('liking recipe')
+        print('INSIDE RECIPES, liking recipe')
         try:
             app.db.execute('''
                 INSERT INTO \"Likes\"

@@ -11,19 +11,21 @@ unlike_recipe_blueprint = Blueprint('unlike-recipe', __name__)
 def like_recipe():
     print("liking recipe")
     try:
-        recipeID = request.json['recipeID']
-        if 'user' not in session:
+        data = request.get_json()
+        recipeID = data['recipeID']
+        print(recipeID)
+        user_id = Users.get_current_user_id()
+        if not user_id:
             print("User not in session")
             return jsonify({'message': 'You must be logged in to like a recipe'}), 401
-        user_email = session['user']
-        user = Users.get(user_email)
-        userID = user.uid
+        
 
-        Recipes.like_recipe(recipeID=recipeID, userID=userID)
-
+        Recipes.like_recipe(recipeID=recipeID, userID=user_id)
+        print("liked recipe")
         return jsonify({'message': 'Recipe liked successfully'}), 201
     
     except Exception as e:
+        print(e)
         return jsonify({'error': str(e)}), 500
 
 
@@ -32,16 +34,16 @@ def like_recipe():
 def unlike_recipe():
     print("unliking recipe")
     try:
-        recipeID = request.json['recipeID']
-        if 'user' not in session:
+        data = request.get_json()
+        recipeID = data['recipeID']
+        print(recipeID)
+        user_id = Users.get_current_user_id()
+        if not user_id:
             print("User not in session")
             return jsonify({'message': 'You must be logged in to unlike a recipe'}), 401
-        user_email = session['user']
-        user = Users.get(user_email)
-        userID = user.uid
 
-        Recipes.unlike_recipe(recipeID=recipeID, userID=userID)
-
+        Recipes.unlike_recipe(recipeID=recipeID, userID=user_id)
+        print("unliked recipe")
         return jsonify({'message': 'Recipe unliked successfully'}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500

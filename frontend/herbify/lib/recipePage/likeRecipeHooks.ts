@@ -7,7 +7,8 @@ const likeRecipe = async (recipeId: string) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ recipeId }),
+            body: JSON.stringify({ recipeID: recipeId }),
+            credentials: 'include',
         });
         
         if (!response.ok) {
@@ -27,7 +28,8 @@ const unlikeRecipe = async (recipeId: string) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ recipeId }),
+            body: JSON.stringify({ recipeID: recipeId }),
+            credentials: 'include',
         });
 
         if (!response.ok) {

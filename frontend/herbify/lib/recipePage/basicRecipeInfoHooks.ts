@@ -6,7 +6,9 @@ import { DirectionsData } from "@/pages/api/recipe/[recipeID]/directions";
 
 const fetchBasicRecipeInfo = async (recipeID : number) : Promise<BasicRecipeInfo> => {
     let route = 'http://127.0.0.1:5000/recipe/' + recipeID + '/basicInfo';
-    const response = await fetch(route);
+    const response = await fetch(route,{
+        credentials: 'include'  // Include cookies with the request
+    });
     if (response.ok) {
         return response.json();
     } else {

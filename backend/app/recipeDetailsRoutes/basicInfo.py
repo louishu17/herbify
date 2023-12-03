@@ -7,7 +7,7 @@ from flask_cors import cross_origin
 basicInfo_blueprint = Blueprint('basicInfo_blueprint', __name__)
 
 @basicInfo_blueprint.route('/recipe/<int:recipeID>/basicInfo', methods=['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def feed(recipeID):
     print(f"Getting basicInfo for recipe {recipeID}")
     # You can use 'recipeID' in your code to fetch specific basicInfo
