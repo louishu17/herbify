@@ -2,7 +2,7 @@ from flask import current_app as app
 import json
 
 class Recipes:
-    def __init__(self, recipeID, postedByUserID, fullRecipeString, createdDate, title, caption, imageS3Filename="none", row_num=0):
+    def __init__(self, recipeID, postedByUserID, fullRecipeString, createdDate, title, caption, imageS3Filename="none", row_num=0, numLikes=0, userLiked=False):
         self.recipeID = recipeID
         self.postedByUserID = postedByUserID
         self.createdDate = createdDate
@@ -87,6 +87,7 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
                               ''',
                               lower_limit = lower_limit,
                               upper_limit = upper_limit)
+        
         return [Recipes(*row) for row in rows]
       
     @staticmethod
@@ -141,7 +142,6 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
     
     @staticmethod
     def add_steps(recipeID, steps):
-        print('INSIDE RECIPE, adding steps')
         try:
             for i, step in enumerate(steps):
                 app.db.execute('''
@@ -159,7 +159,6 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
     
     @staticmethod
     def like_recipe(recipeID, userID):
-        print('INSIDE RECIPES, liking recipe')
         try:
             app.db.execute('''
                 INSERT INTO \"Likes\"
@@ -167,7 +166,6 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
                 ''',
                             recipeID=recipeID,
                             userID=userID)
-            print("liked recipe")
         except Exception as e:
             print(e)
             app.db.rollback()
@@ -175,14 +173,12 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
     
     @staticmethod
     def unlike_recipe(recipeID, userID):
-        print('unliking recipe')
         try:
             app.db.execute('''DELETE FROM \"Likes\"
                             WHERE \"postID\" = :recipeID AND \"likedByUserID\" = :userID
                 ''',
                             recipeID=recipeID,
                             userID=userID)
-            print("unliked recipe")
         except Exception as e:
             print(e)
             app.db.rollback()

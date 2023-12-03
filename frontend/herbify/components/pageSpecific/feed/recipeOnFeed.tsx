@@ -1,17 +1,59 @@
 import { RecipeInfoFromFeed } from "@/pages/api/feed";
-import { Avatar, Typography, Box, Stack, Link as MuiLink, Card, CardActionArea, CardContent, CardMedia } from "@mui/material";
+import { Avatar, Typography, Box, Stack, Link as MuiLink, Card, CardActionArea, CardContent, CardMedia, IconButton } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useImageForRecipe } from "@/lib/imageHooks";
 import { HerbifyLoadingCircle } from "../../shared/loading";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { useLikeRecipe, useUnlikeRecipe } from "@/lib/recipePage/likeRecipeHooks";
+import { useEffect, useState } from "react";
+
 interface RecipeOnFeedProps {
     info : RecipeInfoFromFeed;
 }
 
 export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedProps) => {
     const {data : imageSrc, isLoading : isLoadingImg, isError : isErrorLoadingImg} = useImageForRecipe(props.info.imageS3Filename);
-    
+    const { mutate: like } = useLikeRecipe();
+    const { mutate: unlike } = useUnlikeRecipe();
+
+
+
+    const [userLiked, setUserLiked] = useState(false);
+    const [likes, setLikes] = useState(0);
+
     const info = props.info;
+
+    // useEffect(() => {
+    //     if (data) {
+    //         setUserLiked(data.userLiked);
+    //         setLikes(data.numLikes);
+    //     }
+    // }, [data]);
+
+    // const handleLikeClick = () => {
+    //     if (userLiked) {
+    //         // User has already liked the recipe, so unlike it
+    //         unlike(info.id, {
+    //             onSuccess: () => {
+    //                 console.log("unliked");
+    //                 setUserLiked(false);
+    //                 setLikes(likes => likes - 1);
+    //             }
+    //         });
+    //     } else {
+    //         // User hasn't liked the recipe, so like it
+    //         like(info.id, {
+    //             onSuccess: () => {
+    //                 console.log("liked");
+    //                 setUserLiked(true);
+    //                 setLikes(likes => likes + 1);
+    //             }
+    //         });
+    //     }
+    // };
+
+    
     const borderRadiusValue = '5px'; 
 
     return (
@@ -36,6 +78,9 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                             <Typography variant="body2" color="text.secondary" noWrap>
                                 {info.caption}
                             </Typography>
+                            {/* <IconButton onClick={handleLikeClick}>
+                                <FavoriteBorderIcon />
+                            </IconButton> */}
                         </CardContent>
                     </CardActionArea>
                 </Card>
