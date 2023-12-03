@@ -7,6 +7,7 @@ import { HerbifyLoadingCircle } from "../../shared/loading";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useLikeRecipe, useUnlikeRecipe } from "@/lib/recipePage/likeRecipeHooks";
 import { useEffect, useState } from "react";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 interface RecipeOnFeedProps {
     info : RecipeInfoFromFeed;
@@ -57,35 +58,35 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
     const borderRadiusValue = '5px'; 
 
     return (
-        <Link href={`/recipes/${info.id}`} passHref>
-            <MuiLink underline="none">
-                <Card sx={{ width: 275, m: 2, boxShadow: 3, borderRadius: borderRadiusValue }}>
-                    <CardActionArea>
+        <Card sx={{ width: 275, m: 2, boxShadow: 3, borderRadius: borderRadiusValue }}>
+            <CardActionArea>
+                <Link href={`/recipes/${info.id}`} passHref>
+                    <MuiLink underline="none">
                         <CardMedia sx={{ borderRadius: borderRadiusValue }}>
                             <ImageToDisplay imageSrc={imageSrc ?? ""} isLoading={isLoadingImg} isError={isErrorLoadingImg} />
                         </CardMedia>
-                        <CardContent>
-                            <Stack direction="row" spacing={2} marginBottom={2} alignItems="center">
-                                <Avatar
-                                    src={imageSrc}
-                                    alt="Profile Picture"
-                                    sx={{ width: 50, height: 50, borderRadius: borderRadiusValue }}
-                                />
-                                <Typography variant="h6" noWrap>
-                                    {info.title}
-                                </Typography>
-                            </Stack>
-                            <Typography variant="body2" color="text.secondary" noWrap>
-                                {info.caption}
-                            </Typography>
-                            <IconButton onClick={handleLikeClick}>
-                                <FavoriteBorderIcon />
-                            </IconButton>
-                        </CardContent>
-                    </CardActionArea>
-                </Card>
-            </MuiLink>
-        </Link>
+                    </MuiLink>
+                </Link>
+                <CardContent>
+                    <Stack direction="row" spacing={2} marginBottom={2} alignItems="center">
+                        <Avatar
+                            src={imageSrc}
+                            alt="Profile Picture"
+                            sx={{ width: 50, height: 50, borderRadius: borderRadiusValue }}
+                        />
+                        <Typography variant="h6" noWrap>
+                            {info.title}
+                        </Typography>
+                    </Stack>
+                    <Typography variant="body2" color="text.secondary" noWrap>
+                        {info.caption}
+                    </Typography>
+                    <IconButton onClick={handleLikeClick} aria-label="like" disabled={isLoadingImg}>
+                        {userLiked ? <FavoriteIcon style={{color: "red"}} /> : <FavoriteBorderIcon />}
+                    </IconButton>   
+                </CardContent>
+            </CardActionArea>
+        </Card>
     );
 
 }

@@ -12,11 +12,16 @@ export default function FeedPage() {
     const loader = useRef(null);
 
     useEffect(() => {
+        console.log("useEffect triggered. isLoading:", isLoading, "Recipes:", recipes);
         const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting && !isLoading && recipes) {
+            const firstEntry = entries[0];
+            console.log('IntersectionObserver entry:', firstEntry);
+    
+            if (firstEntry.isIntersecting && !isLoading && recipes) {
+                console.log("Loader is intersecting - Loading more content");
                 loadMore();
             }
-        }, {threshold: 1});
+        }, {threshold: .1});
         if (loader.current) {
             observer.observe(loader.current)
         }
@@ -27,6 +32,7 @@ export default function FeedPage() {
         }
     }, [loadMore, isLoading])
 
+
     let body = null;
     if (!recipes){
         body = <HerbifyLoadingContainer/>
@@ -34,8 +40,8 @@ export default function FeedPage() {
         body = (
             <Container style={{alignContent: 'center'}} maxWidth="lg">
                 {recipes.descriptions.map((recipe) => <RecipeOnFeed info={recipe} key={recipe.id}/>)}
-                <div ref={loader} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    {isLoading ? <HerbifyLoadingCircle/> : null}
+                <div ref={loader} style={{ width: '100%', height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    {isLoading ? <HerbifyLoadingCircle/> : 'I am the loader'}
                 </div>
             </Container>
         )

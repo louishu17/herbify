@@ -1,6 +1,6 @@
 from flask import current_app as app
 import json
-import models.users as Users
+from models.users import Users
 
 class Recipes:
     def __init__(self, recipeID, postedByUserID, fullRecipeString, createdDate, title, caption, imageS3Filename="none", row_num=0, numLikes=0, userLiked=False):
@@ -94,8 +94,6 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
                               ''',
                               lower_limit = lower_limit,
                               upper_limit = upper_limit)
-        
-        print(rows)
 
         recipe_list = []
 
@@ -126,7 +124,8 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
 
             # Create a recipe object with likes and userLiked information
             recipe_info = Recipes(*row, numLikes=num_likes, userLiked=user_liked_recipe)
-            recipe_list.append(recipe_info.to_json())
+            print("recipe info")
+            recipe_list.append(recipe_info)
 
         return recipe_list
     @staticmethod
