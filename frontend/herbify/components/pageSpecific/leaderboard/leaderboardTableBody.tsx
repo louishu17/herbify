@@ -1,10 +1,11 @@
 import React from "react";
-import { Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, List, ListItem, ListItemText } from '@mui/material';
-import { useFetchMockLeaderboard } from "@/lib/leaderboardHooks";
+import { Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, List, ListItem, ListItemText, Link as MuiLink } from '@mui/material';
+import { useFetchMockLeaderboard, useFetchLocallyRunningLeaderboard } from "@/lib/leaderboardHooks";
 import { HerbifyLoadingContainer } from "@/components/shared/loading";
+import Link from "next/link";
 
 export const LeaderboardTableBody : React.FC = () => {
-    const {data : leaderboardData, isLoading, isError} = useFetchMockLeaderboard();
+    const {data : leaderboardData, isLoading, isError} = useFetchLocallyRunningLeaderboard();
     if (isLoading){
         return <HerbifyLoadingContainer/>
     } else if (isError || !leaderboardData){
@@ -14,10 +15,14 @@ export const LeaderboardTableBody : React.FC = () => {
             <List>
                 {leaderboardData.leaders.map((leader, rank) => {
                     return (
-                        
-                        <ListItem key={rank}>
-                            <ListItemText primary={`${rank + 1}. ${leader.name}`} secondary={`Likes: ${leader.numberOfLikes}`} />
-                        </ListItem>
+                        <Link href={`/profile/${leader.uid}`} passHref key={rank}>
+                            <MuiLink underline="none">
+                                <ListItem >
+                                    <ListItemText primary={`${rank + 1}. ${leader.name}`} secondary={`Followers: ${leader.numberOfFollowers}`} />
+                                </ListItem>
+                            </MuiLink>
+                        </Link>
+
                     );
                     
                 })}

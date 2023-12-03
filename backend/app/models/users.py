@@ -103,35 +103,7 @@ class Users:
         return max_uid[0][0] if max_uid[0][0] else None
 
     @staticmethod
-    def get_followers(curr_uid):
-        print("getting num followers")
-        num_followers = app.db.execute(
-            """
-        SELECT COUNT(*)
-        FROM \"Follows\"
-        WHERE \"followerID\" = :curr_uid
-        """,
-            curr_uid=curr_uid,
-        )
-
-        return num_followers[0][0] if num_followers else None
-
-    @staticmethod
-    def get_following(curr_uid):
-        print("getting num following")
-        num_following = app.db.execute(
-            """
-        SELECT COUNT(*)
-        FROM \"Follows\"
-        WHERE \"followedID\" = :curr_uid
-        """,
-            curr_uid=curr_uid,
-        )
-        return num_following[0][0] if num_following else None
-
-    @staticmethod
     def to_json(curr_user):
-        print("hi")
         return {
             "uid": curr_user.uid,
             "firstName": curr_user.firstName,
@@ -235,5 +207,4 @@ WHERE LOWER(\"firstName\") LIKE LOWER(:term)
         """,
             term=search_term,
         )
-        print("rows are " + str(rows))
         return [Users(*row) for row in rows]
