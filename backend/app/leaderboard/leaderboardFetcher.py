@@ -32,10 +32,11 @@ class Leaderboard:
                             FROM \"Users\"
                             INNER JOIN \"MostFollowedUsers\"
                             ON \"Users\".\"uid\" = \"MostFollowedUsers\".\"followedID\"
+                            ORDER BY \"numberOfFollowers\" DESC
 
                                
 
-                               ''')                  
+                               ''')              
         return [Leader(*row) for row in rows]
 
 

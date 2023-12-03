@@ -160,7 +160,7 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
     
     @staticmethod
     def add_steps(recipeID, steps):
-        print('adding steps')
+        print('INSIDE RECIPE, adding steps')
         try:
             for i, step in enumerate(steps):
                 app.db.execute('''
@@ -175,7 +175,37 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
             print(e)
             app.db.rollback()
             raise e
-        
+    
+    @staticmethod
+    def like_recipe(recipeID, userID):
+        print('INSIDE RECIPES, liking recipe')
+        try:
+            app.db.execute('''
+                INSERT INTO \"Likes\"
+                            VALUES (:recipeID, :userID)
+                ''',
+                            recipeID=recipeID,
+                            userID=userID)
+            print("liked recipe")
+        except Exception as e:
+            print(e)
+            app.db.rollback()
+            raise e
+    
+    @staticmethod
+    def unlike_recipe(recipeID, userID):
+        print('unliking recipe')
+        try:
+            app.db.execute('''DELETE FROM \"Likes\"
+                            WHERE \"postID\" = :recipeID AND \"likedByUserID\" = :userID
+                ''',
+                            recipeID=recipeID,
+                            userID=userID)
+            print("unliked recipe")
+        except Exception as e:
+            print(e)
+            app.db.rollback()
+            raise e
 
 
 class RecipeJSONEncoder(json.JSONEncoder):
