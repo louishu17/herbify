@@ -32,25 +32,12 @@ class Leaderboard:
                             FROM \"Users\"
                             INNER JOIN \"MostFollowedUsers\"
                             ON \"Users\".\"uid\" = \"MostFollowedUsers\".\"followedID\"
+                            ORDER BY \"numberOfFollowers\" DESC
 
                                
 
-                               ''')                  
+                               ''')              
         return [Leader(*row) for row in rows]
-
-'''
-WITH (
-    SELECT followedID, COUNT(*) as numberOfFollowers
-    FROM Follows
-    GROUP BY followedID
-    SORT BY numberOfFollowers DESC
-    LIMIT 10
-) AS MostFollowedUsers
-SELECT uid, firstName, lastName, numberOfFollowers
-FROM Users
-INNER JOIN MostFollowedUsers
-ON Users.uid=MostFollowedUsers.followedID 
-                              '''     
 
 
 
