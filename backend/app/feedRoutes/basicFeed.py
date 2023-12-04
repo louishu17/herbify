@@ -6,7 +6,7 @@ from feedRoutes.feedFetcher import FeedFetcher
 basic_feed_blueprint = Blueprint('basic feed', __name__)
 
 @basic_feed_blueprint.route('/feed', methods=['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def feed():
     print("getting feed")
 

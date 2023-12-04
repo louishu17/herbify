@@ -22,7 +22,7 @@ const fetchLocallyRunningPaginatedFeed = async (pageNum : number, fetchingCustom
         } 
         return response.data;
     } else {
-        const response = await axios.get('http://127.0.0.1:5000/feed/' + pageNum)
+        const response = await axios.get('http://127.0.0.1:5000/feed/' + pageNum, {withCredentials : true})
         if (response.status > 300){
             throw new Error("Error fetching feed");
         } 

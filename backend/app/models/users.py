@@ -230,7 +230,8 @@ class Users:
     def check_user_liked_recipe(recipeID: int):
         # Check if the current user has liked the recipe
         user_id = Users.get_current_user_id()
-        if user_id:
+
+        if user_id is not None:
             user_liked_recipe_result = app.db.execute('''
     SELECT * FROM \"Likes\"
     WHERE \"postID\" = :recipeID AND \"likedByUserID\" = :userID
