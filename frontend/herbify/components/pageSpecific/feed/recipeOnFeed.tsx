@@ -19,9 +19,9 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
             <MuiLink underline="none">
                 <Card sx={{ width: 275, m: 2, boxShadow: 3, borderRadius: borderRadiusValue }}>
                     <CardActionArea>
-                        <CardMedia sx={{ borderRadius: borderRadiusValue }}>
-                            <ImageToDisplay imageSrc={imageSrc ?? ""} isLoading={isLoadingImg} isError={isErrorLoadingImg} />
-                        </CardMedia>
+                    <CardMedia sx={{ height: 170, width: 275, borderRadius: borderRadiusValue }}>
+                        <ImageToDisplay imageSrc={imageSrc ?? ""} isLoading={isLoadingImg} isError={isErrorLoadingImg} />
+                    </CardMedia>
                         <CardContent>
                             <Stack direction="row" spacing={2} marginBottom={2} alignItems="center">
                                 <Avatar
@@ -51,12 +51,11 @@ interface FeedImageProps{
     imageSrc : string;
 }
 export const ImageToDisplay: React.FC<FeedImageProps> = ({ isLoading, isError, imageSrc }) => {
-    // Define a common border radius value
-    const borderRadiusValue = '5px'; // or you can use a value from the theme
+    const borderRadiusValue = '5px';
 
     if (isLoading) {
         return (
-            <Box width={250} height={200} display="flex" justifyContent="center" alignItems="center" sx={{ borderRadius: borderRadiusValue }}>
+            <Box width={275} height={170} display="flex" justifyContent="center" alignItems="center" sx={{ borderRadius: borderRadiusValue }}>
                 <HerbifyLoadingCircle />
             </Box>
         );
@@ -64,8 +63,8 @@ export const ImageToDisplay: React.FC<FeedImageProps> = ({ isLoading, isError, i
         return <Typography variant="body2" color="error" sx={{ borderRadius: borderRadiusValue }}>Error Loading Image</Typography>;
     } else if (imageSrc) {
         return (
-            <div style={{ borderRadius: borderRadiusValue, overflow: 'hidden', width: '100%', height: '100%' }}>
-                <Image src={imageSrc} alt="Recipe" layout="responsive" width={250} height={200} objectFit="cover" />
+            <div style={{ borderRadius: borderRadiusValue, overflow: 'hidden', width: 275, height: 170, position: 'relative' }}>
+                <Image src={imageSrc} alt="Recipe" layout="fill" objectFit="cover" />
             </div>
         );
     } else {

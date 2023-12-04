@@ -29,6 +29,7 @@ const FollowersClickableArea = styled(Button)({
 
 const ProfileGrid = styled(Grid)(({ theme }) => ({
   marginTop: theme.spacing(3),
+  width: '100%', // Ensure full width
 }));
 
 const ProfilePaper = styled(Paper)(({ theme }) => ({
@@ -177,8 +178,10 @@ export default function ProfilePage() {
     body = <Typography>Error</Typography>
   }
   return (
-    <BaseHerbifyLayoutWithTitle title="">
-      {body}
+    <BaseHerbifyLayoutWithTitle title="" > {/* Ensure full width */}
+      <Box sx={{ width: '100%' }}>
+        {body}
+      </Box>
     </BaseHerbifyLayoutWithTitle>
   );
   
