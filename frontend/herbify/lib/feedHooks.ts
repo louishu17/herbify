@@ -67,11 +67,11 @@ export const useFetchPaginatedFeed = () : usePaginatedFeedResult => {
                     })
                 }
                 setLastPageFetched(pageNumber);   
-                if (newData.descriptions.length < 8 && fetchingCustomized){
+                if (newData.descriptions.length < 7 && fetchingCustomized){
                     setFetchingCustomized(false);
                     setPageNumber(0);
                 }  
-            } 
+            }
         },
     );
 

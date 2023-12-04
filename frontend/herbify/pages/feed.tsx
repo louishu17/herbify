@@ -36,7 +36,7 @@ export default function FeedPage() {
     } else if (recipes){
         body = (
             <Container style={{alignContent: 'center'}} maxWidth="lg">
-                {recipes.descriptions.map((recipe) => <RecipeOnFeed info={recipe} key={recipe.id}/>)}
+                {recipes.descriptions.map((recipe) => <RecipeOnFeed info={recipe} key={recipe.recipeID}/>)}
                 <div ref={loader} style={{ width: '100%', height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     {isLoading ? <HerbifyLoadingCircle/> : 'I am the loader'}
                 </div>

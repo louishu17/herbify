@@ -3,16 +3,18 @@ import json
 
 
 class Leader:
-    def __init__(self, uid, firstName=None, lastName=None, numberOfFollowers=0):
+    def __init__(self, uid, firstName=None, lastName=None, numberOfFollowers=0, profilePicS3Filename=""):
         self.name = firstName + " " + lastName
         self.uid = uid
         self.numberOfFollowers=numberOfFollowers
+        self.profilePicS3Filename=profilePicS3Filename
 
     def to_json(self):
         return {
             "name": self.name,
             "uid": self.uid,
-            "numberOfFollowers" : self.numberOfFollowers
+            "numberOfFollowers" : self.numberOfFollowers,
+            "profilePicS3Filename" : self.profilePicS3Filename
         }
 
 class Leaderboard:
@@ -28,7 +30,7 @@ class Leaderboard:
                                ORDER BY \"numberOfFollowers\" DESC
                                LIMIT 10
                             )
-                            SELECT \"uid\", \"firstName\", \"lastName\", \"numberOfFollowers\" 
+                            SELECT \"uid\", \"firstName\", \"lastName\", \"numberOfFollowers\", \"profilePicS3Filename\"
                             FROM \"Users\"
                             INNER JOIN \"MostFollowedUsers\"
                             ON \"Users\".\"uid\" = \"MostFollowedUsers\".\"followedID\"
@@ -46,6 +48,6 @@ class LeaderJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Leader):
             # Define how to serialize the object
-            return obj.to_feed_json()
+            return obj.to_json()
         return super(LeaderJSONEncoder, self).default(obj)
 

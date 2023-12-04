@@ -37,6 +37,7 @@ export interface UserOnProfileData {
     pronouns : string;
     suffix : string;
     uid : number;
+    profilePicS3Filename : string;
 }
 
 export interface ProfileData {
