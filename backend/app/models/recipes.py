@@ -88,7 +88,6 @@ LIMIT :x
     
     @staticmethod
     def get_likes_info(recipeID: int):
-        print("getting likes info")
         # Query for number of likes
         num_likes_results = app.db.execute('''
 SELECT COUNT(*)
@@ -97,14 +96,11 @@ WHERE \"postID\" = :recipeID
 ''',
                             recipeID=recipeID)
         num_likes = num_likes_results[0][0] if num_likes_results else 0
-        print("num likes:", num_likes)
 
         # Check if User has liked message
         try:
             user_liked_recipe = Users.check_user_liked_recipe(recipeID)
-            print("User liked recipe:", user_liked_recipe)
         except Exception as e:
-            print("Error checking if user liked recipe:", e)
             user_liked_recipe = False
         return (num_likes, user_liked_recipe)
     @staticmethod

@@ -12,13 +12,10 @@ export default function FeedPage() {
     const loader = useRef(null);
 
     useEffect(() => {
-        console.log("useEffect triggered. isLoading:", isLoading, "Recipes:", recipes);
         const observer = new IntersectionObserver((entries) => {
             const firstEntry = entries[0];
-            console.log('IntersectionObserver entry:', firstEntry);
     
             if (firstEntry.isIntersecting && !isLoading && recipes) {
-                console.log("Loader is intersecting - Loading more content");
                 loadMore();
             }
         }, {threshold: .1});

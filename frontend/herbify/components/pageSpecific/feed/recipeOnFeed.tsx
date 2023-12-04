@@ -27,6 +27,7 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
 
     const info = props.info;
 
+
     useEffect(() => {
         if (info) {
             setUserLiked(info.userLiked);
@@ -39,7 +40,6 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
             // User has already liked the recipe, so unlike it
             unlike(info.recipeID.toString(), {
                 onSuccess: () => {
-                    console.log("unliked");
                     setUserLiked(false);
                     setLikes(likes => likes - 1);
                 }
@@ -48,7 +48,6 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
             // User hasn't liked the recipe, so like it
             like(info.recipeID.toString(), {
                 onSuccess: () => {
-                    console.log("liked");
                     setUserLiked(true);
                     setLikes(likes => likes + 1);
                 }

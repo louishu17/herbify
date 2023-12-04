@@ -61,7 +61,17 @@ class FeedFetcher:
             ''',
                               x=x)
 
-        return [RecipeOnFeed(*row) for row in rows]
+        recipe_info_list = []
+        for row in rows:
+            recipeID = row[0]
+
+            likes_info = Recipes.get_likes_info(recipeID)
+            num_likes = likes_info[0]
+            user_liked = likes_info[1]
+            recipe_info = Recipes(*row, numLikes=num_likes, userLiked=user_liked)
+            recipe_info_list.append(recipe_info)
+
+        return recipe_info_list
     
     def get_ith_set_of_most_recent_feed_recipes(i : int):
         lower_limit = 8 * i
@@ -90,10 +100,8 @@ class FeedFetcher:
             likes_info = Recipes.get_likes_info(recipeID)
             num_likes = likes_info[0]
             user_liked = likes_info[1]
-            print(likes_info)
-            recipe_info = RecipeOnFeed(*row, numLikes=num_likes, userLiked=user_liked)
+            recipe_info = Recipes(*row, numLikes=num_likes, userLiked=user_liked)
             recipe_info_list.append(recipe_info)
-            print(row)
 
         return recipe_info_list
 
@@ -134,7 +142,6 @@ class FeedFetcher:
             likes_info = Recipes.get_likes_info(recipeID)
             num_likes = likes_info[0]
             user_liked = likes_info[1]
-            print(likes_info)
 
             recipe_info = RecipeOnFeed(*row, numLikes=num_likes, userLiked=user_liked)
             recipe_info_list.append(recipe_info)
