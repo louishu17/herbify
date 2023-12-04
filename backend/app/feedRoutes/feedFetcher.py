@@ -4,7 +4,7 @@ from models.users import Users
 import json
 
 class RecipeOnFeed: 
-    def __init__(self, recipeID, postedByUserID, fullRecipeString, createdDate, title, caption, imageS3Filename="none", firstName="", lastName="", profilePicS3Filename="", row_num=0, numLikes=0, userLiked=False):
+    def __init__(self, recipeID, postedByUserID, fullRecipeString, createdDate, title, caption, imageS3Filename="none", firstName="", lastName="", profilePicS3Filename="", numLikes=0, userLiked=False):
         self.recipeID = recipeID
         self.postedByUserID = postedByUserID
         self.createdDate = createdDate
@@ -100,13 +100,14 @@ class FeedFetcher:
             likes_info = Recipes.get_likes_info(recipeID)
             num_likes = likes_info[0]
             user_liked = likes_info[1]
-            recipe_info = Recipes(*row, numLikes=num_likes, userLiked=user_liked)
+            recipe_info = RecipeOnFeed(*row, numLikes=num_likes, userLiked=user_liked)
             recipe_info_list.append(recipe_info)
 
         return recipe_info_list
 
     def get_ith_set_of_most_recent_feed_recipes_from_ppl_you_follow(i : int):
         uid = Users.get_current_user_id()
+        #uid = 19
         lower_limit = 8 * i
         upper_limit = 8 * (i + 1) -1 
         rows = app.db.execute('''
