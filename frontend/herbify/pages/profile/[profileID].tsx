@@ -8,6 +8,7 @@ import { RecipesSection } from '@/components/pageSpecific/profile/recipesSection
 import { HerbifyLoadingContainer } from '@/components/shared/loading';
 import { ProfileListModal } from '@/components/pageSpecific/profile/followModal';
 import { User } from "@/components/pageSpecific/search/searchResultsUser";
+import { INVALID_S3_FILENAME, useImageForProfilePic } from '@/lib/profilePicHooks';
 
 const FollowersClickableArea = styled(Button)({
   background: 'none',
@@ -51,6 +52,8 @@ export default function ProfilePage() {
 
   const userId = useUserID();
   const {data : profileData, isLoading, isError, refetch } = useFetchProfile(userId);
+  const {data : profilePicSrc, isLoading : isLoadingProfilePicSrc, isError : isErrorLoadingProfilePicSrc} = useImageForProfilePic(profileData ? profileData.user[0].profilePicS3Filename : INVALID_S3_FILENAME);
+ 
 
   const currFollowers = profileData ? profileData.followers : 0
   
@@ -125,7 +128,7 @@ export default function ProfilePage() {
             <Grid item>
               <Avatar 
                 alt={profileData.user[0].firstName} 
-                src="/static/images/avatar/1.jpg" 
+                src={(profilePicSrc && !isLoadingProfilePicSrc && !isErrorLoadingProfilePicSrc) ? profilePicSrc : INVALID_S3_FILENAME}
                 style={avatarStyle} 
               />
             </Grid>
