@@ -106,8 +106,7 @@ class FeedFetcher:
         return recipe_info_list
 
     def get_ith_set_of_most_recent_feed_recipes_from_ppl_you_follow(i : int):
-        #uid = Users.get_current_user_id()
-        uid=19
+        uid = Users.get_current_user_id()
         lower_limit = 8 * i
         upper_limit = 8 * (i + 1) -1 
         rows = app.db.execute('''
