@@ -18,6 +18,7 @@ class Users:
         phoneNumber=None,
         creationDate=None,
         bio=None,
+        row_num=None
     ):
         self.uid = uid
         self.firstName = firstName
@@ -103,35 +104,7 @@ class Users:
         return max_uid[0][0] if max_uid[0][0] else None
 
     @staticmethod
-    def get_followers(curr_uid):
-        print("getting num followers")
-        num_followers = app.db.execute(
-            """
-        SELECT COUNT(*)
-        FROM \"Follows\"
-        WHERE \"followerID\" = :curr_uid
-        """,
-            curr_uid=curr_uid,
-        )
-
-        return num_followers[0][0] if num_followers else None
-
-    @staticmethod
-    def get_following(curr_uid):
-        print("getting num following")
-        num_following = app.db.execute(
-            """
-        SELECT COUNT(*)
-        FROM \"Follows\"
-        WHERE \"followedID\" = :curr_uid
-        """,
-            curr_uid=curr_uid,
-        )
-        return num_following[0][0] if num_following else None
-
-    @staticmethod
     def to_json(curr_user):
-        print("hi")
         return {
             "uid": curr_user.uid,
             "firstName": curr_user.firstName,
@@ -225,15 +198,51 @@ class Users:
             return {"error": "Failed to update user"}, 500
 
     @staticmethod
-    def get_by_term(term: str):
+    def get_by_term(term: str, paginated=False, pageNum=0):
         search_term = "%" + term + "%"
-        rows = app.db.execute(
-            f"""
-SELECT *
-FROM \"Users\"
-WHERE LOWER(\"firstName\") LIKE LOWER(:term)
-        """,
-            term=search_term,
-        )
-        print("rows are " + str(rows))
+        if paginated:
+            lower_limit = 8 * pageNum
+            upper_limit = 8 * (pageNum + 1) -1
+            rows = app.db.execute('''
+                SELECT *
+                FROM (
+                    SELECT *, ROW_NUMBER() OVER (ORDER BY \"Users\".\"firstName\" DESC) AS row_num
+                    FROM \"Users\"
+                    WHERE LOWER(\"firstName\") LIKE LOWER(:term)
+                ) AS ranked_posts
+                WHERE row_num BETWEEN :lower_limit AND :upper_limit;
+                              ''',
+                              term=search_term,
+                              lower_limit = lower_limit,
+                              upper_limit = upper_limit)
+        else :
+            rows = app.db.execute(f"""
+                SELECT *
+                FROM \"Users\"
+                WHERE LOWER(\"firstName\") LIKE LOWER(:term)
+                        """,
+                            term=search_term,
+                        )
         return [Users(*row) for row in rows]
+    
+
+    @staticmethod
+    def check_user_liked_recipe(recipeID: int):
+        # Check if the current user has liked the recipe
+        user_id = Users.get_current_user_id()
+        if user_id:
+            user_liked_recipe_result = app.db.execute('''
+    SELECT * FROM \"Likes\"
+    WHERE \"postID\" = :recipeID AND \"likedByUserID\" = :userID
+    ''',
+                                recipeID=recipeID, userID=user_id)
+            # if there is a row from user_liked_recipe_result, then the user has liked the recipe
+            if user_liked_recipe_result:
+                user_liked_recipe_result = True
+            else:
+                user_liked_recipe_result = False
+            
+        else:
+            user_liked_recipe_result = False
+        
+        return user_liked_recipe_result
