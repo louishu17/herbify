@@ -2,6 +2,7 @@
 import React, {  useContext} from 'react';
 import {  Container, Typography } from '@mui/material';
 import { NewRecipeContext } from '@/lib/createRecipePage/newRecipeContext';
+import Image from "next/image";
 
 
 export const ImageForm: React.FC = () => {
@@ -20,6 +21,7 @@ export const ImageForm: React.FC = () => {
         <Container maxWidth="md">
             <Typography variant="h4">Recipe Image</Typography>
             <input type="file" onChange={handleFileChange} accept=".jpg" />
+            {imageFile ? <Image src={imageFile ? URL.createObjectURL(imageFile) : ""} alt="pic" width={250} height={200} ></Image> : null}
         </Container>
     );
 };
