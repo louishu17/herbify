@@ -14,15 +14,13 @@ export const RecipesSection: React.FC = () => {
         return <Typography>Error loading the recipes</Typography>
     } else if (data) {
         return (
-            <Box sx={{ width: '100%' }}> {/* Ensuring the Box takes full width */}
-                <RecipesGrid container spacing={2}>
-                    {data.recipes.map((recipe, index) => (
-                        <Grid item xs={12} sm={6} md={4} key={recipe.recipeID}>
-                            <RecipeOnProfile data={recipe} />
-                        </Grid>
-                    ))}
-                </RecipesGrid>
-            </Box>
+            <RecipesGrid container spacing={2}>
+                {data.recipes.map((recipe, index) => {
+                    return (
+                        <RecipeOnProfile recipeSpecificData={recipe} profilePicS3Filename={data.user[0].profilePicS3Filename} key={recipe.recipeID}/>
+                    );
+                })}
+            </RecipesGrid>
         )
     } else {
         return null;

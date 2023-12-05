@@ -4,6 +4,7 @@ import { useBasicRecipeInfo, useRecipeID } from "@/lib/recipePage/basicRecipeInf
 import { HerbifyLoadingCircle } from "@/components/shared/loading";
 import Link from "next/link";
 import { useFetchProfile } from '@/lib/profileHooks';
+import { INVALID_S3_FILENAME, useImageForProfilePic } from '@/lib/profilePicHooks';
 
 interface RecipeHeaderProps {
 
@@ -14,6 +15,8 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = (props: RecipeHeaderPro
 
     const recipeID = useRecipeID();
     const { data, isLoading, isError } = useBasicRecipeInfo(recipeID);
+    const {data : profilePicImgSrc, isLoading : isLoadingProfilePic, isError : isErrorLoadingProfilePic} = useImageForProfilePic(data ? data.profilePicS3Filename : INVALID_S3_FILENAME);
+
 
     
     const avatarStyle = { width: '50px', height: '50px', marginRight: '15px' };
@@ -46,11 +49,11 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = (props: RecipeHeaderPro
                 <Typography variant="h2">{data.title}</Typography>
                 <Box display="flex" flexDirection="row">
                     <Avatar 
-                        src="/static/images/avatar/1.jpg" 
+                        src={(profilePicImgSrc && !isLoadingProfilePic && !isErrorLoadingProfilePic) ? profilePicImgSrc : INVALID_S3_FILENAME}
                         style={avatarStyle} 
                     />
-                    <Link href={'/profile/'+data.author.split(" ")[1]}>
-                        <Typography variant="h6">{data.author}</Typography>
+                    <Link href={'/profile/'+data.postedByUserID.toString()}>
+                        <Typography variant="h6">{data.userName}</Typography>
                     </Link> 
                 </Box>
                 <Box display="flex" justifyContent="flex-end" alignItems="center" marginTop={-8}>

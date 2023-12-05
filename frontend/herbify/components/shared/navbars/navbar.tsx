@@ -57,7 +57,7 @@ export const descriptionsToOptions = (optionDescriptions : OptionDescription[], 
             {optionDescriptions.map((description, index) => {
                 return (
                     <ListItem>
-                        <img src={`/icons/${description.icon}`}/>
+                        <img src={`/icons/${description.icon}`} width={"45px"} height={"45px"}/>
                         <Button color="inherit" onClick={() => router.push(description.route)} key={index}>{description.text}</Button>
                     </ListItem>
                 )

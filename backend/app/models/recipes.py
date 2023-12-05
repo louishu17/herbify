@@ -13,16 +13,6 @@ class Recipes:
         self.numLikes = numLikes
         self.userLiked = userLiked
         
-
-    def to_feed_json(self):
-        return {
-            "id" : self.recipeID,
-            "title" : self.title,
-            "caption" : self.caption,
-            "imageS3Filename" : self.imageS3Filename,
-            "numLikes": self.numLikes,
-            "userLiked": self.userLiked
-        }
     
     def to_json_recipe(self):
         return {
@@ -98,7 +88,6 @@ LIMIT :x
     
     @staticmethod
     def get_likes_info(recipeID: int):
-        print("getting likes info")
         # Query for number of likes
         num_likes_results = app.db.execute('''
 SELECT COUNT(*)
@@ -107,14 +96,11 @@ WHERE \"postID\" = :recipeID
 ''',
                             recipeID=recipeID)
         num_likes = num_likes_results[0][0] if num_likes_results else 0
-        print("num likes:", num_likes)
 
         # Check if User has liked message
         try:
             user_liked_recipe = Users.check_user_liked_recipe(recipeID)
-            print("User liked recipe:", user_liked_recipe)
         except Exception as e:
-            print("Error checking if user liked recipe:", e)
             user_liked_recipe = False
         return (num_likes, user_liked_recipe)
     @staticmethod
@@ -216,6 +202,6 @@ class RecipeJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Recipes):
             # Define how to serialize the object
-            return obj.to_feed_json()
+            return obj.to_json_recipe()
         return super(RecipeJSONEncoder, self).default(obj)
 

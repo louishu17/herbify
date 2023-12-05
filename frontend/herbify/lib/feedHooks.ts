@@ -22,7 +22,7 @@ const fetchLocallyRunningPaginatedFeed = async (pageNum : number, fetchingCustom
         } 
         return response.data;
     } else {
-        const response = await axios.get('http://127.0.0.1:5000/feed/' + pageNum)
+        const response = await axios.get('http://127.0.0.1:5000/feed/' + pageNum, {withCredentials : true})
         if (response.status > 300){
             throw new Error("Error fetching feed");
         } 
@@ -67,11 +67,11 @@ export const useFetchPaginatedFeed = () : usePaginatedFeedResult => {
                     })
                 }
                 setLastPageFetched(pageNumber);   
-                if (newData.descriptions.length < 8 && fetchingCustomized){
+                if (newData.descriptions.length < 7 && fetchingCustomized){
                     setFetchingCustomized(false);
                     setPageNumber(0);
                 }  
-            } 
+            }
         },
     );
 

@@ -23,6 +23,7 @@ class Users(Base):
     phoneNumber = Column(String)
     creationDate = Column(DateTime)
     bio = Column(String)
+    profilePicS3Filename = Column(String)
 
 class Recipes(Base):
     __tablename__ = 'Recipes'
