@@ -4,25 +4,16 @@ import { NewRecipeContext } from '@/lib/createRecipePage/newRecipeContext';
 
 const tagOptions = [
     'Gluten Free',
-    'Lactose Free',
     'Vegan',
-    '6 Minutes or Less',
-    'Low Carb',
     'High Protein',
     'Kid-Friendly',
     'Vegetarian',
-    'Paleo',
     'Keto',
     'Spicy',
     'Quick & Easy',
-    'Comfort Food',
     'Healthy',
     'Dairy-Free',
     'Nut-Free',
-    'No Added Sugar',
-    'Grilled',
-    'One-Pot',
-    'Make-Ahead'
   ];
 
 

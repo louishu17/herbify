@@ -7,6 +7,7 @@ import { ImageForm } from "@/components/pageSpecific/create/addImageForm";
 import { useState } from "react";
 import { NewRecipeContext } from "@/lib/createRecipePage/newRecipeContext";
 import { AddTitleForm } from "@/components/pageSpecific/create/addTitleForm";
+import { TimeForm } from "@/components/pageSpecific/create/addTimeForm";
 import axios from 'axios';
 import { useRouter } from "next/router";
 
@@ -17,6 +18,8 @@ export default function CreateRecipePage() {
     const [title, setTitle] = useState<string>('');
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [caption, setCaption] = useState<string>('');
+    const [hours, setHours] = useState<number>(0);
+    const [minutes, setMinutes] = useState<number>(0);
     const [tags, setTags] = useState<string[]>(['']);
     const router = useRouter();
 
@@ -27,7 +30,9 @@ export default function CreateRecipePage() {
                 title: title,
                 caption: caption,
                 ingredients: ingredients,
-                steps: directions
+                steps: directions,
+                hours: hours,
+                minutes: minutes,
             }
             const formData = new FormData();
 
@@ -56,13 +61,14 @@ export default function CreateRecipePage() {
 
     return (
         <BaseHerbifyLayoutWithTitle title="Create Recipe">
-            <NewRecipeContext.Provider value={{title, setTitle, imageFile, setImageFile, caption, setCaption, ingredients, setIngredients, directions, setDirections, tags, setTags}}>
+            <NewRecipeContext.Provider value={{title, setTitle, imageFile, setImageFile, caption, setCaption, ingredients, setIngredients, directions, setDirections, tags, setTags, hours, setHours, minutes, setMinutes}}>
                 <Container maxWidth="lg">
                     <Stack width={400} spacing={6} style={{paddingBottom:6}}>
                         <AddTitleForm/>
                         <ImageForm/>
                         <IngredientsForm/>
                         <DirectionsForm/>
+                        <TimeForm/>
                         <TagsForm/>
                     </Stack>
                     <Button variant="contained" onClick={handleSubmit} style={{backgroundColor: "Highlight", marginTop : 40, display: "block", margin: "0 auto"}}>Submit Recipe</Button>
