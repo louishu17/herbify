@@ -13,6 +13,7 @@ from recipeDetailsRoutes.directions import directions_blueprint
 from recipeDetailsRoutes.ingredients import ingredients_blueprint
 from feedRoutes.basicFeed import basic_feed_blueprint
 from feedRoutes.paginatedFeed import paginated_feed_blueprint
+from feedRoutes.feedFetcher import FeedFetcher
 from leaderboard.leaderboardRoute import leaderboard_blueprint
 from searchRoutes.paginatedSearch import paginated_search_blueprint
 from searchRoutes.basicSearch import basic_search_blueprint
@@ -66,6 +67,6 @@ sess.init_app(app)
 
 @app.route("/data/list", methods=["GET"])
 def return_top_recipes():
-    return Recipes.get_x_most_recent(5)
+    return FeedFetcher.get_x_most_recent(5)
 
 

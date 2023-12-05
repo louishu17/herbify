@@ -1,27 +1,69 @@
 import { RecipeInfoFromFeed } from "@/pages/api/feed";
-import { Avatar, Typography, Box, Stack, Link as MuiLink, Card, CardActionArea, CardContent, CardMedia } from "@mui/material";
+import { Avatar, Typography, Box, Stack, Link as MuiLink, Card, CardActionArea, CardContent, CardMedia, IconButton, CardActions } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useImageForRecipe } from "@/lib/imageHooks";
 import { HerbifyLoadingCircle } from "../../shared/loading";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { useLikeRecipe, useUnlikeRecipe } from "@/lib/recipePage/likeRecipeHooks";
+import { useEffect, useState } from "react";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+
 interface RecipeOnFeedProps {
     info : RecipeInfoFromFeed;
 }
 
 export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedProps) => {
     const {data : imageSrc, isLoading : isLoadingImg, isError : isErrorLoadingImg} = useImageForRecipe(props.info.imageS3Filename);
-    
-    const info = props.info;
-    const borderRadiusValue = '5px'; 
+    const { mutate: like } = useLikeRecipe();
+    const { mutate: unlike } = useUnlikeRecipe();
 
+
+
+    const [userLiked, setUserLiked] = useState(false);
+    const [likes, setLikes] = useState(0);
+
+    const info = props.info;
+
+    useEffect(() => {
+        if (info) {
+            setUserLiked(info.userLiked);
+            setLikes(info.numLikes);
+        }
+    }, [info]);
+
+    const handleLikeClick = () => {
+        if (userLiked) {
+            // User has already liked the recipe, so unlike it
+            unlike(info.id, {
+                onSuccess: () => {
+                    console.log("unliked");
+                    setUserLiked(false);
+                    setLikes(likes => likes - 1);
+                }
+            });
+        } else {
+            // User hasn't liked the recipe, so like it
+            like(info.id, {
+                onSuccess: () => {
+                    console.log("liked");
+                    setUserLiked(true);
+                    setLikes(likes => likes + 1);
+                }
+            });
+        }
+    };
+
+    
+    const borderRadiusValue = '5px'; 
     return (
-        <Link href={`/recipes/${info.id}`} passHref>
-            <MuiLink underline="none">
-                <Card sx={{ width: 275, m: 2, boxShadow: 3, borderRadius: borderRadiusValue }}>
-                    <CardActionArea>
-                    <CardMedia sx={{ height: 170, width: 275, borderRadius: borderRadiusValue }}>
-                        <ImageToDisplay imageSrc={imageSrc ?? ""} isLoading={isLoadingImg} isError={isErrorLoadingImg} />
-                    </CardMedia>
+        <Card sx={{ width: '100%', maxWidth: 345, m: 2, boxShadow: 3, borderRadius: borderRadiusValue }}>
+            <Box sx={{ position: 'relative' }}>
+                <Link href={`/recipes/${info.id}`} passHref>
+                    <MuiLink underline="none">
+                        <CardMedia sx={{ borderRadius: borderRadiusValue }}>
+                            <ImageToDisplay imageSrc={imageSrc ?? ""} isLoading={isLoadingImg} isError={isErrorLoadingImg} />
+                        </CardMedia>
                         <CardContent>
                             <Stack direction="row" spacing={2} marginBottom={2} alignItems="center">
                                 <Avatar
@@ -37,10 +79,18 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                                 {info.caption}
                             </Typography>
                         </CardContent>
-                    </CardActionArea>
-                </Card>
-            </MuiLink>
-        </Link>
+                    </MuiLink>
+                </Link>
+                <CardActions disableSpacing>
+                            <IconButton onClick={handleLikeClick} aria-label="add to favorites" disabled={isLoadingImg}>
+                                {userLiked ? <FavoriteIcon style={{color: "red"}} /> : <FavoriteBorderIcon />}
+                            </IconButton>
+                            <Typography variant="body2" color="text.secondary">
+                                {likes} Likes
+                            </Typography>
+                </CardActions>
+            </Box>
+        </Card>
     );
 
 }

@@ -1,6 +1,6 @@
 import { Modal, Box, List, ListItem, Avatar, ListItemText, Typography } from '@mui/material';
 import Link from 'next/link';
-import { SearchResultsUsers } from "@/components/pageSpecific/search/searchResultsUser"; 
+import { UsersList } from "@/components/pageSpecific/search/searchResultsUser"; 
 import { User } from "@/components/pageSpecific/search/searchResultsUser";
 
 const modalStyle = {
@@ -32,7 +32,7 @@ export const ProfileListModal: React.FC<ProfileListModalProps> = ({ open, handle
       aria-labelledby="profile-list-modal-title"
     >
       <Box sx={modalStyle}>
-        <SearchResultsUsers results={profiles} onClose={handleClose}/>
+        <UsersList results={profiles} onClose={handleClose}/>
       </Box>
     </Modal>
   );

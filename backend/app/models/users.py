@@ -224,3 +224,25 @@ class Users:
                             term=search_term,
                         )
         return [Users(*row) for row in rows]
+    
+
+    @staticmethod
+    def check_user_liked_recipe(recipeID: int):
+        # Check if the current user has liked the recipe
+        user_id = Users.get_current_user_id()
+        if user_id:
+            user_liked_recipe_result = app.db.execute('''
+    SELECT * FROM \"Likes\"
+    WHERE \"postID\" = :recipeID AND \"likedByUserID\" = :userID
+    ''',
+                                recipeID=recipeID, userID=user_id)
+            # if there is a row from user_liked_recipe_result, then the user has liked the recipe
+            if user_liked_recipe_result:
+                user_liked_recipe_result = True
+            else:
+                user_liked_recipe_result = False
+            
+        else:
+            user_liked_recipe_result = False
+        
+        return user_liked_recipe_result

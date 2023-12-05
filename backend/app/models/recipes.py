@@ -1,14 +1,17 @@
 from flask import current_app as app
 import json
+from models.users import Users
 
 class Recipes:
-    def __init__(self, recipeID, postedByUserID, fullRecipeString, createdDate, title, caption, imageS3Filename="none", row_num=0):
+    def __init__(self, recipeID, postedByUserID, fullRecipeString, createdDate, title, caption, imageS3Filename="none", row_num=0, numLikes=0, userLiked=False):
         self.recipeID = recipeID
         self.postedByUserID = postedByUserID
         self.createdDate = createdDate
         self.title = title
         self.caption = caption
         self.imageS3Filename = imageS3Filename
+        self.numLikes = numLikes
+        self.userLiked = userLiked
         
 
     def to_feed_json(self):
@@ -16,7 +19,9 @@ class Recipes:
             "id" : self.recipeID,
             "title" : self.title,
             "caption" : self.caption,
-            "imageS3Filename" : self.imageS3Filename
+            "imageS3Filename" : self.imageS3Filename,
+            "numLikes": self.numLikes,
+            "userLiked": self.userLiked
         }
     
     def to_json_recipe(self):
@@ -91,21 +96,27 @@ LIMIT :x
                               x=x)
         return [Recipes(*row) for row in rows]
     
-    def get_ith_set_of_feed_recipes(i : int):
-        lower_limit = 8 * i
-        upper_limit = 8 * (i + 1) -1
-        rows = app.db.execute('''
-SELECT *
-FROM (
-    SELECT *, ROW_NUMBER() OVER (ORDER BY "Recipes"."createdDate" DESC) AS row_num
-    FROM "Recipes"
-) AS ranked_posts
-WHERE row_num BETWEEN :lower_limit AND :upper_limit;
-                              ''',
-                              lower_limit = lower_limit,
-                              upper_limit = upper_limit)
-        return [Recipes(*row) for row in rows]
-      
+    @staticmethod
+    def get_likes_info(recipeID: int):
+        print("getting likes info")
+        # Query for number of likes
+        num_likes_results = app.db.execute('''
+SELECT COUNT(*)
+FROM \"Likes\"
+WHERE \"postID\" = :recipeID
+''',
+                            recipeID=recipeID)
+        num_likes = num_likes_results[0][0] if num_likes_results else 0
+        print("num likes:", num_likes)
+
+        # Check if User has liked message
+        try:
+            user_liked_recipe = Users.check_user_liked_recipe(recipeID)
+            print("User liked recipe:", user_liked_recipe)
+        except Exception as e:
+            print("Error checking if user liked recipe:", e)
+            user_liked_recipe = False
+        return (num_likes, user_liked_recipe)
     @staticmethod
     def get_last_recipe_id():
         print("getting last recipe id")
@@ -149,7 +160,7 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
                     ''',
                                 recipeID=recipeID,
                                 ingredient=ingredient)
-            print("added ingredients")
+            ("added ingredients")
 
         except Exception as e:
             print(e)
@@ -158,7 +169,6 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
     
     @staticmethod
     def add_steps(recipeID, steps):
-        print('INSIDE RECIPE, adding steps')
         try:
             for i, step in enumerate(steps):
                 app.db.execute('''
@@ -176,7 +186,6 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
     
     @staticmethod
     def like_recipe(recipeID, userID):
-        print('INSIDE RECIPES, liking recipe')
         try:
             app.db.execute('''
                 INSERT INTO \"Likes\"
@@ -184,7 +193,6 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
                 ''',
                             recipeID=recipeID,
                             userID=userID)
-            print("liked recipe")
         except Exception as e:
             print(e)
             app.db.rollback()
@@ -192,14 +200,12 @@ WHERE row_num BETWEEN :lower_limit AND :upper_limit;
     
     @staticmethod
     def unlike_recipe(recipeID, userID):
-        print('unliking recipe')
         try:
             app.db.execute('''DELETE FROM \"Likes\"
                             WHERE \"postID\" = :recipeID AND \"likedByUserID\" = :userID
                 ''',
                             recipeID=recipeID,
                             userID=userID)
-            print("unliked recipe")
         except Exception as e:
             print(e)
             app.db.rollback()
