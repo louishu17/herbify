@@ -196,6 +196,7 @@ WHERE \"postID\" = :recipeID
             print(e)
             app.db.rollback()
             raise e
+    
 
 
 class RecipeJSONEncoder(json.JSONEncoder):

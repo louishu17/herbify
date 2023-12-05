@@ -33,6 +33,21 @@ class RecipeOnFeed:
             "nameOfPoster": name,
             "profilePicS3Filename" : self.profilePicS3Filename
         }
+
+    @staticmethod
+    def add_likes_info(rows):
+        recipe_info_list = []
+        for row in rows:
+            recipeID = row[0]
+
+            likes_info = Recipes.get_likes_info(recipeID)
+            num_likes = likes_info[0]
+            user_liked = likes_info[1]
+
+            recipe_info = RecipeOnFeed(*row, numLikes=num_likes, userLiked=user_liked)
+            recipe_info_list.append(recipe_info)
+
+        return recipe_info_list
     
 class RecipeOnFeedJSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -61,15 +76,7 @@ class FeedFetcher:
             ''',
                               x=x)
 
-        recipe_info_list = []
-        for row in rows:
-            recipeID = row[0]
-
-            likes_info = Recipes.get_likes_info(recipeID)
-            num_likes = likes_info[0]
-            user_liked = likes_info[1]
-            recipe_info = Recipes(*row, numLikes=num_likes, userLiked=user_liked)
-            recipe_info_list.append(recipe_info)
+        recipe_info_list = RecipeOnFeed.add_likes_info(rows)
 
         return recipe_info_list
     
@@ -93,15 +100,7 @@ class FeedFetcher:
                               lower_limit = lower_limit,
                               upper_limit = upper_limit)
 
-        recipe_info_list = []
-        for row in rows:
-            recipeID = row[0]
-
-            likes_info = Recipes.get_likes_info(recipeID)
-            num_likes = likes_info[0]
-            user_liked = likes_info[1]
-            recipe_info = RecipeOnFeed(*row, numLikes=num_likes, userLiked=user_liked)
-            recipe_info_list.append(recipe_info)
+        recipe_info_list = RecipeOnFeed.add_likes_info(rows)
 
         return recipe_info_list
 
@@ -135,16 +134,7 @@ class FeedFetcher:
                               lower_limit = lower_limit,
                               upper_limit = upper_limit)
 
-        recipe_info_list = []
-        for row in rows:
-            recipeID = row[0]
-
-            likes_info = Recipes.get_likes_info(recipeID)
-            num_likes = likes_info[0]
-            user_liked = likes_info[1]
-
-            recipe_info = RecipeOnFeed(*row, numLikes=num_likes, userLiked=user_liked)
-            recipe_info_list.append(recipe_info)
+        recipe_info_list = RecipeOnFeed.add_likes_info(rows)
 
         return recipe_info_list
     
