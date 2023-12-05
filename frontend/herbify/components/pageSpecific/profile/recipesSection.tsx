@@ -16,7 +16,7 @@ export const RecipesSection : React.FC = () => {
             <RecipesGrid container spacing={2}>
                 {data.recipes.map((recipe, index) => {
                     return (
-                        <RecipeOnProfile data={recipe} key={recipe.recipeID}/>
+                        <RecipeOnProfile recipeSpecificData={recipe} profilePicS3Filename={data.user[0].profilePicS3Filename} key={recipe.recipeID}/>
                     );
                 })}
             </RecipesGrid>

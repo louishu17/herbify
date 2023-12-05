@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { Typography } from "@mui/material";
+import { Typography, Container } from "@mui/material";
 import { HerbifyForm } from "@/components/shared/textForm";
 import { BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
 import { HerbifyLoadingContainer } from '@/components/shared/loading';
 import { object as YupObject, string as YupString, number as YupNumber } from 'yup';
 import { useFetchProfile } from '@/lib/profileHooks';
+import { ProfilePicForm } from "@/components/pageSpecific/settings/profilePicForm";
 
 interface SetUserProfileFormValues {
     firstName: string;
@@ -53,9 +54,9 @@ export default function SetProfilePage() {
         phoneNumber: '',
         bio: '',
     });
-
-    const userId = 455;
-    const { data: profileData, isLoading, isError } = useFetchProfile(userId);
+    const [newProfilePicFile, setNewProfilePicFile] = useState<File | null>(null);
+    const uid = 947;
+    const { data: profileData, isLoading, isError } = useFetchProfile(uid);
 
     useEffect(() => {
         if (profileData && profileData.user && profileData.user.length > 0) {
@@ -75,15 +76,22 @@ export default function SetProfilePage() {
         }
     }, [profileData]);
 
-    const setUserProfile = async (values: SetUserProfileFormValues) => {
+    const updateProfileInDB = async (values : SetUserProfileFormValues) => {
         const combinedDate = `${values.birthYear}-${values.birthMonth.padStart(2, '0')}-${values.birthDay.padStart(2, '0')}`;
         const modifiedValues = {
             ...values,
             dateOfBirth: combinedDate,
         };
-
+        //axios.post('http://127.0.0.1:5000/set-profile', modifiedValues, { withCredentials: true });
+        if (newProfilePicFile){
+            const formData = new FormData();
+            formData.append('imageFile', newProfilePicFile);    
+            axios.post('http://127.0.0.1:5000/set-profile-pic', formData, {withCredentials: true});
+        }
+    }
+    const setUserProfile = async (values: SetUserProfileFormValues) => {
         try {
-            await axios.post('http://127.0.0.1:5000/set-profile', modifiedValues, { withCredentials: true });
+            await updateProfileInDB(values);
             setErrorMessage("User updated");
         } catch (error) {
             console.error(error);
@@ -111,24 +119,27 @@ export default function SetProfilePage() {
         body = <Typography>Error</Typography>
     } else if (profileData && profileData.user && profileData.user.length > 0) {
         body = (
-            <HerbifyForm
-                handleSubmit={handleSubmit}
-                initialValues={initialValues}
-                validationSchema={setUserProfileValidationSchema}
-                textFields={[
-                    { name: "firstName", type: "text" },
-                    { name: "middleName", type: "text" },
-                    { name: "lastName", type: "text" },
-                    { name: "suffix", type: "text" },
-                    { name: "birthMonth", type: "text" },
-                    { name: "birthDay", type: "text" },
-                    { name: "birthYear", type: "text" },
-                    { name: "pronouns", type: "text" },
-                    { name: "phoneNumber", type: "text" },
-                    { name: "bio", type: "text" },
-                ]}
-                errorMessage={errorMessage}
-            />
+            <Container >
+                <ProfilePicForm uid={uid} setNewProfilePicFile={setNewProfilePicFile} newProfilePicFile={newProfilePicFile}/>
+                <HerbifyForm
+                    handleSubmit={handleSubmit}
+                    initialValues={initialValues}
+                    validationSchema={setUserProfileValidationSchema}
+                    textFields={[
+                        { name: "firstName", type: "text" },
+                        { name: "middleName", type: "text" },
+                        { name: "lastName", type: "text" },
+                        { name: "suffix", type: "text" },
+                        { name: "birthMonth", type: "text" },
+                        { name: "birthDay", type: "text" },
+                        { name: "birthYear", type: "text" },
+                        { name: "pronouns", type: "text" },
+                        { name: "phoneNumber", type: "text" },
+                        { name: "bio", type: "text" },
+                    ]}
+                    errorMessage={errorMessage}
+                />
+            </Container>
         )
     } else {
         body = <Typography>No user data available</Typography>
