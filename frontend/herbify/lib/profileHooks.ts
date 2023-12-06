@@ -74,6 +74,17 @@ export const fetchSessionId = async () : Promise<number> => {
     return response.data.session_id;
 };
 
+export const fetchSessionIdServerSide = async (cookies: string) : Promise<number> => {
+    const response = await instance.get(`http://127.0.0.1:5000/curr_session`, {headers: {
+        'Cookie': cookies,
+    },});
+    
+    if (response.status > 300){
+        throw new Error("Error session id");
+    } 
+    return response.data.session_id;
+};
+
 const fetchFollowStatus = async (profileUserId: number) : Promise<boolean> => {
     if (profileUserId === INVALID_USER_ID) {
         return false;
