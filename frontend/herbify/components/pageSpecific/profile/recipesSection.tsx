@@ -9,29 +9,36 @@ export const RecipesSection: React.FC = () => {
     const { data, isLoading, isError } = useFetchProfile(userID);
 
     if (isLoading) {
-        return <HerbifyLoadingContainer />
+        return <HerbifyLoadingContainer />;
     } else if (isError) {
-        return <Typography>Error loading the recipes</Typography>
+        return <Typography>Error loading the recipes</Typography>;
     } else if (data) {
         return (
-            <RecipesGrid container spacing={2}>
-                {data.recipes.map((recipe, index) => {
-                    return (
-                        <RecipeOnProfile recipeSpecificData={recipe} profilePicS3Filename={data.user[0].profilePicS3Filename} key={recipe.recipeID}/>
-                    );
-                })}
-            </RecipesGrid>
-        )
+            <RecipesContainer>
+                <RecipesGrid container spacing={2}>
+                    {data.recipes.map((recipe) => (
+                        <Grid item xs={12} sm={6} md={4} key={recipe.recipeID}>
+                            <RecipeOnProfile recipeSpecificData={recipe} profilePicS3Filename={data.user[0].profilePicS3Filename} />
+                        </Grid>
+                    ))}
+                </RecipesGrid>
+            </RecipesContainer>
+        );
     } else {
         return null;
     }
-}
+};
 
 const RecipesGrid = styled(Grid)(({ theme }) => ({
     flexGrow: 1,
     marginTop: theme.spacing(2),
-    width: '100%', // Ensuring the Grid takes full width
+    width: '100%',
 }));
+
+const RecipesContainer = styled(Box)({
+    width: '900px', // Adjust as per your design
+    margin: '0 auto', // Center the container
+});
 
 const ProfileGrid = styled(Grid)(({ theme }) => ({
     marginTop: theme.spacing(3),

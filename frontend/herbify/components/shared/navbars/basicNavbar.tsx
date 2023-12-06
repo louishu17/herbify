@@ -15,5 +15,9 @@ export const BasicHerbifyNavBar : React.FC = () => {
         {text : "Register", route : "/register", icon: 'register-icon.svg'}
     ];
 
-    return <HerbifyNavBarGivenOptionDescriptions optionDescriptions={optionDescriptions}/>
+    return (
+        <div style={{ width: '205px' }}>
+            <HerbifyNavBarGivenOptionDescriptions optionDescriptions={optionDescriptions}/>
+        </div>
+    );
 }
