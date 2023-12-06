@@ -82,7 +82,7 @@ export default function SetProfilePage() {
             ...values,
             dateOfBirth: combinedDate,
         };
-        //axios.post('http://127.0.0.1:5000/set-profile', modifiedValues, { withCredentials: true });
+        axios.post('http://127.0.0.1:5000/set-profile', modifiedValues, { withCredentials: true });
         if (newProfilePicFile){
             const formData = new FormData();
             formData.append('imageFile', newProfilePicFile);    
