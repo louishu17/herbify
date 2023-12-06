@@ -1,6 +1,7 @@
 import React, {ReactNode} from 'react';
 import { AppBar, Drawer, List, ListItem, ListItemText, Toolbar, Typography, Button, PropTypes } from '@mui/material'
 import { useRouter, NextRouter } from 'next/router';
+import { handleLogout } from '@/lib/logoutHooks';
 
 
 
@@ -32,6 +33,7 @@ export interface OptionDescription {
     text : string;
     route : string;
     icon: string;
+    isLogoutButton? : boolean;
 }
 
 interface HerbifyNavBarGivenOptionDescriptionsProps {
@@ -55,12 +57,20 @@ export const descriptionsToOptions = (optionDescriptions : OptionDescription[], 
     return (
         <div>
             {optionDescriptions.map((description, index) => {
+                if (description.isLogoutButton) {
+                    return (
+                        <ListItem key={index}>
+                            <img src={`/icons/${description.icon}`} width={"45px"} height={"45px"}/>
+                            <Button color="inherit" onClick={() => {handleLogout(router)}}>{description.text}</Button>
+                        </ListItem>
+                    );
+                }
                 return (
-                    <ListItem>
+                    <ListItem key={index}>
                         <img src={`/icons/${description.icon}`} width={"45px"} height={"45px"}/>
-                        <Button color="inherit" onClick={() => router.push(description.route)} key={index}>{description.text}</Button>
+                        <Button color="inherit" onClick={() => router.push(description.route)}>{description.text}</Button>
                     </ListItem>
-                )
+                );
             })}
         </div>
     );
