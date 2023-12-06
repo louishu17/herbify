@@ -7,6 +7,9 @@ import { HerbifyLoadingContainer } from '@/components/shared/loading';
 import { object as YupObject, string as YupString, number as YupNumber } from 'yup';
 import { useFetchProfile } from '@/lib/profileHooks';
 import { ProfilePicForm } from "@/components/pageSpecific/settings/profilePicForm";
+import { withAuth } from '@/lib/authCheck';
+
+export const getServerSideProps = withAuth();
 
 interface SetUserProfileFormValues {
     firstName: string;

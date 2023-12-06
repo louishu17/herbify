@@ -5,6 +5,9 @@ import React, {useState} from "react";
 import {object as YupObject, string as YupString} from 'yup';
 import axios from 'axios';
 import { useRouter } from "next/router";
+import { withAuthRedirect } from '@/lib/authCheck';
+
+export const getServerSideProps = withAuthRedirect();
 
 interface RegisterFormValues {
     email: string;

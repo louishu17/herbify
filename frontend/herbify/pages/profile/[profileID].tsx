@@ -9,6 +9,9 @@ import { HerbifyLoadingContainer } from '@/components/shared/loading';
 import { ProfileListModal } from '@/components/pageSpecific/profile/followModal';
 import { User } from "@/components/pageSpecific/search/searchResultsUser";
 import { INVALID_S3_FILENAME, useImageForProfilePic } from '@/lib/profilePicHooks';
+import { withAuth } from '@/lib/authCheck';
+
+export const getServerSideProps = withAuth();
 
 const FollowersClickableArea = styled(Button)({
   background: 'none',
