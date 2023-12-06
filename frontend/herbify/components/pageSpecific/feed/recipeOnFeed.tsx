@@ -12,6 +12,7 @@ import { useImageForProfilePic } from "@/lib/profilePicHooks";
 
 interface RecipeOnFeedProps {
     info : RecipeInfoFromFeed;
+    isProfile? : boolean;
 }
 
 export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedProps) => {
@@ -26,7 +27,7 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
     const [likes, setLikes] = useState(0);
 
     const info = props.info;
-
+    const displayLikes = props.isProfile !== null && props.isProfile !== true;
 
     useEffect(() => {
         if (info) {
@@ -58,7 +59,7 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
     
     const borderRadiusValue = '5px'; 
     return (
-        <Card sx={{ width: '100%', maxWidth: 345, m: 2, boxShadow: 3, borderRadius: borderRadiusValue }}>
+        <Card sx={{ width: '100%', maxWidth: 275, m: 2, boxShadow: 3, borderRadius: borderRadiusValue }}>
             <Box sx={{ position: 'relative' }}>
                 <Link href={`/recipes/${info.recipeID}`} passHref>
                     <MuiLink underline="none">
@@ -82,14 +83,14 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                         </CardContent>
                     </MuiLink>
                 </Link>
-                <CardActions disableSpacing>
+                {displayLikes && <CardActions disableSpacing>
                             <IconButton onClick={handleLikeClick} aria-label="add to favorites" disabled={isLoadingRecipeImg}>
                                 {userLiked ? <FavoriteIcon style={{color: "red"}} /> : <FavoriteBorderIcon />}
                             </IconButton>
                             <Typography variant="body2" color="text.secondary">
                                 {likes} Likes
                             </Typography>
-                </CardActions>
+                </CardActions>}
             </Box>
         </Card>
     );
@@ -102,12 +103,11 @@ interface FeedImageProps{
     imageSrc : string;
 }
 export const ImageToDisplay: React.FC<FeedImageProps> = ({ isLoading, isError, imageSrc }) => {
-    // Define a common border radius value
-    const borderRadiusValue = '5px'; // or you can use a value from the theme
+    const borderRadiusValue = '5px';
 
     if (isLoading) {
         return (
-            <Box width={250} height={200} display="flex" justifyContent="center" alignItems="center" sx={{ borderRadius: borderRadiusValue }}>
+            <Box width={275} height={170} display="flex" justifyContent="center" alignItems="center" sx={{ borderRadius: borderRadiusValue }}>
                 <HerbifyLoadingCircle />
             </Box>
         );
@@ -115,8 +115,8 @@ export const ImageToDisplay: React.FC<FeedImageProps> = ({ isLoading, isError, i
         return <Typography variant="body2" color="error" sx={{ borderRadius: borderRadiusValue }}>Error Loading Image</Typography>;
     } else if (imageSrc) {
         return (
-            <div style={{ borderRadius: borderRadiusValue, overflow: 'hidden', width: '100%', height: '100%' }}>
-                <Image src={imageSrc} alt="Recipe" layout="responsive" width={250} height={200} objectFit="cover" />
+            <div style={{ borderRadius: borderRadiusValue, overflow: 'hidden', width: 275, height: 170, position: 'relative' }}>
+                <Image src={imageSrc} alt="Recipe" layout="fill" objectFit="cover" />
             </div>
         );
     } else {
