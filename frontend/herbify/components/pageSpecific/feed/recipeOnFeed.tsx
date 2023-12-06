@@ -116,7 +116,7 @@ export const ImageToDisplay: React.FC<FeedImageProps> = ({ isLoading, isError, i
     } else if (imageSrc) {
         return (
             <div style={{ borderRadius: borderRadiusValue, overflow: 'hidden', width: 275, height: 170, position: 'relative' }}>
-                <Image src={imageSrc} alt="Recipe" layout="fill" objectFit="cover" />
+                <Image src={imageSrc} alt="Recipe" layout="fill" objectFit="cover" sizes="275px" />
             </div>
         );
     } else {
