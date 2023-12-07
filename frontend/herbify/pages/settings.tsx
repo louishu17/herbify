@@ -5,7 +5,7 @@ import { HerbifyForm } from "@/components/shared/textForm";
 import { BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
 import { HerbifyLoadingContainer } from '@/components/shared/loading';
 import { object as YupObject, string as YupString, number as YupNumber } from 'yup';
-import { useFetchProfile } from '@/lib/profileHooks';
+import { useFetchProfile, useUserID } from '@/lib/profileHooks';
 import { ProfilePicForm } from "@/components/pageSpecific/settings/profilePicForm";
 import { withAuth } from '@/lib/authCheck';
 
@@ -58,7 +58,7 @@ export default function SetProfilePage() {
         bio: '',
     });
     const [newProfilePicFile, setNewProfilePicFile] = useState<File | null>(null);
-    const uid = 947;
+    const uid = useUserID();
     const { data: profileData, isLoading, isError } = useFetchProfile(uid);
 
     useEffect(() => {
