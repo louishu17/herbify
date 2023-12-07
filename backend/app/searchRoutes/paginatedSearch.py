@@ -2,6 +2,7 @@ from flask import request, jsonify, Blueprint
 from models.recipes import Recipes, RecipeJSONEncoder
 from flask_cors import cross_origin
 from models.users import Users
+from searchRoutes.searchFetcher import SearchFetcher
 
 paginated_search_blueprint = Blueprint("paginated search", __name__)
 
@@ -32,5 +33,19 @@ def search_user(pageNum):
         users = Users.get_by_term(term, paginated=True, pageNum=pageNum)
         serialized_users = [Users.to_json(obj) for obj in users]
         return jsonify({"results": serialized_users}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@paginated_search_blueprint.route("/search_ingredient/<int:pageNum>", methods=["GET"])
+@cross_origin()
+def search_ingredient(pageNum):
+    print("getting search for recipes by ingredient")
+
+    try:
+        args = request.args
+        term = args.get("term")
+        recipes = SearchFetcher.get_by_ingredient_term(term=term, paginated=True, pageNum=pageNum)
+        serialized_recipies = [obj.to_json_recipe() for obj in recipes]
+        return jsonify({"results": serialized_recipies}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
