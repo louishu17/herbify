@@ -9,6 +9,9 @@ import { SearchResults } from "@/components/pageSpecific/search/searchResultsRec
 import { SearchPageUsersResults } from "@/components/pageSpecific/search/searchResultsUser"; 
 import { useFetchPaginatedSearchRecipeByTerm } from "@/lib/searchPage/searchByTermHooks";
 import { useFetchPaginatedSearchUserByTerm } from "@/lib/searchPage/searchUserByTermHooks";
+import { withAuth } from '@/lib/authCheck';
+
+export const getServerSideProps = withAuth();
 
 export default function SearchPage(){
     const [currentTabIndex, setCurrentTabIndex] = useState(0);

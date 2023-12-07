@@ -12,8 +12,13 @@ export const BasicHerbifyNavBar : React.FC = () => {
         {text : "Profile", route : "/profile/-1", icon: 'profile-icon.svg'},
         {text : "Settings", route : "/settings", icon: 'settings-icon.svg'},
         {text : "Login", route : "/login", icon: 'login-icon.svg'},
-        {text : "Register", route : "/register", icon: 'register-icon.svg'}
+        {text : "Register", route : "/register", icon: 'register-icon.svg'},
+        {text : "Logout", route : "/logout", icon: 'login-icon.svg', isLogoutButton: true,}
     ];
 
-    return <HerbifyNavBarGivenOptionDescriptions optionDescriptions={optionDescriptions}/>
+    return (
+        <div style={{ width: '205px' }}>
+            <HerbifyNavBarGivenOptionDescriptions optionDescriptions={optionDescriptions}/>
+        </div>
+    );
 }

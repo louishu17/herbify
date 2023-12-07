@@ -39,8 +39,9 @@ def login():
 
 
 @login_blueprint.route("/logout", methods=["POST"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def logout():
+    print("Logging out")
     session.pop("user", None)
     return jsonify({"message": "Logout successful"}), 200
 

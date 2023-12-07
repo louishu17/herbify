@@ -21,6 +21,6 @@ def feed(recipeID):
     try:
         recipe = BasicRecipeInfo.get(recipeID)
         
-        return jsonify({'title' : recipe.title, 'author' : 'User ' + str(recipe.postedByUserID), 'dateCreated' : recipe.createdDate, 'imageS3Filename': recipe.imageS3Filename, 'numLikes': recipe.numLikes, 'userLiked': recipe.userLiked}), 201
+        return jsonify(recipe.to_json()), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500

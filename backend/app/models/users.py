@@ -18,7 +18,8 @@ class Users:
         phoneNumber=None,
         creationDate=None,
         bio=None,
-        row_num=None
+        profilePicS3Filename=None,
+        row_num=None,
     ):
         self.uid = uid
         self.firstName = firstName
@@ -32,6 +33,7 @@ class Users:
         self.phoneNumber = phoneNumber
         self.creationDate = creationDate
         self.bio = bio
+        self.profilePicS3Filename = profilePicS3Filename
 
     @staticmethod
     def get_current_user_id():
@@ -117,6 +119,7 @@ class Users:
             "phoneNumber": curr_user.phoneNumber,
             "creationDate": curr_user.creationDate,
             "bio": curr_user.bio,
+            "profilePicS3Filename" : curr_user.profilePicS3Filename
         }
 
     @staticmethod
@@ -233,17 +236,11 @@ class Users:
 
         if user_id is not None:
             user_liked_recipe_result = app.db.execute('''
-    SELECT * FROM \"Likes\"
-    WHERE \"postID\" = :recipeID AND \"likedByUserID\" = :userID
+    SELECT EXISTS (SELECT 1 FROM \"Likes\"
+    WHERE \"postID\" = :recipeID AND \"likedByUserID\" = :userID)
     ''',
                                 recipeID=recipeID, userID=user_id)
             # if there is a row from user_liked_recipe_result, then the user has liked the recipe
-            if user_liked_recipe_result:
-                user_liked_recipe_result = True
-            else:
-                user_liked_recipe_result = False
-            
-        else:
-            user_liked_recipe_result = False
+            return user_liked_recipe_result[0][0]
         
-        return user_liked_recipe_result
+        return False

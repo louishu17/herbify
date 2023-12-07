@@ -39,7 +39,6 @@ def curr_session():
     print("getting sessionID")
     try:
         user_id = Users.get_current_user_id()
-            
         return jsonify({'session_id': user_id}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500

@@ -5,6 +5,9 @@ import React, {useState} from "react";
 import {object as YupObject, string as YupString} from 'yup';
 import axios from 'axios';
 import { useRouter } from "next/router";
+import { withAuthRedirect } from '@/lib/authCheck';
+
+export const getServerSideProps = withAuthRedirect();
 
 interface LoginFormValues {
     email: string;
@@ -32,7 +35,7 @@ export default function LoginPage(){
 
             setTimeout(() => {
                 router.push("/feed");
-            }, 1000);
+            }, 0);
         } catch (error) {
             console.error(error);
 

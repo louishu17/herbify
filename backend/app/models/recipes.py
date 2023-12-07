@@ -13,16 +13,6 @@ class Recipes:
         self.numLikes = numLikes
         self.userLiked = userLiked
         
-
-    def to_feed_json(self):
-        return {
-            "id" : self.recipeID,
-            "title" : self.title,
-            "caption" : self.caption,
-            "imageS3Filename" : self.imageS3Filename,
-            "numLikes": self.numLikes,
-            "userLiked": self.userLiked
-        }
     
     def to_json_recipe(self):
         return {
@@ -206,12 +196,13 @@ WHERE \"postID\" = :recipeID
             print(e)
             app.db.rollback()
             raise e
+    
 
 
 class RecipeJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Recipes):
             # Define how to serialize the object
-            return obj.to_feed_json()
+            return obj.to_json_recipe()
         return super(RecipeJSONEncoder, self).default(obj)
 

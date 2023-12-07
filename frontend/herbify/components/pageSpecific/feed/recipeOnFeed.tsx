@@ -2,29 +2,32 @@ import { RecipeInfoFromFeed } from "@/pages/api/feed";
 import { Avatar, Typography, Box, Stack, Link as MuiLink, Card, CardActionArea, CardContent, CardMedia, IconButton, CardActions } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
-import { useImageForRecipe } from "@/lib/imageHooks";
+import { INVALID_S3_FILENAME, useImageForRecipe } from "@/lib/recipeImageHooks";
 import { HerbifyLoadingCircle } from "../../shared/loading";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useLikeRecipe, useUnlikeRecipe } from "@/lib/recipePage/likeRecipeHooks";
 import { useEffect, useState } from "react";
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { useImageForProfilePic } from "@/lib/profilePicHooks";
 
 interface RecipeOnFeedProps {
     info : RecipeInfoFromFeed;
+    isProfile? : boolean;
 }
 
 export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedProps) => {
-    const {data : imageSrc, isLoading : isLoadingImg, isError : isErrorLoadingImg} = useImageForRecipe(props.info.imageS3Filename);
+    const {data : recipeImageSrc, isLoading : isLoadingRecipeImg, isError : isErrorLoadingRecipeImg} = useImageForRecipe(props.info.imageS3Filename);
+    const {data : profilePicImgSrc, isLoading : isLoadingProfilePic, isError : isErrorLoadingProfilePic} = useImageForProfilePic(props.info.profilePicS3Filename);
+
+    
     const { mutate: like } = useLikeRecipe();
     const { mutate: unlike } = useUnlikeRecipe();
-
-
 
     const [userLiked, setUserLiked] = useState(false);
     const [likes, setLikes] = useState(0);
 
     const info = props.info;
-
+    const displayLikes = props.isProfile !== null && props.isProfile !== true;
 
     useEffect(() => {
         if (info) {
@@ -36,7 +39,7 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
     const handleLikeClick = () => {
         if (userLiked) {
             // User has already liked the recipe, so unlike it
-            unlike(info.id, {
+            unlike(info.recipeID.toString(), {
                 onSuccess: () => {
                     setUserLiked(false);
                     setLikes(likes => likes - 1);
@@ -44,7 +47,7 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
             });
         } else {
             // User hasn't liked the recipe, so like it
-            like(info.id, {
+            like(info.recipeID.toString(), {
                 onSuccess: () => {
                     setUserLiked(true);
                     setLikes(likes => likes + 1);
@@ -56,17 +59,17 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
     
     const borderRadiusValue = '5px'; 
     return (
-        <Card sx={{ width: '100%', maxWidth: 345, m: 2, boxShadow: 3, borderRadius: borderRadiusValue }}>
+        <Card sx={{ width: '100%', maxWidth: 275, m: 2, boxShadow: 3, borderRadius: borderRadiusValue }}>
             <Box sx={{ position: 'relative' }}>
-                <Link href={`/recipes/${info.id}`} passHref>
+                <Link href={`/recipes/${info.recipeID}`} passHref>
                     <MuiLink underline="none">
                         <CardMedia sx={{ borderRadius: borderRadiusValue }}>
-                            <ImageToDisplay imageSrc={imageSrc ?? ""} isLoading={isLoadingImg} isError={isErrorLoadingImg} />
+                            <ImageToDisplay imageSrc={recipeImageSrc ?? ""} isLoading={isLoadingRecipeImg} isError={isErrorLoadingRecipeImg} />
                         </CardMedia>
                         <CardContent>
                             <Stack direction="row" spacing={2} marginBottom={2} alignItems="center">
                                 <Avatar
-                                    src={imageSrc}
+                                    src={(profilePicImgSrc && !isLoadingProfilePic && !isErrorLoadingProfilePic) ? profilePicImgSrc : INVALID_S3_FILENAME}
                                     alt="Profile Picture"
                                     sx={{ width: 50, height: 50, borderRadius: borderRadiusValue }}
                                 />
@@ -80,14 +83,14 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                         </CardContent>
                     </MuiLink>
                 </Link>
-                <CardActions disableSpacing>
-                            <IconButton onClick={handleLikeClick} aria-label="add to favorites" disabled={isLoadingImg}>
+                {displayLikes && <CardActions disableSpacing>
+                            <IconButton onClick={handleLikeClick} aria-label="add to favorites" disabled={isLoadingRecipeImg}>
                                 {userLiked ? <FavoriteIcon style={{color: "red"}} /> : <FavoriteBorderIcon />}
                             </IconButton>
                             <Typography variant="body2" color="text.secondary">
                                 {likes} Likes
                             </Typography>
-                </CardActions>
+                </CardActions>}
             </Box>
         </Card>
     );
@@ -100,12 +103,11 @@ interface FeedImageProps{
     imageSrc : string;
 }
 export const ImageToDisplay: React.FC<FeedImageProps> = ({ isLoading, isError, imageSrc }) => {
-    // Define a common border radius value
-    const borderRadiusValue = '5px'; // or you can use a value from the theme
+    const borderRadiusValue = '5px';
 
     if (isLoading) {
         return (
-            <Box width={250} height={200} display="flex" justifyContent="center" alignItems="center" sx={{ borderRadius: borderRadiusValue }}>
+            <Box width={275} height={170} display="flex" justifyContent="center" alignItems="center" sx={{ borderRadius: borderRadiusValue }}>
                 <HerbifyLoadingCircle />
             </Box>
         );
@@ -113,8 +115,8 @@ export const ImageToDisplay: React.FC<FeedImageProps> = ({ isLoading, isError, i
         return <Typography variant="body2" color="error" sx={{ borderRadius: borderRadiusValue }}>Error Loading Image</Typography>;
     } else if (imageSrc) {
         return (
-            <div style={{ borderRadius: borderRadiusValue, overflow: 'hidden', width: '100%', height: '100%' }}>
-                <Image src={imageSrc} alt="Recipe" layout="responsive" width={250} height={200} objectFit="cover" />
+            <div style={{ borderRadius: borderRadiusValue, overflow: 'hidden', width: 275, height: 170, position: 'relative' }}>
+                <Image src={imageSrc} alt="Recipe" layout="fill" objectFit="cover" />
             </div>
         );
     } else {

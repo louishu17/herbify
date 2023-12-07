@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useImageForRecipe } from "@/lib/imageHooks";
+import { useImageForRecipe } from "@/lib/recipeImageHooks";
 import { useBasicRecipeInfo, useRecipeID } from "@/lib/recipePage/basicRecipeInfoHooks";
 import Image from "next/image";
 import { HerbifyLoadingCircle } from "@/components/shared/loading";

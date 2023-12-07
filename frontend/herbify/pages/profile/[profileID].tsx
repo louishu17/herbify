@@ -8,6 +8,10 @@ import { RecipesSection } from '@/components/pageSpecific/profile/recipesSection
 import { HerbifyLoadingContainer } from '@/components/shared/loading';
 import { ProfileListModal } from '@/components/pageSpecific/profile/followModal';
 import { User } from "@/components/pageSpecific/search/searchResultsUser";
+import { INVALID_S3_FILENAME, useImageForProfilePic } from '@/lib/profilePicHooks';
+import { withAuth } from '@/lib/authCheck';
+
+export const getServerSideProps = withAuth();
 
 const FollowersClickableArea = styled(Button)({
   background: 'none',
@@ -29,12 +33,16 @@ const FollowersClickableArea = styled(Button)({
 
 const ProfileGrid = styled(Grid)(({ theme }) => ({
   marginTop: theme.spacing(3),
+  justifyContent: 'center', // Center align the content
+  width: '100%', // Ensure full width
 }));
 
 const ProfilePaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
   textAlign: 'center',
   color: theme.palette.text.secondary,
+  width: '600px', // Set a maximum width for the profile information
+  margin: 'auto', // Center the paper in the grid
 }));
 
 const RecipesGrid = styled(Grid)(({ theme }) => ({
@@ -51,6 +59,8 @@ export default function ProfilePage() {
 
   const userId = useUserID();
   const {data : profileData, isLoading, isError, refetch } = useFetchProfile(userId);
+  const {data : profilePicSrc, isLoading : isLoadingProfilePicSrc, isError : isErrorLoadingProfilePicSrc} = useImageForProfilePic(profileData ? profileData.user[0].profilePicS3Filename : INVALID_S3_FILENAME);
+ 
 
   const currFollowers = profileData ? profileData.followers : 0
   
@@ -121,11 +131,11 @@ export default function ProfilePage() {
       <ProfileGrid spacing={2}>
         <ProfileGrid item xs={10}>
         <ProfilePaper elevation={0}>
-          <Grid container alignItems="center" spacing={2}>
+          <Grid container alignItems="center" spacing={2} width = {"100%"}>
             <Grid item>
               <Avatar 
                 alt={profileData.user[0].firstName} 
-                src="/static/images/avatar/1.jpg" 
+                src={(profilePicSrc && !isLoadingProfilePicSrc && !isErrorLoadingProfilePicSrc) ? profilePicSrc : INVALID_S3_FILENAME}
                 style={avatarStyle} 
               />
             </Grid>
@@ -177,8 +187,10 @@ export default function ProfilePage() {
     body = <Typography>Error</Typography>
   }
   return (
-    <BaseHerbifyLayoutWithTitle title="">
-      {body}
+    <BaseHerbifyLayoutWithTitle title="" > {/* Ensure full width */}
+      <Box sx={{ width: '100%' }}>
+        {body}
+      </Box>
     </BaseHerbifyLayoutWithTitle>
   );
   

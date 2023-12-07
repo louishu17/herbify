@@ -37,6 +37,7 @@ export interface UserOnProfileData {
     pronouns : string;
     suffix : string;
     uid : number;
+    profilePicS3Filename : string;
 }
 
 export interface ProfileData {
@@ -66,6 +67,17 @@ export const useFetchProfile = (userID : number) : UseQueryResult<ProfileData> =
 
 export const fetchSessionId = async () : Promise<number> => {
     const response = await instance.get(`http://127.0.0.1:5000/curr_session`);
+    
+    if (response.status > 300){
+        throw new Error("Error session id");
+    } 
+    return response.data.session_id;
+};
+
+export const fetchSessionIdServerSide = async (cookies: string) : Promise<number> => {
+    const response = await instance.get(`http://127.0.0.1:5000/curr_session`, {headers: {
+        'Cookie': cookies,
+    },});
     
     if (response.status > 300){
         throw new Error("Error session id");
