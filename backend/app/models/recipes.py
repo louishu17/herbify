@@ -43,16 +43,16 @@ class Recipes:
         self.userLiked = userLiked
 
         # 'Gluten Free', 'Vegan', 'High Protein', 'Kid-Friendly', 'Vegetarian', 'Keto', 'Spicy', 'Healthy', 'Dairy-Free', 'Nut-Free',
-        self.isGlutenFree = False
-        self.isVegan = False
-        self.isHighProtein = False
-        self.isKidFriendly = False
-        self.isVegetarian = False
-        self.isKeto = False
-        self.isSpicy = False
-        self.isHealthy = False
-        self.isDairyFree = False
-        self.isNutFree = False
+        self.isGlutenFree = isGlutenFree
+        self.isVegan = isVegan
+        self.isHighProtein = isHighProtein
+        self.isKidFriendly = isKidFriendly
+        self.isVegetarian = isVegetarian
+        self.isKeto = isKeto
+        self.isSpicy = isSpicy
+        self.isHealthy = isHealthy
+        self.isDairyFree = isDairyFree
+        self.isNutFree = isNutFree
 
     def to_json_recipe(self):
         return {

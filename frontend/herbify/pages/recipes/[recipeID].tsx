@@ -14,7 +14,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useEffect, useState } from "react";
 import { withAuth } from '@/lib/authCheck';
 
-export const getServerSideProps = withAuth();
+// export const getServerSideProps = withAuth();
 
 export default function RecipePage() {
     const recipeID = useRecipeID();
