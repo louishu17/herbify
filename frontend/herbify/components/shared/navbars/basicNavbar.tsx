@@ -17,7 +17,7 @@ export const BasicHerbifyNavBar : React.FC = () => {
     ];
 
     return (
-        <div style={{ width: '205px' }}>
+        <div>
             <HerbifyNavBarGivenOptionDescriptions optionDescriptions={optionDescriptions}/>
         </div>
     );

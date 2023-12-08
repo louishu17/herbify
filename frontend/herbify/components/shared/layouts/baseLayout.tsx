@@ -9,10 +9,17 @@ interface BaseLayoutProps {
 
 export const BaseHerbifyLayout : React.FC<BaseLayoutProps> = (props:BaseLayoutProps) => {
     return (
-        <Stack direction="row" style={{justifyContent : 'center'}} component="main">
+        <Stack 
+          direction="row" 
+          style={{ 
+              justifyContent: 'center', 
+              width: '100%' // Ensuring the Stack takes full width
+          }} 
+          component="main"
+        >
             <BasicHerbifyNavBar/>
-            <div>
-                {props.children ? props.children : null}
+            <div style={{ width: '100%', maxWidth: '800px', margin: 'auto' }}> {/* Ensure this div takes full width */}
+                {props.children}
             </div>
             <Footer/>
         </Stack>
