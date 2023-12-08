@@ -20,7 +20,6 @@ const tagOptions = [
   'Vegetarian',
   'Keto',
   'Spicy',
-  'Quick & Easy',
   'Healthy',
   'Dairy-Free',
   'Nut-Free',
