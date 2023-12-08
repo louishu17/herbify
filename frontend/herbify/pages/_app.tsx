@@ -7,6 +7,7 @@ import {persistQueryClient} from 'react-query/persistQueryClient-experimental';
 import {ReactQueryDevtools} from "react-query/devtools";
 import {createWebStoragePersistor} from "react-query/createWebStoragePersistor-experimental";
 import { QueryClient } from 'react-query';
+import 'typeface-roboto';
 
 
 export default function App({ Component, pageProps }: AppProps) {

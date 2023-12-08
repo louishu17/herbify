@@ -15,10 +15,11 @@ export const getServerSideProps = withAuth();
 
 export default function SearchPage(){
     const [currentTabIndex, setCurrentTabIndex] = useState(0);
-    const {loadMore : loadMoreRecipes, setTerm : setRecipeTerm} = useFetchPaginatedSearchRecipeByTerm();
+    const {loadMore : loadMoreRecipes, setTerm : setRecipeTerm, setSearchingByIngredient, searchingByIngredient} = useFetchPaginatedSearchRecipeByTerm();
     const {loadMore : loadMoreUsers, setTerm : setUsersTerm} = useFetchPaginatedSearchUserByTerm();
 
     const handleSearchRecipesSubmit = async (term: string) => {
+        setSearchingByIngredient(false);
         setRecipeTerm(term);
         loadMoreRecipes();
     };
@@ -28,20 +29,39 @@ export default function SearchPage(){
         loadMoreUsers();
     };
 
+    const handleSearchIngredientsSubmit = async (term : string) => {
+        setSearchingByIngredient(true);
+        setRecipeTerm(term);
+        loadMoreRecipes();
+    }
+
     const handleTabChange = (e: any, tabIndex: React.SetStateAction<number>) => {
         setCurrentTabIndex(tabIndex);
       };
 
-    const handleSearchSubmit = currentTabIndex === 0 ? handleSearchRecipesSubmit : handleSearchUsersSubmit;
+    const handleSearchSubmit = () => {
+        if (currentTabIndex === 0){
+            return handleSearchRecipesSubmit;
+        } else if (currentTabIndex === 1){
+            return handleSearchIngredientsSubmit;
+        } else {
+            return handleSearchUsersSubmit;
+        }
+
+    }
+
     
     return (
         <BaseHerbifyLayoutWithTitle title="Search">
-            <Tabs value={currentTabIndex} onChange={handleTabChange}>
-                <Tab label="Search Recipes"/>
-                <Tab label="Search Users"/>
-            </Tabs>
-            <SearchBar onSearchSubmit={handleSearchSubmit}/>
-            {currentTabIndex === 0 ? <SearchResults  /> : <SearchPageUsersResults />}   
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Tabs value={currentTabIndex} onChange={handleTabChange}>
+                    <Tab label="Search Recipes By Title"/>
+                <Tab label="Search Recipes By Ingredient"/>
+                    <Tab label="Search Users"/>
+                </Tabs>
+            </div>
+            <SearchBar onSearchSubmit={handleSearchSubmit()}/>
+            {currentTabIndex <=1 ? <SearchResults  /> : <SearchPageUsersResults />}   
               
         </BaseHerbifyLayoutWithTitle>
     )
