@@ -15,6 +15,33 @@ interface RecipeOnFeedProps {
     isProfile? : boolean;
 }
 
+const AttributeTags = ({ info }) => {
+    const attributes = [
+        { key: 'isGlutenFree', color: '#ddcc66' },
+        { key: 'isVegan', color: '#006c47' },
+        { key: 'isHighProtein', color: '#964B00' },
+        { key: 'isKeto', color: 'purple' },
+        { key: 'isKidFriendly', color: 'orange' },
+        { key: 'isNutFree', color: 'brown' },
+        { key: 'isSpicy', color: '#ff1111' },
+        { key: 'isVegetarian', color: '#90EE90' }
+    ];
+
+    const tagElements = attributes
+        .filter(attr => info[attr.key])
+        .map(attr => (
+            <Box key={attr.key} sx={{ borderRadius: '5px', backgroundColor: attr.color, color: 'white', padding: '2px 5px', margin: '5px' }}>
+                {attr.key.replace('is', '').replace(/([a-z])([A-Z])/g, '$1 $2')}
+            </Box>
+        ));
+
+    return (
+        <div style={{ display: 'flex', flexWrap: 'wrap', maxWidth: '100%' }}>
+            {tagElements}
+        </div>
+    );
+};
+
 export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedProps) => {
     const {data : recipeImageSrc, isLoading : isLoadingRecipeImg, isError : isErrorLoadingRecipeImg} = useImageForRecipe(props.info.imageS3Filename);
     const {data : profilePicImgSrc, isLoading : isLoadingProfilePic, isError : isErrorLoadingProfilePic} = useImageForProfilePic(props.info.profilePicS3Filename);
@@ -27,6 +54,7 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
     const [likes, setLikes] = useState(0);
 
     const info = props.info;
+
     const displayLikes = props.isProfile !== null && props.isProfile !== true;
 
     useEffect(() => {
@@ -91,6 +119,7 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                                 {likes} Likes
                             </Typography>
                 </CardActions>}
+                <AttributeTags info={info}/>
             </Box>
         </Card>
     );
