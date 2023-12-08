@@ -1,6 +1,6 @@
 // SearchBar.tsx
 import React, { useState } from 'react';
-import { InputBase, Paper, IconButton } from '@mui/material';
+import { InputBase, Paper, IconButton, Container } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 interface SearchBarProps {
@@ -23,25 +23,27 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearchSubmit }) => {
   };
 
   return (
-    <Paper 
-      component="form" 
-      style={{ 
-        display: 'flex', // Ensures the contents are laid out in a row
-        alignItems: 'center',
+    <Container maxWidth="xs">
+      <Paper 
+        component="form" 
+        style={{ 
+          display: 'flex', // Ensures the contents are laid out in a row
+        alignItems: 'right',
         width: '100%', // Adjust this value as needed
-      }}
-      onSubmit={handleSearchSubmit}
-    >
-      <InputBase
-        style={{ marginLeft: 8, flex: 1 }}
-        placeholder="Search..."
-        inputProps={{ 'aria-label': 'Search for users or posts' }}
-        value={searchTerm}
-        onChange={handleSearchChange}
-      />
-      <IconButton type="submit" style={{ padding: 10 }} aria-label="search">
-        <SearchIcon />
-      </IconButton>
-    </Paper>
+        }}
+        onSubmit={handleSearchSubmit}
+      >
+        <InputBase
+          style={{ marginLeft: 8, flex: 1 }}
+          placeholder="Search..."
+          inputProps={{ 'aria-label': 'Search for users or posts' }}
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+        <IconButton type="submit" style={{ padding: 10, marginRight: 0 }} aria-label="search">
+          <SearchIcon />
+        </IconButton>
+      </Paper>
+    </Container>
   );
 }
