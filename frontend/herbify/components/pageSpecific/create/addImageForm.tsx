@@ -1,28 +1,76 @@
-// components/IngredientsForm.tsx
-import React, {  useContext} from 'react';
-import {  Container, Typography } from '@mui/material';
-import { NewRecipeContext } from '@/lib/createRecipePage/newRecipeContext';
-import Image from "next/image";
+import React, { useState, useEffect } from 'react';
+import { Container, Avatar, Typography, Button } from '@mui/material';
+import {
+  useImageForProfilePic,
+  INVALID_S3_FILENAME,
+} from '@/lib/profilePicHooks';
+import { useFetchProfile } from '@/lib/profileHooks';
 
+interface ProfilePicFormProps {
+  uid: number;
+  newProfilePicFile: File | null;
+  setNewProfilePicFile: (f: File) => void;
+}
 
-export const ImageForm: React.FC = () => {
+export const ProfilePicForm: React.FC<ProfilePicFormProps> = (
+  props: ProfilePicFormProps
+) => {
+  const { data, isLoading: isLoadingProfile, isError: isErrorLoadingProfile } =
+    useFetchProfile(props.uid);
+  const {
+    data: profilePicSrc,
+    isLoading: isLoadingProfilePic,
+    isError: isErrorLoadingProfilePic,
+  } = useImageForProfilePic(
+    data ? data.user[0].profilePicS3Filename : INVALID_S3_FILENAME
+  );
 
-    const {imageFile, setImageFile} = useContext(NewRecipeContext);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const uploadedFile = event.target.files && event.target.files[0];
+    if (uploadedFile) {
+      props.setNewProfilePicFile(uploadedFile);
+    }
+  };
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const uploadedFile = event.target.files && event.target.files[0];
-        if (uploadedFile) {
-            setImageFile(uploadedFile);
-        }
-    };
+  const [imgSrc, setImgSrc] = useState<string>(INVALID_S3_FILENAME);
+  useEffect(() => {
+    if (props.newProfilePicFile) {
+      setImgSrc(props.newProfilePicFile.name);
+    } else {
+      setImgSrc(
+        profilePicSrc &&
+          !isLoadingProfilePic &&
+          !isErrorLoadingProfilePic
+          ? profilePicSrc
+          : INVALID_S3_FILENAME
+      );
+    }
+  }, [profilePicSrc, isLoadingProfilePic, isErrorLoadingProfilePic, props.newProfilePicFile]);
 
-
-    return (
-        <Container maxWidth="md">
-            <Typography variant="h4">Recipe Image</Typography>
-            <input type="file" onChange={handleFileChange} accept=".jpg" />
-            {imageFile ? <Image src={imageFile ? URL.createObjectURL(imageFile) : ""} alt="pic" width={250} height={200} ></Image> : null}
-        </Container>
-    );
+  return (
+    <Container style={{ marginBottom: 16 }}>
+      <Avatar
+        alt="Profile Pic"
+        src={imgSrc}
+        sx={{ marginRight: 2, height: 100, width: 100 }}
+      />
+      <Typography variant="h6">Change Profile Pic</Typography>
+      <label htmlFor="profile-pic-upload">
+        <Button
+          variant="contained"
+          component="span"
+          sx={{ marginTop: 2 }}
+        >
+          Upload Image
+        </Button>
+      </label>
+      <input
+        type="file"
+        id="profile-pic-upload"
+        onChange={handleFileChange}
+        accept=".jpg"
+        style={{ display: 'none' }}
+      />
+    </Container>
+  );
 };
-
