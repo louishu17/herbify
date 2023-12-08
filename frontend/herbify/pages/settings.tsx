@@ -8,6 +8,7 @@ import { object as YupObject, string as YupString, number as YupNumber } from 'y
 import { useFetchProfile } from '@/lib/profileHooks';
 import { ProfilePicForm } from "@/components/pageSpecific/settings/profilePicForm";
 import { withAuth } from '@/lib/authCheck';
+import { fetchSessionId } from '@/lib/profileHooks';
 
 export const getServerSideProps = withAuth();
 
@@ -58,8 +59,9 @@ export default function SetProfilePage() {
         bio: '',
     });
     const [newProfilePicFile, setNewProfilePicFile] = useState<File | null>(null);
-    const uid = 947;
-    const { data: profileData, isLoading, isError } = useFetchProfile(uid);
+    const [sessionUserId, setSessionUserId] = useState(-1);
+
+    const { data: profileData, isLoading, isError } = useFetchProfile(sessionUserId);
 
     useEffect(() => {
         if (profileData && profileData.user && profileData.user.length > 0) {
@@ -78,6 +80,16 @@ export default function SetProfilePage() {
             });
         }
     }, [profileData]);
+
+    useEffect(() => {
+        const getSessionId = async () => {
+          const id = await fetchSessionId();
+          
+          setSessionUserId(id);
+        };
+    
+        getSessionId();
+      }, []);
 
     const updateProfileInDB = async (values : SetUserProfileFormValues) => {
         const combinedDate = `${values.birthYear}-${values.birthMonth.padStart(2, '0')}-${values.birthDay.padStart(2, '0')}`;
@@ -123,7 +135,7 @@ export default function SetProfilePage() {
     } else if (profileData && profileData.user && profileData.user.length > 0) {
         body = (
             <Container >
-                <ProfilePicForm uid={uid} setNewProfilePicFile={setNewProfilePicFile} newProfilePicFile={newProfilePicFile}/>
+                <ProfilePicForm uid={sessionUserId} setNewProfilePicFile={setNewProfilePicFile} newProfilePicFile={newProfilePicFile}/>
                 <HerbifyForm
                     handleSubmit={handleSubmit}
                     initialValues={initialValues}

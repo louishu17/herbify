@@ -4,6 +4,7 @@ import { HerbifyLoadingContainer } from "@/components/shared/loading";
 import { Grid, Paper, Typography, Box, Avatar } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { RecipeOnProfile } from "./recipeOnProfile";
+
 export const RecipesSection: React.FC = () => {
     const userID = useUserID();
     const { data, isLoading, isError } = useFetchProfile(userID);

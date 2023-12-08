@@ -11,7 +11,7 @@ import { User } from "@/components/pageSpecific/search/searchResultsUser";
 import { INVALID_S3_FILENAME, useImageForProfilePic } from '@/lib/profilePicHooks';
 import { withAuth } from '@/lib/authCheck';
 
-// export const getServerSideProps = withAuth();
+export const getServerSideProps = withAuth();
 
 const FollowersClickableArea = styled(Button)({
   background: 'none',

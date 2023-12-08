@@ -7,7 +7,7 @@ import React, {useEffect, useRef} from "react";
 import { fetchSessionId } from "@/lib/profileHooks";
 import { withAuth } from '@/lib/authCheck';
 
-// export const getServerSideProps = withAuth();
+export const getServerSideProps = withAuth();
 
 export default function FeedPage() {
     //const {data : recipes, isLoading, isError} = useFetchBasicFeed();
