@@ -27,7 +27,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearchSubmit }) => {
       <Paper 
         component="form" 
         style={{ 
-          alignItems: 'right'
+          display: 'flex', // Ensures the contents are laid out in a row
+        alignItems: 'right',
+        width: '100%', // Adjust this value as needed
         }}
         onSubmit={handleSearchSubmit}
       >

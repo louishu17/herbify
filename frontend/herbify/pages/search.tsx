@@ -53,11 +53,13 @@ export default function SearchPage(){
     
     return (
         <BaseHerbifyLayoutWithTitle title="Search">
-            <Tabs value={currentTabIndex} onChange={handleTabChange}>
-                <Tab label="Search Recipes By Title"/>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Tabs value={currentTabIndex} onChange={handleTabChange}>
+                    <Tab label="Search Recipes By Title"/>
                 <Tab label="Search Recipes By Ingredient"/>
-                <Tab label="Search Users"/>
-            </Tabs>
+                    <Tab label="Search Users"/>
+                </Tabs>
+            </div>
             <SearchBar onSearchSubmit={handleSearchSubmit()}/>
             {currentTabIndex <=1 ? <SearchResults  /> : <SearchPageUsersResults />}   
               

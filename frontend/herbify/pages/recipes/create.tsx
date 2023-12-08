@@ -67,7 +67,7 @@ export default function CreateRecipePage() {
         <BaseHerbifyLayoutWithTitle title="Create Recipe">
             <NewRecipeContext.Provider value={{title, setTitle, imageFile, setImageFile, caption, setCaption, ingredients, setIngredients, directions, setDirections, tags, setTags, hours, setHours, minutes, setMinutes}}>
                 <Container maxWidth="lg">
-                    <Stack width={400} spacing={6} style={{paddingBottom:6}}>
+                <Stack width={400} spacing={6} style={{ paddingBottom: 6, justifyContent: "center", alignItems: "center", display: "flex", flexDirection: "column" }} >
                         <AddTitleForm/>
                         <ImageForm/>
                         <IngredientsForm/>
@@ -75,7 +75,7 @@ export default function CreateRecipePage() {
                         <TimeForm/>
                         <TagsForm/>
                     </Stack>
-                    <Button variant="contained" onClick={handleSubmit} style={{backgroundColor: "Highlight", marginTop : 40, display: "block", margin: "0 auto"}}>Submit Recipe</Button>
+                    <Button variant="contained" onClick={handleSubmit} style={{backgroundColor: "Highlight", marginTop : 40, marginBottom : 40, display: "block", margin: "0 auto"}}>Submit Recipe</Button>
                 </Container>
             </NewRecipeContext.Provider>
         </BaseHerbifyLayoutWithTitle>

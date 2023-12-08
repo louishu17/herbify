@@ -116,7 +116,19 @@ export const ImageToDisplay: React.FC<FeedImageProps> = ({ isLoading, isError, i
     } else if (imageSrc) {
         return (
             <div style={{ borderRadius: borderRadiusValue, overflow: 'hidden', width: 275, height: 170, position: 'relative' }}>
-                <Image src={imageSrc} alt="Recipe" layout="fill" objectFit="cover" />
+                <Image 
+                    src={imageSrc} 
+                    alt="Recipe" 
+                    width={275}
+                    height={170}
+                    style={{
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',  // This will cover the area of the container
+                        objectPosition: 'center' // Center the image within the element
+                    }}
+                />
             </div>
         );
     } else {

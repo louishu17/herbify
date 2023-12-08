@@ -17,7 +17,7 @@ export const TimeForm: React.FC = () => {
   return (
     <Container maxWidth="md">
       <Typography variant="h4">Time</Typography>
-      <FormControl fullWidth>
+      <FormControl fullWidth style={{paddingBottom: 10}}>
         <InputLabel>Hours</InputLabel>
         <Select
           value={hours}
