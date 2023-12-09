@@ -4,7 +4,7 @@ import { useBasicRecipeInfo, useRecipeID} from "@/lib/recipePage/basicRecipeInfo
 import { useLikeRecipe, useUnlikeRecipe } from "@/lib/recipePage/likeRecipeHooks";
 import { BasicRecipeInfo } from "../api/recipe/[recipeID]/recipeInfo";
 import { RecipeHeader } from "../../components/pageSpecific/recipePage/RecipeHeader";
-import {Container} from "@mui/material"
+import {Box, Container} from "@mui/material"
 import { IngredientsSection } from "@/components/pageSpecific/recipePage/ingredientsSection";
 import { DirectionsSection } from "@/components/pageSpecific/recipePage/directionsSection";
 import { PictureSection } from "@/components/pageSpecific/recipePage/pictureSection";
@@ -14,6 +14,9 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useEffect, useState } from "react";
 import { withAuth } from '@/lib/authCheck';
 import { CommentsSection } from "@/components/pageSpecific/recipePage/commentsSection";
+import { usePostRating } from "@/lib/recipePage/ratingRecipeHooks";
+import { RatingComponent } from "@/components/pageSpecific/recipePage/ratingComponent";
+import { LikesComponent } from "@/components/pageSpecific/recipePage/likesComponent";
 
 export const getServerSideProps = withAuth();
 
@@ -22,14 +25,17 @@ export default function RecipePage() {
     const {data, isLoading, isError} = useBasicRecipeInfo(recipeID);
     const { mutate: like } = useLikeRecipe();
     const { mutate: unlike } = useUnlikeRecipe();
+    const { mutate: rate } = usePostRating(recipeID);
   
     const [userLiked, setUserLiked] = useState(false);
     const [likes, setLikes] = useState(0);
+    const [userRating, setUserRating] = useState(0);
 
     useEffect(() => {
         if (data) {
             setUserLiked(data.userLiked);
             setLikes(data.numLikes);
+            setUserRating(data.userRated);
         }
     }, [data]);
 
@@ -55,16 +61,33 @@ export default function RecipePage() {
         }
     };
 
+    const handleRatingChange = (newRating: number) => {
+        rate({ rating: newRating }, {
+            onSuccess: () => {
+                console.log("Rating updated");
+                setUserRating(newRating);
+            }
+        });
+    };
+    
     
     return (
         <BaseHerbifyLayout>
             <Container maxWidth="lg">
                 <RecipeHeader />
                 <PictureSection/>
-                <IconButton onClick={handleLikeClick} aria-label="like" disabled={isLoading}>
-                    {userLiked ? <FavoriteIcon style={{color: "red"}} /> : <FavoriteBorderIcon />}
-                </IconButton>
-                <span>{likes} Likes</span>
+                <Box display="flex" alignItems="center" gap={4}>
+                    <LikesComponent 
+                        userLiked={userLiked} 
+                        likesCount={likes} 
+                        onLikeClick={handleLikeClick} 
+                        isLoading={isLoading} 
+                    />
+                    <RatingComponent 
+                        userRating={userRating} 
+                        onRatingChange={handleRatingChange} 
+                    />
+                </Box>
                 <IngredientsSection />
                 <DirectionsSection/>
                 <CommentsSection/>

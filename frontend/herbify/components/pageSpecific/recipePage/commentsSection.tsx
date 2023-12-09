@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useComments, usePostComment } from "@/lib/recipePage/commentRecipeHooks";
-import { Typography, Container, List, ListItem, TextField, Button, Box, Link, Avatar } from "@mui/material";
+import { Typography, Container, List, TextField, Button} from "@mui/material";
 import { HerbifyLoadingCircle } from "@/components/shared/loading";
 import { useRecipeID } from "@/lib/recipePage/basicRecipeInfoHooks";
-import { useImageForProfilePic, INVALID_S3_FILENAME } from "@/lib/profilePicHooks";
-import CommentItem, { commentItem } from "@/components/pageSpecific/recipePage/commentItem";
+import CommentItem from "@/components/pageSpecific/recipePage/commentItem";
 
 
 const CommentsBody: React.FC = () => {

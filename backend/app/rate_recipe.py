@@ -8,7 +8,7 @@ rate_recipe_blueprint = Blueprint('rate-recipe', __name__)
 @rate_recipe_blueprint.route('/recipe/<int:recipeID>/rate-recipe', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def like_recipe(recipeID):
-    print("liking recipe")
+    print("rating recipe")
     try:
         data = request.get_json()
         rating = data['rating']
