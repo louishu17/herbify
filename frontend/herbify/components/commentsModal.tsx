@@ -3,13 +3,16 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { List, ListItem, TextField } from '@mui/material';
+import { Avatar, List, ListItem, TextField } from '@mui/material';
+import { INVALID_S3_FILENAME, useImageForProfilePic } from '@/lib/profilePicHooks';
 
-interface RecipeComment {
+export interface RecipeComment {
     id: number;
     text: string;
     user_id: number;
     timestamp: string;
+    profilePicS3Filename?: string;
+    firstName?: string;
     replies?: RecipeComment[]; 
 }
 
@@ -69,19 +72,32 @@ const CommentsModal: React.FC<RecipeCommentsModalProps> = ({ open, handleClose, 
         setReplyComments({ ...replyComments, [commentId]: text });
     };
 
+    const avatarStyle = { width: '40px', height: '40px', marginRight: '10px' };
+   
     const renderComments = (comments: RecipeComment[], depth: number = 0) => {
         return (
             <List sx={{ pl: depth > 0 ? 2 : 0, width: '100%' }}>
-                {comments.map((comment) => (
-                    <ListItem key={comment.id} sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-                        <Box sx={{ mb: 1 }}>
-                            <Typography style={{ fontSize: '0.75rem' }}>
-                                User {comment.user_id}     
-                                <span style={{ marginLeft: '5px', color: 'darkgrey', fontSize: '0.65rem'}}>
-                                    {getRelativeTime(comment.timestamp)}
-                                </span>
-                            </Typography>
-                            <Typography variant="body1">{comment.text}</Typography>
+                {comments.map((comment) => {
+                    const { data: profilePicSrc, isLoading: isLoadingProfilePicSrc, isError: isErrorLoadingProfilePicSrc } = useImageForProfilePic(comment.profilePicS3Filename ? comment.profilePicS3Filename : INVALID_S3_FILENAME);
+
+                    return (
+                        <ListItem key={comment.id} sx={{ flexDirection: 'column', alignItems: 'flex-start', mb: 2 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 1 }}>
+                                <Avatar 
+                                    alt={comment.firstName || `User ${comment.user_id}`} 
+                                    src={(profilePicSrc && !isLoadingProfilePicSrc && !isErrorLoadingProfilePicSrc) ? profilePicSrc : INVALID_S3_FILENAME}
+                                    style={avatarStyle} 
+                                />
+                                <Box sx={{ mt: 0.5 }}> {/* Adjust top margin to align text with avatar */}
+                                    <Typography style={{ fontSize: '0.75rem' }}>
+                                        {comment.firstName || `User ${comment.user_id}`}
+                                        <span style={{ marginLeft: '5px', color: 'darkgrey', fontSize: '0.65rem'}}>
+                                            {getRelativeTime(comment.timestamp)}
+                                        </span>
+                                    </Typography>
+                                    <Typography variant="body1">{comment.text}</Typography>
+                                </Box>
+                            </Box>
                             <Button size="small" onClick={() => setReplyTo(replyTo === comment.id ? null : comment.id)}>
                                 {replyTo === comment.id ? 'Cancel' : 'Reply'}
                             </Button>
@@ -97,14 +113,13 @@ const CommentsModal: React.FC<RecipeCommentsModalProps> = ({ open, handleClose, 
                                     <Button onClick={() => handleReplySubmit(comment.id)}>Post Reply</Button>
                                 </Box>
                             )}
-                        </Box>
-                        {comment.replies && renderComments(comment.replies, depth + 1)}
-                    </ListItem>
-                ))}
+                            {comment.replies && renderComments(comment.replies, depth + 1)}
+                        </ListItem>
+                    );
+                })}
             </List>
         );
     };
-    
 
     return (
         <Modal

@@ -1,7 +1,8 @@
 import React, {ReactNode} from 'react';
-import { AppBar, Drawer, List, ListItem, ListItemText, Toolbar, Typography, Button, PropTypes } from '@mui/material'
+import { AppBar, Drawer, List, ListItem, Button,IconButton } from '@mui/material'
 import { useRouter, NextRouter } from 'next/router';
 import { handleLogout } from '@/lib/logoutHooks';
+import HomeButton from '@/components/shared/homeButton';
 
 
 
@@ -11,12 +12,22 @@ interface HerbifyNavBarGivenOptionsProps {
 }
 
 const HerbifyNavBarGivenOptions : React.FC<HerbifyNavBarGivenOptionsProps> = (props : HerbifyNavBarGivenOptionsProps) => {
-
+    const router = useRouter();
   return (
     <Drawer variant="permanent">
       <List>
         <ListItem style={{justifyContent: 'center'}}>
+        <IconButton 
+            onClick={() => router.push('/feed')} 
+            sx={{ 
+                padding: 0, 
+                '&:hover': { 
+                    bgcolor: 'transparent', // Make hover background transparent
+                } 
+            }}
+        >
             <img src={`/icons/herbify-logo.svg`} style={{ width: '100px', height: 'auto'}}/>
+        </IconButton>
         </ListItem>
         {props.options}
       </List>

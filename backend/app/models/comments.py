@@ -1,12 +1,14 @@
 from flask import current_app as app
 
 class RecipeComment:
-    def __init__(self, id, text, user_id, parent_id, post_id, timestamp):
+    def __init__(self, id, text, user_id, parent_id, post_id, timestamp, firstName, profilePicS3Filename):
         self.id = id
         self.text = text
         self.user_id = user_id
         self.parent_id = parent_id
         self.post_id = post_id
+        self.firstName = firstName
+        self.profilePicS3Filename = profilePicS3Filename
         self.timestamp = timestamp
     
     def __repr__(self):
@@ -29,27 +31,29 @@ class RecipeComment:
     
 
     @staticmethod
-    def format_comments(post_id, comment_id = None):
+    def format_comments(post_id, comment_id=None):
         print("getting comments")
         try:
             if comment_id is None:
                 query = '''
-                    SELECT *
-                    FROM "Comments"
-                    WHERE parent_id IS NULL AND post_id = :post_id
+                    SELECT c.*, u.\"firstName\", u.\"profilePicS3Filename\"
+                    FROM \"Comments\" c
+                    JOIN \"Users\" u ON c.user_id = u.uid
+                    WHERE c.parent_id IS NULL AND c.post_id = :post_id
                 '''
                 comments = app.db.execute(query, post_id=post_id)
             else:
                 query = '''
-                    SELECT *
-                    FROM "Comments"
-                    WHERE parent_id = :comment_id AND post_id = :post_id
+                    SELECT c.*, u.\"firstName\", u.\"profilePicS3Filename\"
+                    FROM \"Comments\" c
+                    JOIN \"Users\" u ON c.user_id = u.uid
+                    WHERE c.parent_id = :comment_id AND c.post_id = :post_id
                 '''
                 comments = app.db.execute(query, comment_id=comment_id, post_id=post_id)
 
             print(comments)
-            comments = [RecipeComment(comment.id, comment.text, comment.user_id, comment.parent_id, comment.post_id, comment.timestamp) for comment in comments] if comments else []
-            
+            comments = [RecipeComment(comment.id, comment.text, comment.user_id, comment.parent_id, comment.post_id, comment.timestamp, comment.firstName, comment.profilePicS3Filename) for comment in comments] if comments else []
+
             formatted_comments = []
             for comment in comments:
                 formatted_comments.append({
@@ -59,6 +63,8 @@ class RecipeComment:
                     "parent_id": comment.parent_id,
                     "post_id": comment.post_id,
                     "timestamp": comment.timestamp,
+                    "firstName": comment.firstName,
+                    "profilePicS3Filename": comment.profilePicS3Filename,
                     "replies": RecipeComment.format_comments(post_id, comment.id)
                 })
 
@@ -67,7 +73,7 @@ class RecipeComment:
             print(e)
             app.db.rollback()
             raise e
-        
+
 
 
 

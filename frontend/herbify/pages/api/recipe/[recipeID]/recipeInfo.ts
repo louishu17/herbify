@@ -12,7 +12,7 @@ export interface BasicRecipeInfo{
     userLiked: boolean;
     userName : string;
     profilePicS3Filename : string;
-
+    userRated: number;
 }
 
 
@@ -28,7 +28,8 @@ export default function getBasicRecipeInfo(req: NextApiRequest, res: NextApiResp
             userLiked: false,
             userName : "Tad",
             postedByUserID : 19,
-            profilePicS3Filename : "profilePics/ProfilePic.jpg"
+            profilePicS3Filename : "profilePics/ProfilePic.jpg",
+            userRated: 0
         })
 
     }, 100);

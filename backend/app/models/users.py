@@ -249,3 +249,23 @@ class Users:
             return user_liked_recipe_result[0][0]
 
         return False
+
+    @staticmethod
+    def user_rating_recipe(recipeID: int):
+        # Check what the user rated the recipe
+        user_id = Users.get_current_user_id()
+        user_rating_recipe_result = None
+        if user_id is not None:
+            try:
+                user_rating_recipe_result = app.db.execute('''
+            SELECT \"rating\" 
+            FROM \"Ratings\"
+            WHERE \"RecipeID\" = :recipeID AND \"RatedByUserID\" = :userID
+            ''',
+                                        recipeID=recipeID, userID=user_id)
+            except Exception as e:
+                print(e)
+                app.db.rollback()
+                raise e
+        print(user_rating_recipe_result)
+        return user_rating_recipe_result[0][0] if user_rating_recipe_result else None
