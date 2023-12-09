@@ -11,7 +11,7 @@ import { useFetchPaginatedSearchRecipeByTerm } from "@/lib/searchPage/searchByTe
 import { useFetchPaginatedSearchUserByTerm } from "@/lib/searchPage/searchUserByTermHooks";
 import { withAuth } from '@/lib/authCheck';
 
-export const getServerSideProps = withAuth();
+// export const getServerSideProps = withAuth();
 
 export default function SearchPage(){
     const [currentTabIndex, setCurrentTabIndex] = useState(0);

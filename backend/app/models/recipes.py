@@ -291,6 +291,24 @@ WHERE \"postID\" = :recipeID
             app.db.rollback()
             raise e
 
+    @staticmethod
+    def get_user_liked_recipes(user_id: int):
+        # Select post id from Likes and then select the recipe from the Recipes table
+
+        if user_id is not None:
+            rows = app.db.execute(
+                """
+    SELECT *
+    FROM \"Recipes\"
+    WHERE \"recipeID\" IN (SELECT \"postID\" FROM \"Likes\" WHERE \"likedByUserID\" = :userID)
+                                  """,
+                userID=user_id,
+            )
+
+            return [Recipes(*row) for row in rows]
+
+        return []
+
 
 class RecipeJSONEncoder(json.JSONEncoder):
     def default(self, obj):

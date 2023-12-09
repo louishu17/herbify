@@ -249,18 +249,3 @@ class Users:
             return user_liked_recipe_result[0][0]
 
         return False
-
-    @staticmethod
-    def get_user_liked_recipes(user_id: int):
-        # Select post id from Likes and then select the recipe from the Recipes table
-        if user_id is not None:
-            rows = app.db.execute(
-                """
-    SELECT *
-    FROM \"Recipes\"
-    WHERE \"recipeID\" IN (SELECT \"postID\" FROM \"Likes\" WHERE \"likedByUserID\" = :userID)
-                                  """,
-                userID=user_id,
-            )
-            return rows
-        return None

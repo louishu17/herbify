@@ -3,6 +3,7 @@ from models.recipes import Recipes, RecipeJSONEncoder
 from flask_cors import cross_origin
 from models.users import Users
 from models.follows import Follows
+from models.recipes import Recipes
 
 profile_blueprint = Blueprint("profile", __name__)
 
@@ -116,10 +117,12 @@ def following_users(profileId):
 @profile_blueprint.route("/users_liked_by_current/<path:profileId>", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def users_liked_by_current(profileId):
+    print("getting users liked by current user")
+
     try:
-        # following_users = Follows.get_following_users(profileId)
-        # return jsonify({"users": following_users}), 201
-        return 1
+        liked_users = Recipes.get_user_liked_recipes(profileId)
+
+        return jsonify({"users": liked_users}), 201
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

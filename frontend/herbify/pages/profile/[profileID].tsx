@@ -8,6 +8,7 @@ import { RecipesSection } from '@/components/pageSpecific/profile/recipesSection
 import { HerbifyLoadingContainer } from '@/components/shared/loading';
 import { ProfileListModal } from '@/components/pageSpecific/profile/followModal';
 import { User } from "@/components/pageSpecific/search/searchResultsUser";
+import { Recipe } from "@/components/pageSpecific/search/searchResultsRecipe";
 import { INVALID_S3_FILENAME, useImageForProfilePic } from '@/lib/profilePicHooks';
 import { withAuth } from '@/lib/authCheck';
 
@@ -70,23 +71,32 @@ export default function ProfilePage() {
   const { isFollowing, toggleFollow } = useFollow(userId, numFollowers, setNumFollowers);
 
   const [openModal, setOpenModal] = useState(false);
-  const [modalData, setModalData] = useState<User[]>([]);
+  const [modalProfileData, setModalProfileData] = useState<User[]>([]);
+  const [modalRecipeData, setModalRecipeData] = useState<Recipe[]>([]);
+  const [isRecipes, setIsRecipes] = useState<boolean>(true);
 
   const handleOpenModal = async (getType: string) => {
     let followersList: User[] = [];
+    let recipesList: Recipe[] = [];
+
     const currId = userId === -1 ? sessionUserId : userId;
 
     if (getType === "followers") { 
-      followersList = await fetchFollowedBy(currId)
+      followersList = await fetchFollowedBy(currId);
+      setIsRecipes(false);
     }
     if (getType === "following") { 
-      followersList = await fetchFollowing(currId)
+      followersList = await fetchFollowing(currId);
+      setIsRecipes(false);
     }
     if (getType === "liked") { 
-      followersList = await fetchLiked(currId)
+      recipesList = await fetchLiked(currId);
+      setIsRecipes(true);
     }
 
-    setModalData(followersList)
+    setModalProfileData(followersList);
+    setModalRecipeData(recipesList);
+
     setOpenModal(true)
   };
   
@@ -182,7 +192,9 @@ export default function ProfilePage() {
               <ProfileListModal 
                 open={openModal} 
                 handleClose={handleCloseModal} 
-                profiles={modalData} 
+                profiles={modalProfileData}
+                recipes={modalRecipeData}
+                isRecipes={isRecipes}
               />
             </Grid>
           </Grid>
