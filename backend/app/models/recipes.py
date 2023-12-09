@@ -291,6 +291,22 @@ WHERE \"postID\" = :recipeID
             app.db.rollback()
             raise e
 
+    @staticmethod
+    def rate_recipe(recipeID, userID, rating):
+        try:
+            app.db.execute(
+                """
+                INSERT INTO \"Ratings\"
+                            VALUES (:recipeID, :userID, :rating)
+                """,
+                recipeID=recipeID,
+                userID=userID,
+                rating=rating,
+            )
+        except Exception as e:
+            print(e)
+            app.db.rollback()
+            raise e
 
 class RecipeJSONEncoder(json.JSONEncoder):
     def default(self, obj):

@@ -23,6 +23,7 @@ from like_recipe import like_recipe_blueprint
 from like_recipe import unlike_recipe_blueprint
 from comments import add_comment_blueprint
 from profile import profile_blueprint
+from rate_recipe import rate_recipe_blueprint
 from flask_cors import CORS, cross_origin
 from flask_session import Session
 import redis
@@ -61,6 +62,7 @@ app.register_blueprint(leaderboard_blueprint)
 app.register_blueprint(paginated_search_blueprint)
 app.register_blueprint(add_comment_blueprint)
 app.register_blueprint(get_comments_blueprint)
+app.register_blueprint(rate_recipe_blueprint)
 
 setup_db_connection(app)
 setup_swagger(app)
