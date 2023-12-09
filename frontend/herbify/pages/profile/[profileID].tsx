@@ -114,7 +114,7 @@ export default function ProfilePage() {
   
   if (userId !== -1 && sessionUserId && userId !== sessionUserId) {
     followButton = (
-      <Button variant="outlined" color="primary" onClick={handleFollowClick}>
+      <Button variant="contained" onClick={handleFollowClick}>
         {isFollowing ? 'Unfollow' : 'Follow'}
       </Button>
     );
