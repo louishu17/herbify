@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react';
 import {  BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
 import { Grid, Paper, Typography, Modal, Box, Avatar, Button} from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useFetchProfile, useUserID, fetchSessionId, useFollow, fetchFollowedBy, fetchFollowing } from '@/lib/profileHooks';
+import { useFetchProfile, useUserID, useFollow, fetchFollowedBy, fetchFollowing, fetchLiked, fetchSessionId } from '@/lib/profileHooks';
 import { RecipesSection } from '@/components/pageSpecific/profile/recipesSection';
 import { HerbifyLoadingContainer } from '@/components/shared/loading';
 import { ProfileListModal } from '@/components/pageSpecific/profile/followModal';
 import { User } from "@/components/pageSpecific/search/searchResultsUser";
+import { Recipe } from "@/components/pageSpecific/search/searchResultsRecipe";
 import { INVALID_S3_FILENAME, useImageForProfilePic } from '@/lib/profilePicHooks';
 import { withAuth } from '@/lib/authCheck';
 
@@ -60,7 +61,6 @@ export default function ProfilePage() {
   const userId = useUserID();
   const {data : profileData, isLoading, isError, refetch } = useFetchProfile(userId);
   const {data : profilePicSrc, isLoading : isLoadingProfilePicSrc, isError : isErrorLoadingProfilePicSrc} = useImageForProfilePic(profileData ? profileData.user[0].profilePicS3Filename : INVALID_S3_FILENAME);
- 
 
   const currFollowers = profileData ? profileData.followers : 0
   
@@ -71,30 +71,44 @@ export default function ProfilePage() {
   const { isFollowing, toggleFollow } = useFollow(userId, numFollowers, setNumFollowers);
 
   const [openModal, setOpenModal] = useState(false);
-  const [followers, setFollowers] = useState<User[]>([]);
+  const [modalProfileData, setModalProfileData] = useState<User[]>([]);
+  const [modalRecipeData, setModalRecipeData] = useState<Recipe[]>([]);
+  const [isRecipes, setIsRecipes] = useState<boolean>(true);
 
   const handleOpenModal = async (getType: string) => {
     let followersList: User[] = [];
+    let recipesList: Recipe[] = [];
+
     const currId = userId === -1 ? sessionUserId : userId;
 
     if (getType === "followers") { 
-      followersList = await fetchFollowedBy(currId)
+      followersList = await fetchFollowedBy(currId);
+      setIsRecipes(false);
     }
     if (getType === "following") { 
-      followersList = await fetchFollowing(currId)
+      followersList = await fetchFollowing(currId);
+      setIsRecipes(false);
     }
-    setFollowers(followersList)
+    if (getType === "liked") { 
+      recipesList = await fetchLiked(currId);
+      setIsRecipes(true);
+    }
+
+    setModalProfileData(followersList);
+    setModalRecipeData(recipesList);
+
     setOpenModal(true)
   };
   
   const handleCloseModal = () => setOpenModal(false);
 
   let followButton = null;
+  let likedModal = null;
 
   useEffect(() => {
     const getSessionId = async () => {
       const id = await fetchSessionId();
-      
+      // TODO: Remove this hardcoding
       setSessionUserId(id);
     };
 
@@ -117,6 +131,17 @@ export default function ProfilePage() {
       <Button variant="contained" onClick={handleFollowClick}>
         {isFollowing ? 'Unfollow' : 'Follow'}
       </Button>
+    );
+  }
+
+  if (userId !== -1 && sessionUserId && userId === sessionUserId) {
+    likedModal = (
+      <Grid item xs={4} sm={2.5} container direction="column" alignItems="center">
+      <FollowersClickableArea onClick={() => handleOpenModal("liked")}>
+        <Typography variant="h6">View</Typography>
+        <Typography variant="body2">Liked Posts</Typography>
+      </FollowersClickableArea>
+    </Grid>
     );
   }
 
@@ -161,6 +186,9 @@ export default function ProfilePage() {
                       <Typography variant="body2">Following</Typography>
                     </FollowersClickableArea>
                   </Grid>
+                  <Grid item>
+                    {likedModal}
+                  </Grid>
                 </Grid>
                 <Grid item>
                   <Typography>{profileData.user[0].bio}</Typography>
@@ -172,7 +200,9 @@ export default function ProfilePage() {
               <ProfileListModal 
                 open={openModal} 
                 handleClose={handleCloseModal} 
-                profiles={followers} 
+                profiles={modalProfileData}
+                recipes={modalRecipeData}
+                isRecipes={isRecipes}
               />
             </Grid>
           </Grid>

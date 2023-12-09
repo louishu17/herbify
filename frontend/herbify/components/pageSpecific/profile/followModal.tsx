@@ -1,7 +1,8 @@
 import { Modal, Box, List, ListItem, Avatar, ListItemText, Typography } from '@mui/material';
 import Link from 'next/link';
-import { UsersList } from "@/components/pageSpecific/search/searchResultsUser"; 
-import { User } from "@/components/pageSpecific/search/searchResultsUser";
+import { UsersList, User } from "@/components/pageSpecific/search/searchResultsUser"; 
+import { RecipesList, Recipe } from "@/components/pageSpecific/search/searchResultsRecipe"; 
+import React from 'react';
 
 const modalStyle = {
   position: 'absolute',
@@ -16,15 +17,18 @@ const modalStyle = {
   maxHeight: '80%', // Adjust the height as needed
 };
 
-import React from 'react';
 
 interface ProfileListModalProps {
   open: boolean;
   handleClose: () => void;
-  profiles: User[]; 
+  profiles: User[];
+  recipes: Recipe[];
+  isRecipes: boolean;
 }
 
-export const ProfileListModal: React.FC<ProfileListModalProps> = ({ open, handleClose, profiles }) => {
+export const ProfileListModal: React.FC<ProfileListModalProps> = ({ open, handleClose, profiles, recipes, isRecipes }) => {
+  // if isRecipes than UsersList else RecipesList
+
   return (
     <Modal
       open={open}
@@ -32,7 +36,11 @@ export const ProfileListModal: React.FC<ProfileListModalProps> = ({ open, handle
       aria-labelledby="profile-list-modal-title"
     >
       <Box sx={modalStyle}>
-        <UsersList results={profiles} onClose={handleClose}/>
+        {
+          isRecipes ? 
+          <RecipesList results={recipes} onClose={handleClose}/> :
+          <UsersList results={profiles} onClose={handleClose}/>
+        }
       </Box>
     </Modal>
   );
