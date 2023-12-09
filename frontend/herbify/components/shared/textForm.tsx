@@ -47,7 +47,6 @@ export const HerbifyForm: React.FC<HerbifyFormProps<any>> = ({ handleSubmit, ini
                     validationSchema={validationSchema}
                     onSubmit={(values) => {
                         const formattedValues = formatDates(values);
-                        console.log("form was submitted with values:", formattedValues);
                         handleSubmit(formattedValues);
                     }}
                     enableReinitialize={true}
@@ -60,11 +59,11 @@ export const HerbifyForm: React.FC<HerbifyFormProps<any>> = ({ handleSubmit, ini
                                 <Field
                                     component={DatePicker}
                                     name={fieldProps.name}
-                                    
+                                    label="Birthday"
                                     renderInput={(params: React.JSX.IntrinsicAttributes & { variant?: TextFieldVariants | undefined; } & Omit<OutlinedTextFieldProps | FilledTextFieldProps | StandardTextFieldProps, "variant">) => (
                                     <TextField
                                         {...params}
-                                        label={fieldProps.name.charAt(0).toUpperCase() + fieldProps.name.slice(1)}
+                                        label="Birthday"
                                         fullWidth
                                     />
                                     )}
