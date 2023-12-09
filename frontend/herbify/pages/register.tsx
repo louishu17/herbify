@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { withAuthRedirect } from '@/lib/authCheck';
 import PageTransition from '@/components/shared/pageTransition';
 import HerbifyLayout from "@/components/shared/layouts/herbifyLayout";
+import HomeButton from "@/components/shared/homeButton";
 
 export const getServerSideProps = withAuthRedirect();
 
@@ -67,6 +68,9 @@ export default function RegisterPage(){
         <HerbifyLayout>
             <PageTransition>
                 <Box sx={{ my: 4, mx: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', my: 4 }}>
+                        {HomeButton("/")}
+                    </Box>
                     <Typography variant="h4" sx={{ mb: 2 }}>Create a New Account</Typography>
                     <Typography variant="body1" sx={{ mb: 4 }}>
                         Already have an account? <Button color="primary" onClick={() => router.push('/login')}>Log In</Button>

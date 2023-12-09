@@ -27,7 +27,7 @@ export const NO_ERROR_MESSAGE = "";
 
 export const HerbifyForm: React.FC<HerbifyFormProps<any>> = ({ handleSubmit, initialValues, validationSchema, textFields, errorMessage, submitButtonText }) => {
     
-    const formatDates = (values) => {
+    const formatDates = (values: any) => {
         const formattedValues = { ...values };
         if (textFields){
             textFields.forEach(field => {
@@ -77,6 +77,7 @@ export const HerbifyForm: React.FC<HerbifyFormProps<any>> = ({ handleSubmit, ini
                                     variant="outlined"
                                     fullWidth
                                     required={!fieldProps.optional}
+                                    
                                 />
                                 )}
                                 <ErrorMessage name={fieldProps.name} component={Typography} />
