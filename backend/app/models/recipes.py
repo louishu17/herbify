@@ -279,18 +279,44 @@ WHERE \"postID\" = :recipeID
     @staticmethod
     def unlike_recipe(recipeID, userID):
         try:
-            app.db.execute(
-                """DELETE FROM \"Likes\"
-                            WHERE \"postID\" = :recipeID AND \"likedByUserID\" = :userID
-                """,
-                recipeID=recipeID,
-                userID=userID,
-            )
+            print("db unliking recipe")
+            try:
+                app.db.execute(
+                    """DELETE FROM \"Likes\"
+                                WHERE \"postID\" = :recipeID AND \"likedByUserID\" = :userID
+                    """,
+                    recipeID=recipeID,
+                    userID=userID,
+                )
+            except Exception as e:
+                print(e)
+                app.db.rollback()
+                raise e
+            print("db unliked recipe")
         except Exception as e:
             print(e)
             app.db.rollback()
             raise e
 
+    @staticmethod
+    def rate_recipe(recipeID, userID, rating):
+        try:
+            app.db.execute(
+                """
+                INSERT INTO "Ratings" (\"RecipeID\", \"RatedByUserID\", \"rating\")
+                VALUES (:recipeID, :userID, :rating)
+                ON CONFLICT (\"RecipeID\", \"RatedByUserID\")
+                DO UPDATE SET \"rating\" = :rating
+                """,
+                recipeID=recipeID,
+                userID=userID,
+                rating=rating,
+            )
+            print("rated recipe")
+        except Exception as e:
+            print(e)
+            app.db.rollback()
+            raise e
 
 class RecipeJSONEncoder(json.JSONEncoder):
     def default(self, obj):
