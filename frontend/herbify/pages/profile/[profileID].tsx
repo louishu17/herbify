@@ -134,7 +134,7 @@ export default function ProfilePage() {
     );
   }
 
-  if (userId !== -1 && sessionUserId && userId === sessionUserId) {
+  if (userId === -1) {
     likedModal = (
       <Grid item xs={4} sm={2.5} container direction="column" alignItems="center">
       <FollowersClickableArea onClick={() => handleOpenModal("liked")}>
