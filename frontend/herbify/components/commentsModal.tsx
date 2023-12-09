@@ -9,6 +9,7 @@ interface RecipeComment {
     id: number;
     text: string;
     user_id: number;
+    timestamp: string;
     replies?: RecipeComment[]; 
 }
 
@@ -18,6 +19,30 @@ interface RecipeCommentsModalProps {
     comments: RecipeComment[];
     onCommentSubmit: (text: string, parentID?: number) => void; // This function includes recipeID implicitly
 }
+
+const getRelativeTime = (timestamp: string): string => {
+    const postedTime = new Date(timestamp).getTime();
+    const currentTime = new Date().getTime();
+    const differenceInSeconds = Math.floor((currentTime - postedTime) / 1000);
+
+    const minute = 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+    const week = day * 7;
+
+    if (differenceInSeconds < minute) {
+        return `${differenceInSeconds}s`; // seconds ago
+    } else if (differenceInSeconds < hour) {
+        return `${Math.floor(differenceInSeconds / minute)}m`; // minutes ago
+    } else if (differenceInSeconds < day) {
+        return `${Math.floor(differenceInSeconds / hour)}h`; // hours ago
+    } else if (differenceInSeconds < week) {
+        return `${Math.floor(differenceInSeconds / day)}d`; // days ago
+    } else {
+        return `${Math.floor(differenceInSeconds / week)}w`; // weeks ago
+    }
+};
+
 
 const CommentsModal: React.FC<RecipeCommentsModalProps> = ({ open, handleClose, comments, onCommentSubmit }) => {
     const [mainComment, setMainComment] = useState("");
@@ -50,7 +75,12 @@ const CommentsModal: React.FC<RecipeCommentsModalProps> = ({ open, handleClose, 
                 {comments.map((comment) => (
                     <ListItem key={comment.id} sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                         <Box sx={{ mb: 1 }}>
-                            <Typography style={{ fontSize: '0.75rem' }}>User {comment.user_id}:</Typography>
+                            <Typography style={{ fontSize: '0.75rem' }}>
+                                User {comment.user_id}     
+                                <span style={{ marginLeft: '5px', color: 'darkgrey', fontSize: '0.65rem'}}>
+                                    {getRelativeTime(comment.timestamp)}
+                                </span>
+                            </Typography>
                             <Typography variant="body1">{comment.text}</Typography>
                             <Button size="small" onClick={() => setReplyTo(replyTo === comment.id ? null : comment.id)}>
                                 {replyTo === comment.id ? 'Cancel' : 'Reply'}
@@ -74,6 +104,7 @@ const CommentsModal: React.FC<RecipeCommentsModalProps> = ({ open, handleClose, 
             </List>
         );
     };
+    
 
     return (
         <Modal

@@ -1,12 +1,13 @@
 from flask import current_app as app
 
 class RecipeComment:
-    def __init__(self, id, text, user_id, parent_id, post_id):
+    def __init__(self, id, text, user_id, parent_id, post_id, timestamp):
         self.id = id
         self.text = text
         self.user_id = user_id
         self.parent_id = parent_id
         self.post_id = post_id
+        self.timestamp = timestamp
     
     def __repr__(self):
         return f'<Comment {self.id}>'
@@ -47,7 +48,7 @@ class RecipeComment:
                 comments = app.db.execute(query, comment_id=comment_id, post_id=post_id)
 
             print(comments)
-            comments = [RecipeComment(comment.id, comment.text, comment.user_id, comment.parent_id, comment.post_id) for comment in comments] if comments else []
+            comments = [RecipeComment(comment.id, comment.text, comment.user_id, comment.parent_id, comment.post_id, comment.timestamp) for comment in comments] if comments else []
             
             formatted_comments = []
             for comment in comments:
@@ -57,6 +58,7 @@ class RecipeComment:
                     "user_id": comment.user_id,
                     "parent_id": comment.parent_id,
                     "post_id": comment.post_id,
+                    "timestamp": comment.timestamp,
                     "replies": RecipeComment.format_comments(post_id, comment.id)
                 })
 
