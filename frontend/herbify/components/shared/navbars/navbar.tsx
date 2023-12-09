@@ -15,8 +15,8 @@ const HerbifyNavBarGivenOptions : React.FC<HerbifyNavBarGivenOptionsProps> = (pr
   return (
     <Drawer variant="permanent">
       <List>
-        <ListItem>
-            <img src={`/icons/herbify-icon.svg`}/>
+        <ListItem style={{justifyContent: 'center'}}>
+            <img src={`/icons/herbify-logo.svg`} style={{ width: '100px', height: 'auto'}}/>
         </ListItem>
         {props.options}
       </List>
