@@ -7,6 +7,7 @@ export interface Comment{
   post_id: number;
   text: string;
   user_id: number;
+  timestamp: string;
   replies: Comment[];
 }
 
@@ -32,10 +33,21 @@ export default function handler(
                         "post_id": 1,
                         "replies": [],
                         "text": "I LOVE HERBIFY!",
+                        "timestamp": "Sat, 09 Dec 2023 17:28:25 GMT",
+                        "user_id": 16
+                    },
+                    {
+                        "id": 14,
+                        "parent_id": 1,
+                        "post_id": 1,
+                        "replies": [],
+                        "text": "I LOVE HERBIFY!",
+                        "timestamp": "Sat, 09 Dec 2023 17:36:26 GMT",
                         "user_id": 16
                     }
                 ],
                 "text": "I LOVE HERBIFY!",
+                "timestamp": "Sat, 09 Dec 2023 17:28:25 GMT",
                 "user_id": 16
             },
             {
@@ -44,6 +56,7 @@ export default function handler(
                 "post_id": 1,
                 "replies": [],
                 "text": "I LOVE HERBIFY!",
+                "timestamp": "Sat, 09 Dec 2023 17:28:25 GMT",
                 "user_id": 16
             },
             {
@@ -52,6 +65,7 @@ export default function handler(
                 "post_id": 1,
                 "replies": [],
                 "text": "I LOVE HERBIFY!",
+                "timestamp": "Sat, 09 Dec 2023 17:28:25 GMT",
                 "user_id": 16
             },
             {
@@ -60,6 +74,7 @@ export default function handler(
                 "post_id": 1,
                 "replies": [],
                 "text": "I LOVE HERBIFY!",
+                "timestamp": "Sat, 09 Dec 2023 17:28:25 GMT",
                 "user_id": 16
             }
         ]

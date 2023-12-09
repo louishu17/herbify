@@ -29,6 +29,29 @@ const CommentsBody: React.FC = () => {
     const handleSetReplyComment = (commentId: number, text: string) => {
         setReplyComments({ ...replyComments, [commentId]: text });
     };
+    const getRelativeTime = (timestamp: string): string => {
+        const postedTime = new Date(timestamp).getTime();
+        const currentTime = new Date().getTime();
+        const differenceInSeconds = Math.floor((currentTime - postedTime) / 1000);
+    
+        const minute = 60;
+        const hour = minute * 60;
+        const day = hour * 24;
+        const week = day * 7;
+    
+        if (differenceInSeconds < minute) {
+            return `${differenceInSeconds}s`; // seconds ago
+        } else if (differenceInSeconds < hour) {
+            return `${Math.floor(differenceInSeconds / minute)}m`; // minutes ago
+        } else if (differenceInSeconds < day) {
+            return `${Math.floor(differenceInSeconds / hour)}h`; // hours ago
+        } else if (differenceInSeconds < week) {
+            return `${Math.floor(differenceInSeconds / day)}d`; // days ago
+        } else {
+            return `${Math.floor(differenceInSeconds / week)}w`; // weeks ago
+        }
+    };
+    
 
     const renderComments = (comments: any[], depth: number = 0) => {
         return (
@@ -38,7 +61,10 @@ const CommentsBody: React.FC = () => {
                         <ListItem sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                             <Box sx={{ mb: 1 }}>
                                 {/* Display the user's name as a link to their profile */}
-                                <Typography style={{ fontSize: '0.75rem' }}>User {comment.user_id}:</Typography>
+                                <Typography style={{ fontSize: '0.75rem' }}>User {comment.user_id}                               
+                                <span style={{ marginLeft: '5px', color: 'darkgrey', fontSize: '0.65rem'}}>
+                                    {getRelativeTime(comment.timestamp)}
+                                </span> </Typography>
                                 <Typography variant="body1">{comment.text}</Typography>
                                 <Button 
                                     size="small" 
