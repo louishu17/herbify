@@ -9,6 +9,15 @@ import { useLikeRecipe, useUnlikeRecipe } from "@/lib/recipePage/likeRecipeHooks
 import { useEffect, useState } from "react";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useImageForProfilePic } from "@/lib/profilePicHooks";
+import CommentsModal from '../../commentsModal';
+import CommentIcon from '@mui/icons-material/Comment';
+import { useComments, usePostComment } from "@/lib/recipePage/commentRecipeHooks";
+
+interface RecipeComment {
+    id: number;
+    text: string;
+    user_id: number;
+}
 
 interface RecipeOnFeedProps {
     info : RecipeInfoFromFeed;
@@ -46,9 +55,10 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
     const {data : recipeImageSrc, isLoading : isLoadingRecipeImg, isError : isErrorLoadingRecipeImg} = useImageForRecipe(props.info.imageS3Filename);
     const {data : profilePicImgSrc, isLoading : isLoadingProfilePic, isError : isErrorLoadingProfilePic} = useImageForProfilePic(props.info.profilePicS3Filename);
 
-    
     const { mutate: like } = useLikeRecipe();
     const { mutate: unlike } = useUnlikeRecipe();
+    const [modalOpen, setModalOpen] = useState(false);
+    const [comments, setComments] = useState<RecipeComment[]>([]); // Use the Comment interface from commentsModal.tsx
 
     const [userLiked, setUserLiked] = useState(false);
     const [likes, setLikes] = useState(0);
@@ -56,6 +66,24 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
     const info = props.info;
 
     const displayLikes = props.isProfile !== null && props.isProfile !== true;
+
+    const { data: commentsResponse, isLoading, isError, refetch } = useComments(info.recipeID);
+
+    const { mutate: postComment } = usePostComment({
+        onSuccess: () => {
+            refetch(); // Refetch comments after posting
+        },
+        onError: (error) => {
+            // Handle error
+            console.error('Error posting comment:', error);
+        },
+    });
+
+    const handleCommentSubmit = (text: string, parentID?: number) => {
+        postComment({ recipeID: props.info.recipeID, text, parentID }); // Include recipeID here
+    };
+
+
 
     useEffect(() => {
         if (info) {
@@ -82,6 +110,15 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                 }
             });
         }
+    };
+
+    const handleOpenModal = () => {
+        // Fetch comments here if needed
+        setModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
     };
 
     
@@ -118,6 +155,10 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                             <Typography variant="body2" color="text.secondary">
                                 {likes} Likes
                             </Typography>
+                            <IconButton onClick={handleOpenModal} aria-label="show comments">
+                                <CommentIcon />
+                            </IconButton>
+                            {commentsResponse && <CommentsModal open={modalOpen} handleClose={handleCloseModal} comments={commentsResponse.comments} onCommentSubmit={handleCommentSubmit}  />}
                 </CardActions>}
                 <AttributeTags info={info}/>
             </Box>

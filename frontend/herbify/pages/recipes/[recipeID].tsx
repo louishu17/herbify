@@ -13,6 +13,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useEffect, useState } from "react";
 import { withAuth } from '@/lib/authCheck';
+import { CommentsSection } from "@/components/pageSpecific/recipePage/commentsSection";
 
 export const getServerSideProps = withAuth();
 
@@ -66,6 +67,7 @@ export default function RecipePage() {
                 <span>{likes} Likes</span>
                 <IngredientsSection />
                 <DirectionsSection/>
+                <CommentsSection/>
                 <div>
             </div>
             </Container>
