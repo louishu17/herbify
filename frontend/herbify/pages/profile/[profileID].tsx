@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import {  BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
 import { Grid, Paper, Typography, Modal, Box, Avatar, Button} from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useFetchProfile, useUserID, fetchSessionId, useFollow, fetchFollowedBy, fetchFollowing } from '@/lib/profileHooks';
+import { useFetchProfile, useUserID, useFollow, fetchFollowedBy, fetchFollowing, fetchLiked, fetchSessionId } from '@/lib/profileHooks';
 import { RecipesSection } from '@/components/pageSpecific/profile/recipesSection';
 import { HerbifyLoadingContainer } from '@/components/shared/loading';
 import { ProfileListModal } from '@/components/pageSpecific/profile/followModal';
@@ -11,7 +11,7 @@ import { User } from "@/components/pageSpecific/search/searchResultsUser";
 import { INVALID_S3_FILENAME, useImageForProfilePic } from '@/lib/profilePicHooks';
 import { withAuth } from '@/lib/authCheck';
 
-export const getServerSideProps = withAuth();
+// export const getServerSideProps = withAuth();
 
 const FollowersClickableArea = styled(Button)({
   background: 'none',
@@ -60,7 +60,6 @@ export default function ProfilePage() {
   const userId = useUserID();
   const {data : profileData, isLoading, isError, refetch } = useFetchProfile(userId);
   const {data : profilePicSrc, isLoading : isLoadingProfilePicSrc, isError : isErrorLoadingProfilePicSrc} = useImageForProfilePic(profileData ? profileData.user[0].profilePicS3Filename : INVALID_S3_FILENAME);
- 
 
   const currFollowers = profileData ? profileData.followers : 0
   
@@ -71,7 +70,7 @@ export default function ProfilePage() {
   const { isFollowing, toggleFollow } = useFollow(userId, numFollowers, setNumFollowers);
 
   const [openModal, setOpenModal] = useState(false);
-  const [followers, setFollowers] = useState<User[]>([]);
+  const [modalData, setModalData] = useState<User[]>([]);
 
   const handleOpenModal = async (getType: string) => {
     let followersList: User[] = [];
@@ -83,7 +82,11 @@ export default function ProfilePage() {
     if (getType === "following") { 
       followersList = await fetchFollowing(currId)
     }
-    setFollowers(followersList)
+    if (getType === "liked") { 
+      followersList = await fetchLiked(currId)
+    }
+
+    setModalData(followersList)
     setOpenModal(true)
   };
   
@@ -93,8 +96,9 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const getSessionId = async () => {
-      const id = await fetchSessionId();
-      
+      // const id = await fetchSessionId();
+      // TODO: Remove this hardcoding
+      const id = 18;
       setSessionUserId(id);
     };
 
@@ -161,6 +165,12 @@ export default function ProfilePage() {
                       <Typography variant="body2">Following</Typography>
                     </FollowersClickableArea>
                   </Grid>
+                  <Grid item xs={4} sm={2.5} container direction="column" alignItems="center">
+                    <FollowersClickableArea onClick={() => handleOpenModal("liked")}>
+                      <Typography variant="h6">0</Typography>
+                      <Typography variant="body2">Liked Posts</Typography>
+                    </FollowersClickableArea>
+                  </Grid>
                 </Grid>
                 <Grid item>
                   <Typography>{profileData.user[0].bio}</Typography>
@@ -172,7 +182,7 @@ export default function ProfilePage() {
               <ProfileListModal 
                 open={openModal} 
                 handleClose={handleCloseModal} 
-                profiles={followers} 
+                profiles={modalData} 
               />
             </Grid>
           </Grid>

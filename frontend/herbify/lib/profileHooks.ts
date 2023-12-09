@@ -154,3 +154,11 @@ export const fetchFollowedBy = async (profileUserId: number) : Promise<User[]> =
     } 
     return response.data.users;
 };
+
+export const fetchLiked = async (profileUserId: number) : Promise<User[]> => {
+    const response = await instance.get(`http://127.0.0.1:5000/users_liked_by_current/${profileUserId}`)
+    if (response.status > 300){
+        throw new Error("Error session id");
+    } 
+    return response.data.users;
+};
