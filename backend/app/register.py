@@ -1,4 +1,4 @@
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify, Blueprint, session
 from datetime import datetime
 from werkzeug.security import generate_password_hash
 from models.users import Users
@@ -7,7 +7,7 @@ from flask_cors import cross_origin
 register_blueprint = Blueprint('register', __name__)
 
 @register_blueprint.route('/register', methods=['POST'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def register():
     print("registering")
 
@@ -40,6 +40,7 @@ def register():
         # app.db.session.commit()
         Users.add_user(uid=new_uid, email=email, password=generate_password_hash(password, method='sha256'), creationDate=datetime.now())
 
+        session['user'] = email
         print("test")
 
         return jsonify({'message': 'Registration successful'}), 201

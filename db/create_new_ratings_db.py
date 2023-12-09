@@ -13,18 +13,19 @@ try:
     cursor = connection.cursor()
 
     create_table_query = '''
-    CREATE TABLE IF NOT EXISTS \"Comments\" (
-        id SERIAL PRIMARY KEY,
-        text TEXT NOT NULL,
-        user_id INTEGER NOT NULL,
-        parent_id INTEGER NULL REFERENCES \"Comments\"(id),
-        post_id INTEGER NOT NULL REFERENCES \"Recipes\"(\"recipeID\")
+    CREATE TABLE \"Ratings\" (
+       \"ratingID\" SERIAL PRIMARY KEY,
+        \"user_id\" INT REFERENCES \"Users\"(uid),
+        recipeID INT REFERENCES \"Recipes\"(recipeID),
+        rating INT CHECK (rating >= 1 AND rating <= 5)
     );
     '''
+    
 
     cursor.execute(create_table_query)
-
-    
+    cursor.execute("CREATE INDEX user_id_idx ON \"Ratings\" (user_id);")
+    cursor.execute("CREATE INDEX recipeID_idx ON \"Ratings\" (recipeID);")
+    cursor.execute("CREATE INDEX idx_ratings_recipeid_rating ON Ratings(recipeID, rating);")
     connection.commit()
     print("Table created successfully")
 

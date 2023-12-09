@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { useComments, usePostComment } from "@/lib/recipePage/commentRecipeHooks";
-import { Typography, Container, List, ListItem, TextField, Button, Box, Link } from "@mui/material";
+import { Typography, Container, List, TextField, Button} from "@mui/material";
 import { HerbifyLoadingCircle } from "@/components/shared/loading";
 import { useRecipeID } from "@/lib/recipePage/basicRecipeInfoHooks";
+import CommentItem from "@/components/pageSpecific/recipePage/commentItem";
+
 
 const CommentsBody: React.FC = () => {
     const recipeID = useRecipeID();
     const { data: commentsResponse, isLoading, isError, refetch } = useComments(recipeID);
     const { mutate: postComment, isLoading: isPostingComment } = usePostComment({ onSuccess: () => refetch() });
+
+    const [commentsWithPics, setCommentsWithPics] = useState<any[]>([]);
 
     const [newComment, setNewComment] = useState("");
     const [replyComments, setReplyComments] = useState<{ [key: number]: string }>({});
@@ -25,7 +29,7 @@ const CommentsBody: React.FC = () => {
             setReplyTo(null); // Reset the reply state
         }
     };
-
+    
     const handleSetReplyComment = (commentId: number, text: string) => {
         setReplyComments({ ...replyComments, [commentId]: text });
     };
@@ -52,50 +56,26 @@ const CommentsBody: React.FC = () => {
         }
     };
     
-
     const renderComments = (comments: any[], depth: number = 0) => {
         return (
             <List sx={{ pl: depth > 0 ? 2 : 0 }}>
                 {comments.map((comment) => (
-                    <React.Fragment key={comment.id}>
-                        <ListItem sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-                            <Box sx={{ mb: 1 }}>
-                                {/* Display the user's name as a link to their profile */}
-                                <Typography style={{ fontSize: '0.75rem' }}>User {comment.user_id}                               
-                                <span style={{ marginLeft: '5px', color: 'darkgrey', fontSize: '0.65rem'}}>
-                                    {getRelativeTime(comment.timestamp)}
-                                </span> </Typography>
-                                <Typography variant="body1">{comment.text}</Typography>
-                                <Button 
-                                    size="small" 
-                                    onClick={() => setReplyTo(replyTo === comment.id ? null : comment.id)}>
-                                    {replyTo === comment.id ? 'Cancel' : 'Reply'}
-                                </Button>
-                            </Box>
-                            {replyTo === comment.id && (
-                                <Box sx={{ mb: 2 }}>
-                                    <TextField
-                                        label="Reply"
-                                        value={replyComments[comment.id] || ''}
-                                        onChange={(e) => handleSetReplyComment(comment.id, e.target.value)}
-                                        fullWidth
-                                        multiline
-                                    />
-                                    <Button 
-                                        onClick={() => handlePostComment(comment.id)} 
-                                        disabled={isPostingComment}>
-                                        Post Reply
-                                    </Button>
-                                </Box>
-                            )}
-                            {/* Render replies recursively */}
-                            {comment.replies && renderComments(comment.replies, depth + 1)}
-                        </ListItem>
-                    </React.Fragment>
+                    <CommentItem
+                        key={comment.id}
+                        comment={comment}
+                        onReplyClick={(commentId: number) => setReplyTo(replyTo === commentId ? null : commentId)}
+                        replyTo={replyTo}
+                        handlePostComment={handlePostComment}
+                        handleSetReplyComment={handleSetReplyComment}
+                        replyComments={replyComments}
+                        isPostingComment={isPostingComment}
+                        depth={depth}
+                    />
                 ))}
             </List>
-        );
+        );    
     };
+    
 
     if (isLoading) {
         return <HerbifyLoadingCircle />;

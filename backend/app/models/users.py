@@ -119,7 +119,7 @@ class Users:
             "phoneNumber": curr_user.phoneNumber,
             "creationDate": curr_user.creationDate,
             "bio": curr_user.bio,
-            "profilePicS3Filename" : curr_user.profilePicS3Filename
+            "profilePicS3Filename": curr_user.profilePicS3Filename,
         }
 
     @staticmethod
@@ -205,8 +205,9 @@ class Users:
         search_term = "%" + term + "%"
         if paginated:
             lower_limit = 8 * pageNum
-            upper_limit = 8 * (pageNum + 1) -1
-            rows = app.db.execute('''
+            upper_limit = 8 * (pageNum + 1) - 1
+            rows = app.db.execute(
+                """
                 SELECT *
                 FROM (
                     SELECT *, ROW_NUMBER() OVER (ORDER BY \"Users\".\"firstName\" DESC) AS row_num
@@ -214,20 +215,21 @@ class Users:
                     WHERE LOWER(\"firstName\") LIKE LOWER(:term)
                 ) AS ranked_posts
                 WHERE row_num BETWEEN :lower_limit AND :upper_limit;
-                              ''',
-                              term=search_term,
-                              lower_limit = lower_limit,
-                              upper_limit = upper_limit)
-        else :
-            rows = app.db.execute(f"""
+                              """,
+                term=search_term,
+                lower_limit=lower_limit,
+                upper_limit=upper_limit,
+            )
+        else:
+            rows = app.db.execute(
+                f"""
                 SELECT *
                 FROM \"Users\"
                 WHERE LOWER(\"firstName\") LIKE LOWER(:term)
                         """,
-                            term=search_term,
-                        )
+                term=search_term,
+            )
         return [Users(*row) for row in rows]
-    
 
     @staticmethod
     def check_user_liked_recipe(recipeID: int):
@@ -235,12 +237,35 @@ class Users:
         user_id = Users.get_current_user_id()
 
         if user_id is not None:
-            user_liked_recipe_result = app.db.execute('''
+            user_liked_recipe_result = app.db.execute(
+                """
     SELECT EXISTS (SELECT 1 FROM \"Likes\"
     WHERE \"postID\" = :recipeID AND \"likedByUserID\" = :userID)
-    ''',
-                                recipeID=recipeID, userID=user_id)
+    """,
+                recipeID=recipeID,
+                userID=user_id,
+            )
             # if there is a row from user_liked_recipe_result, then the user has liked the recipe
             return user_liked_recipe_result[0][0]
-        
+
         return False
+
+    @staticmethod
+    def user_rating_recipe(recipeID: int):
+        # Check what the user rated the recipe
+        user_id = Users.get_current_user_id()
+        user_rating_recipe_result = None
+        if user_id is not None:
+            try:
+                user_rating_recipe_result = app.db.execute('''
+            SELECT \"rating\" 
+            FROM \"Ratings\"
+            WHERE \"RecipeID\" = :recipeID AND \"RatedByUserID\" = :userID
+            ''',
+                                        recipeID=recipeID, userID=user_id)
+            except Exception as e:
+                print(e)
+                app.db.rollback()
+                raise e
+        print(user_rating_recipe_result)
+        return user_rating_recipe_result[0][0] if user_rating_recipe_result else None
