@@ -11,6 +11,7 @@ from create_recipe import create_recipe_blueprint
 from recipeDetailsRoutes.basicInfo import basicInfo_blueprint
 from recipeDetailsRoutes.directions import directions_blueprint
 from recipeDetailsRoutes.ingredients import ingredients_blueprint
+from recipeDetailsRoutes.comments import get_comments_blueprint
 from feedRoutes.basicFeed import basic_feed_blueprint
 from feedRoutes.paginatedFeed import paginated_feed_blueprint
 from feedRoutes.feedFetcher import FeedFetcher
@@ -20,6 +21,7 @@ from searchRoutes.basicSearch import basic_search_blueprint
 from set_profile import set_profile_blueprint
 from like_recipe import like_recipe_blueprint
 from like_recipe import unlike_recipe_blueprint
+from comments import add_comment_blueprint
 from profile import profile_blueprint
 from flask_cors import CORS, cross_origin
 from flask_session import Session
@@ -57,6 +59,8 @@ app.register_blueprint(like_recipe_blueprint)
 app.register_blueprint(unlike_recipe_blueprint)
 app.register_blueprint(leaderboard_blueprint)
 app.register_blueprint(paginated_search_blueprint)
+app.register_blueprint(add_comment_blueprint)
+app.register_blueprint(get_comments_blueprint)
 
 setup_db_connection(app)
 setup_swagger(app)

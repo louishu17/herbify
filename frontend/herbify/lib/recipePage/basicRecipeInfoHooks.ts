@@ -3,6 +3,7 @@ import {useQuery, UseQueryResult} from "react-query";
 import { useRouter } from "next/router";
 import { IngredientsData } from "@/pages/api/recipe/[recipeID]/ingredients";
 import { DirectionsData } from "@/pages/api/recipe/[recipeID]/directions";
+import { CommentsResponse } from "@/pages/api/recipe/[recipeID]/comments";
 
 const fetchBasicRecipeInfo = async (recipeID : number) : Promise<BasicRecipeInfo> => {
     let route = 'http://127.0.0.1:5000/recipe/' + recipeID + '/basicInfo';
@@ -50,7 +51,6 @@ const fetchDirections = async (recipeID : number) : Promise<DirectionsData> => {
 export const useDirections = (recipeID : number) : UseQueryResult<DirectionsData> => {
     return useQuery(["fetchingDirections"+recipeID], () => fetchDirections(recipeID));
 }
-
 
 
 
