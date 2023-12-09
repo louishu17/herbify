@@ -8,9 +8,9 @@ import { useImageForProfilePic, INVALID_S3_FILENAME } from '@/lib/profilePicHook
 export interface Recipe {
     recipeID: number;
     postedByUserID: number;
-    createdDate: Date;
     title: string;
     caption?: string;
+    imageS3Filename: string;
 }
 
 export interface RecipesListProps {
@@ -52,7 +52,7 @@ export const RecipesList: React.FC<RecipesListProps> = ({ results }) => {
 
   const { isLoading, isFetchingNextPage, isError, loadMore } = useFetchPaginatedSearchRecipeByTerm();
 
-  if (results.length === 0 && !isLoading && !isFetchingNextPage) {
+  if ( (!results || results.length === 0) && !isLoading && !isFetchingNextPage) {
       return <Typography>No recipes found.</Typography>;
   }
 

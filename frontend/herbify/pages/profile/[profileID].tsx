@@ -12,7 +12,7 @@ import { Recipe } from "@/components/pageSpecific/search/searchResultsRecipe";
 import { INVALID_S3_FILENAME, useImageForProfilePic } from '@/lib/profilePicHooks';
 import { withAuth } from '@/lib/authCheck';
 
-// export const getServerSideProps = withAuth();
+export const getServerSideProps = withAuth();
 
 const FollowersClickableArea = styled(Button)({
   background: 'none',
@@ -103,12 +103,12 @@ export default function ProfilePage() {
   const handleCloseModal = () => setOpenModal(false);
 
   let followButton = null;
+  let likedModal = null;
 
   useEffect(() => {
     const getSessionId = async () => {
-      // const id = await fetchSessionId();
+      const id = await fetchSessionId();
       // TODO: Remove this hardcoding
-      const id = 18;
       setSessionUserId(id);
     };
 
@@ -131,6 +131,17 @@ export default function ProfilePage() {
       <Button variant="contained" onClick={handleFollowClick}>
         {isFollowing ? 'Unfollow' : 'Follow'}
       </Button>
+    );
+  }
+
+  if (userId !== -1 && sessionUserId && userId === sessionUserId) {
+    likedModal = (
+      <Grid item xs={4} sm={2.5} container direction="column" alignItems="center">
+      <FollowersClickableArea onClick={() => handleOpenModal("liked")}>
+        <Typography variant="h6">View</Typography>
+        <Typography variant="body2">Liked Posts</Typography>
+      </FollowersClickableArea>
+    </Grid>
     );
   }
 
@@ -175,11 +186,8 @@ export default function ProfilePage() {
                       <Typography variant="body2">Following</Typography>
                     </FollowersClickableArea>
                   </Grid>
-                  <Grid item xs={4} sm={2.5} container direction="column" alignItems="center">
-                    <FollowersClickableArea onClick={() => handleOpenModal("liked")}>
-                      <Typography variant="h6">0</Typography>
-                      <Typography variant="body2">Liked Posts</Typography>
-                    </FollowersClickableArea>
+                  <Grid item>
+                    {likedModal}
                   </Grid>
                 </Grid>
                 <Grid item>

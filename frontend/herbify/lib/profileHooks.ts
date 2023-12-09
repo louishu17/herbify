@@ -161,5 +161,6 @@ export const fetchLiked = async (profileUserId: number) : Promise<Recipe[]> => {
     if (response.status > 300){
         throw new Error("Error session id");
     } 
+
     return response.data.recipes;
 };

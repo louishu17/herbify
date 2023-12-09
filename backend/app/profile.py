@@ -122,7 +122,7 @@ def users_liked_by_current(profileId):
     try:
         liked_users = Recipes.get_user_liked_recipes(profileId)
 
-        return jsonify({"users": liked_users}), 201
+        return jsonify({"recipes": liked_users}), 201
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

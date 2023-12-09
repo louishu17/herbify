@@ -305,7 +305,20 @@ WHERE \"postID\" = :recipeID
                 userID=user_id,
             )
 
-            return [Recipes(*row) for row in rows]
+            return (
+                [
+                    {
+                        "title": recipe.title,
+                        "caption": recipe.caption,
+                        "imageS3Filename": recipe.imageS3Filename,
+                        "recipeID": recipe.recipeID,
+                        "postedByUserID": recipe.postedByUserID,
+                    }
+                    for recipe in rows
+                ]
+                if rows
+                else [None]
+            )
 
         return []
 

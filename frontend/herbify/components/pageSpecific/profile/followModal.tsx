@@ -29,9 +29,6 @@ interface ProfileListModalProps {
 export const ProfileListModal: React.FC<ProfileListModalProps> = ({ open, handleClose, profiles, recipes, isRecipes }) => {
   // if isRecipes than UsersList else RecipesList
 
-  console.log(profiles);
-  console.log(recipes);
-
   return (
     <Modal
       open={open}
