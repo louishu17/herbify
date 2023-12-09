@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
+import { useRouter } from "next/router";
 import { Typography, Container } from "@mui/material";
 import { HerbifyForm } from "@/components/shared/textForm";
 import { BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
@@ -17,9 +18,7 @@ interface SetUserProfileFormValues {
     middleName: string;
     lastName: string;
     suffix: string;
-    birthMonth: string;
-    birthDay: string;
-    birthYear: string;
+    birthday: string;
     pronouns: string;
     phoneNumber: string;
     bio: string;
@@ -32,28 +31,21 @@ const setUserProfileValidationSchema = YupObject({
     middleName: YupString().notRequired(),
     lastName: YupString().required('Required'),
     suffix: YupString().notRequired(),
-    birthMonth: YupNumber().min(1).max(12).required('Month is required'),
-    birthDay: YupNumber().min(1).max(31).required('Day is required'),
-    birthYear: YupNumber().min(1900).max(new Date().getFullYear()).required('Year is required')
-        .test('dateOfBirth', 'Date of Birth is not valid', function(value) {
-            const { birthMonth, birthDay, birthYear } = this.parent;
-            return new Date(birthYear, birthMonth - 1, birthDay).getFullYear() === birthYear;
-        }),
-    pronouns: YupString().required('Required'),
+    birthday: YupString().required('Required'),
+    pronouns: YupString().notRequired(),
     phoneNumber: YupString().matches(phoneRegExp, 'Phone number is not valid').required('Required'),
     bio: YupString().required('Required'),
 });
 
 export default function SetProfilePage() {
+    const router = useRouter();
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [initialValues, setInitialValues] = useState<SetUserProfileFormValues>({
         firstName: '',
         middleName: '',
         lastName: '',
         suffix: '',
-        birthMonth: '',
-        birthDay: '',
-        birthYear: '',
+        birthday: '',
         pronouns: '',
         phoneNumber: '',
         bio: '',
@@ -71,9 +63,7 @@ export default function SetProfilePage() {
                 middleName: profileData.user[0].middleName,
                 lastName: profileData.user[0].lastName,
                 suffix: profileData.user[0].suffix,
-                birthMonth: (date.getMonth()).toString(),
-                birthDay: date.getDate().toString(),
-                birthYear: date.getFullYear().toString(),
+                birthday: date.toString(),
                 pronouns: profileData.user[0].pronouns,
                 phoneNumber: profileData.user[0].phoneNumber,
                 bio: profileData.user[0].bio,
@@ -85,14 +75,16 @@ export default function SetProfilePage() {
         const getSessionId = async () => {
           const id = await fetchSessionId();
           
-          setSessionUserId(id);
+          if(sessionUserId !== id) {
+            setSessionUserId(id);
+            }
         };
     
         getSessionId();
       }, []);
 
     const updateProfileInDB = async (values : SetUserProfileFormValues) => {
-        const combinedDate = `${values.birthYear}-${values.birthMonth.padStart(2, '0')}-${values.birthDay.padStart(2, '0')}`;
+        const combinedDate = values.birthday;
         const modifiedValues = {
             ...values,
             dateOfBirth: combinedDate,
@@ -125,6 +117,7 @@ export default function SetProfilePage() {
 
     const handleSubmit = (values: SetUserProfileFormValues) => {
         setUserProfile(values);
+        router.push('/profile/-1')
     };
 
     let body = null;
@@ -142,17 +135,16 @@ export default function SetProfilePage() {
                     validationSchema={setUserProfileValidationSchema}
                     textFields={[
                         { name: "firstName", type: "text" },
-                        { name: "middleName", type: "text" },
+                        { name: "middleName", type: "text", optional: true },
                         { name: "lastName", type: "text" },
-                        { name: "suffix", type: "text" },
-                        { name: "birthMonth", type: "text" },
-                        { name: "birthDay", type: "text" },
-                        { name: "birthYear", type: "text" },
-                        { name: "pronouns", type: "text" },
+                        { name: "suffix", type: "text", optional: true },
+                        { name: "birthday", type: "text", datePicker: true },
+                        { name: "pronouns", type: "text", optional: true },
                         { name: "phoneNumber", type: "text" },
                         { name: "bio", type: "text" },
                     ]}
                     errorMessage={errorMessage}
+                    submitButtonText="Set Profile"
                 />
             </Container>
         )
