@@ -1,11 +1,13 @@
 import { BaseHerbifyLayout, BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
-import {Typography} from "@mui/material";
+import { Typography, Box, Button, TextField } from "@mui/material";
 import { HerbifyForm } from "@/components/shared/textForm";
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {object as YupObject, string as YupString} from 'yup';
 import axios from 'axios';
 import { useRouter } from "next/router";
 import { withAuthRedirect } from '@/lib/authCheck';
+import PageTransition from '@/components/shared/pageTransition';
+import HerbifyLayout from "@/components/shared/layouts/herbifyLayout";
 
 export const getServerSideProps = withAuthRedirect();
 
@@ -23,6 +25,7 @@ const loginValidationSchema = YupObject({
 	email: YupString().email('Invalid email address').required('Required'),
 	password: YupString().required('Required'),
 });
+
 
 export default function LoginPage(){
     const [errorMessage, setErrorMessage] = useState<string>("");
@@ -57,17 +60,26 @@ export default function LoginPage(){
         loginUser(values);
     }
     return (
-        <BaseHerbifyLayoutWithTitle title="Login">
-            <HerbifyForm
-                handleSubmit={handleSubmit}
-                initialValues={initialValues}
-                validationSchema={loginValidationSchema}
-                textFields={[
-                    { name: "email", type: "email" },
-                    { name: "password", type: "password" },
-                ]}
-                errorMessage={errorMessage}
-            />
-        </BaseHerbifyLayoutWithTitle>
+        <HerbifyLayout>
+            <PageTransition>
+                <Box sx={{ my: 4, mx: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Typography variant="h4" sx={{ mb: 2 }}>Log in to Your Account</Typography>
+                    <Typography variant="body1" sx={{ mb: 4 }}>
+                        Don't have an account? <Button color="primary" onClick={() => router.push('/register')}>Register</Button>
+                    </Typography>
+                    <HerbifyForm
+                        handleSubmit={handleSubmit}
+                        initialValues={initialValues}
+                        validationSchema={loginValidationSchema}
+                        textFields={[
+                            { name: "email", type: "email" },
+                            { name: "password", type: "password" },
+                        ]}
+                        errorMessage={errorMessage}
+                        submitButtonText="Log In"
+                    />
+                </Box>
+            </PageTransition>
+        </HerbifyLayout>
     )
 }

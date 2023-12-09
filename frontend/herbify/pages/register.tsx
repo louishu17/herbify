@@ -1,11 +1,13 @@
 import { BaseHerbifyLayout, BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
-import {Typography} from "@mui/material";
+import { Typography, Box, Button } from "@mui/material";
 import { HerbifyForm } from "@/components/shared/textForm";
 import React, {useState} from "react";
 import {object as YupObject, string as YupString} from 'yup';
 import axios from 'axios';
 import { useRouter } from "next/router";
 import { withAuthRedirect } from '@/lib/authCheck';
+import PageTransition from '@/components/shared/pageTransition';
+import HerbifyLayout from "@/components/shared/layouts/herbifyLayout";
 
 export const getServerSideProps = withAuthRedirect();
 
@@ -61,17 +63,27 @@ export default function RegisterPage(){
     };
 
     return (
-        <BaseHerbifyLayoutWithTitle title="Register">
-            <HerbifyForm
-                handleSubmit={handleSubmit}
-                initialValues={initialValues}
-                validationSchema={registerValidationSchema}
-                textFields={[
-                    { name: "email", type: "email" },
-                    { name: "password", type: "password" },
-                ]}
-                errorMessage={errorMessage}
-            />
-        </BaseHerbifyLayoutWithTitle>
+        <HerbifyLayout>
+            <PageTransition>
+                <Box sx={{ my: 4, mx: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Typography variant="h4" sx={{ mb: 2 }}>Create a New Account</Typography>
+                    <Typography variant="body1" sx={{ mb: 4 }}>
+                        Already have an account? <Button color="primary" onClick={() => router.push('/login')}>Log In</Button>
+                    </Typography>
+
+                    <HerbifyForm
+                        handleSubmit={handleSubmit}
+                        initialValues={initialValues}
+                        validationSchema={registerValidationSchema}
+                        textFields={[
+                            { name: "email", type: "email" },
+                            { name: "password", type: "password" },
+                        ]}
+                        errorMessage={errorMessage}
+                        submitButtonText="Create Account"
+                    />
+                </Box>
+            </PageTransition>
+        </HerbifyLayout>
     )
 }
