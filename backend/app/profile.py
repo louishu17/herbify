@@ -126,3 +126,17 @@ def users_liked_by_current(profileId):
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@profile_blueprint.route("/users_rated_by_current/<path:profileId>", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def users_liked_by_current(profileId):
+    print("getting users rated by current user")
+
+    try:
+        rated_users = Recipes.get_user_rated_recipes(profileId)
+
+        return jsonify({"recipes": rated_users}), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

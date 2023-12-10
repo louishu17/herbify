@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import {  BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
 import { Grid, Paper, Typography, Modal, Box, Avatar, Button} from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useFetchProfile, useUserID, useFollow, fetchFollowedBy, fetchFollowing, fetchLiked, fetchSessionId } from '@/lib/profileHooks';
+import { useFetchProfile, useUserID, useFollow, fetchFollowedBy, fetchFollowing, fetchLiked, fetchRated, fetchSessionId } from '@/lib/profileHooks';
 import { RecipesSection } from '@/components/pageSpecific/profile/recipesSection';
 import { HerbifyLoadingContainer } from '@/components/shared/loading';
 import { ProfileListModal } from '@/components/pageSpecific/profile/followModal';
@@ -12,7 +12,7 @@ import { Recipe } from "@/components/pageSpecific/search/searchResultsRecipe";
 import { INVALID_S3_FILENAME, useImageForProfilePic } from '@/lib/profilePicHooks';
 import { withAuth } from '@/lib/authCheck';
 
-export const getServerSideProps = withAuth();
+// export const getServerSideProps = withAuth();
 
 const FollowersClickableArea = styled(Button)({
   background: 'none',
@@ -93,6 +93,10 @@ export default function ProfilePage() {
       recipesList = await fetchLiked(currId);
       setIsRecipes(true);
     }
+    if (getType === "rated") { 
+      recipesList = await fetchRated(currId);
+      setIsRecipes(true);
+    }
 
     setModalProfileData(followersList);
     setModalRecipeData(recipesList);
@@ -104,10 +108,12 @@ export default function ProfilePage() {
 
   let followButton = null;
   let likedModal = null;
+  let ratedModal = null;
 
   useEffect(() => {
     const getSessionId = async () => {
-      const id = await fetchSessionId();
+      // const id = await fetchSessionId();
+      const id = 16;
       // TODO: Remove this hardcoding
       setSessionUserId(id);
     };
@@ -134,12 +140,21 @@ export default function ProfilePage() {
     );
   }
 
-  if (userId === -1) {
+  if (userId === -1 || sessionUserId === userId) {
     likedModal = (
       <Grid item xs={4} sm={2.5} container direction="column" alignItems="center">
       <FollowersClickableArea onClick={() => handleOpenModal("liked")}>
         <Typography variant="h6">View</Typography>
         <Typography variant="body2">Liked Posts</Typography>
+      </FollowersClickableArea>
+    </Grid>
+    );
+
+    ratedModal = (
+      <Grid item xs={4} sm={2.5} container direction="column" alignItems="center">
+      <FollowersClickableArea onClick={() => handleOpenModal("rated")}>
+        <Typography variant="h6">View</Typography>
+        <Typography variant="body2">Rated Posts</Typography>
       </FollowersClickableArea>
     </Grid>
     );
@@ -188,6 +203,9 @@ export default function ProfilePage() {
                   </Grid>
                   <Grid item>
                     {likedModal}
+                  </Grid>
+                  <Grid item>
+                    {ratedModal}
                   </Grid>
                 </Grid>
                 <Grid item>
