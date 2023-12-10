@@ -73,22 +73,7 @@ def create_recipes_view():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-@leaderboard_blueprint.route('/check_view', methods=['GET'])
-@cross_origin()
-def check_recipes_view():
-    print("getting leaderboard by posts")
 
-    try:
-        rows = app.db.execute('''
-            SELECT * FROM RecipesForFeed LIMIT 100
-                       ''')
-        print(rows)
-        recipes = [RecipeOnFeed(*row) for row in rows]
-        serialized_objects = [obj.to_feed_json() for obj in recipes]
-
-        return jsonify({'leaders' : serialized_objects}), 201
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
 
 @leaderboard_blueprint.route('/delete_view', methods=['GET'])
 @cross_origin()
