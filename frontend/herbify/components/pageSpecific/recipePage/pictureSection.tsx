@@ -12,7 +12,7 @@ export const PictureSection : React.FC = () => {
     const {data : imageSrc, isLoading : isLoadingImg, isError : isErrorWithImg} = useImageForRecipe(imageS3Filename)
     if (!isLoadingRecipeData && imageSrc) {
         return (
-            <Image src={imageSrc ? imageSrc : ""} alt="pic" width={250} height={200} ></Image>
+            <Image src={imageSrc ? imageSrc : ""} alt="pic" width={500} height={400} ></Image>
         );
     } else if (isLoadingRecipeData || isLoadingImg) {
         return <HerbifyLoadingCircle/>

@@ -16,15 +16,12 @@ def add_comment():
         if not user_id:
             print("User not in session")
             return jsonify({'message': 'You must be logged in to comment on a recipe'}), 401
-        print(data)
-        print(user_id)
         if 'parentID' not in data:
             parent_id = None
         else:
             parent_id = data['parentID']
         recipeID = data['recipeID'] 
         text = data['text']
-        print(parent_id)
         RecipeComment.add_comment(text=text, user_id=user_id,  parent_id=parent_id, post_id=recipeID)
         print("added comment")
         return jsonify({'message': 'Comment added successfully'}), 201
