@@ -11,8 +11,6 @@ const CommentsBody: React.FC = () => {
     const { data: commentsResponse, isLoading, isError, refetch } = useComments(recipeID);
     const { mutate: postComment, isLoading: isPostingComment } = usePostComment({ onSuccess: () => refetch() });
 
-    const [commentsWithPics, setCommentsWithPics] = useState<any[]>([]);
-
     const [newComment, setNewComment] = useState("");
     const [replyComments, setReplyComments] = useState<{ [key: number]: string }>({});
     const [replyTo, setReplyTo] = useState<number | null>(null);
