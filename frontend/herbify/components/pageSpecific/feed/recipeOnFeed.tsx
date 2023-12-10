@@ -159,6 +159,7 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                                 <CommentIcon />
                             </IconButton>
                             {commentsResponse && <CommentsModal open={modalOpen} handleClose={handleCloseModal} comments={commentsResponse.comments} onCommentSubmit={handleCommentSubmit}  />}
+                            {info.numRatings > 0 ? <Typography>Avg Rating : {info.avgRating}/5</Typography> : null}
                 </CardActions>}
                 <AttributeTags info={info}/>
             </Box>

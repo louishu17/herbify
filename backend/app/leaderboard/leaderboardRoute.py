@@ -59,11 +59,42 @@ def create_recipes_view():
 
     try:
         app.db.execute(
-            """
+            app.db.execute('''
             CREATE VIEW RecipesForFeed AS (
-                -- Your SQL query here
+                WITH \"RecipesWithUserNamesAndProfilePic\" AS (
+                    SELECT \"recipeID\", \"firstName\", \"lastName\", \"profilePicS3Filename\"
+                    FROM \"Recipes\"
+                    LEFT JOIN \"Users\"
+                    ON \"Recipes\".\"postedByUserID\" = \"Users\".\"uid\"
+                ), \"NumLikes\" AS (
+                    SELECT \"recipeID\", COALESCE(COUNT(\"Likes\".\"likedByUserID\"), 0) AS numLikes
+                    FROM \"Recipes\"
+                    LEFT JOIN \"Likes\"
+                    ON \"Recipes\".\"recipeID\" = \"Likes\".\"postID\"
+                    GROUP BY \"Recipes\".\"recipeID\" 
+                ), \"AvgRating\" AS (
+                    SELECT \"recipeID\", COALESCE(COUNT(\"Ratings\".\"RatedByUserID\"), 0) AS numRatings, COALESCE(AVG(\"Ratings\".\"rating\"), 0) AS avgRating
+                    FROM \"Recipes\"
+                    LEFT JOIN \"Ratings\"
+                    ON \"Recipes\".\"recipeID\" = \"Ratings\".\"RecipeID\"
+                    GROUP BY \"Recipes\".\"recipeID\"   
+                ), \"RecipesWithNumLikes\" AS (
+                    SELECT * 
+                    FROM \"Recipes\"
+                    NATURAL JOIN \"NumLikes\"
+                ), \"RecipesWithNumLikesAndRatings\" AS (
+                    SELECT * 
+                    FROM \"RecipesWithNumLikes\"
+                    NATURAL JOIN \"AvgRating\"
+                )
+            
+                SELECT \"recipeID\", \"postedByUserID\", \"fullRecipeString\", \"createdDate\", \"title\", \"caption\", \"imageS3Filename\", \"firstName\", \"lastName\", \"profilePicS3Filename\", numRatings, avgRating, numLikes
+                FROM \"RecipesWithNumLikesAndRatings\"
+                NATURAL JOIN \"RecipesWithUserNamesAndProfilePic\"
             )
-            """
+                       
+            
+                       ''')
         )
         leaders = LeaderboardFetcher.get_leaders()
         serialized_objects = [obj.to_json() for obj in leaders]
@@ -87,7 +118,7 @@ def delete_recipes_view():
     try:
         rows = app.db.execute(
             """
-            DROP VIEW RecipesForFeedd
+            DROP VIEW RecipesForFeed
             """
         )
         print(rows)

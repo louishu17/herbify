@@ -16,6 +16,8 @@ export interface RecipeInfoFromFeed {
     postedByUserID : number;
     nameOfPoster : string;
     profilePicS3Filename : string;
+    numRatings : number;
+    avgRating : number;
     
 }
 
@@ -24,10 +26,7 @@ export interface RecipeInfoFromFeed {
 export default function getFeedRecipeIDs(req: NextApiRequest, res: NextApiResponse<FeedData>) {
     setTimeout(() => {
         res.status(200).json({descriptions : [
-            {recipeID : 1, title: "Pasta", caption: "Yum!", imageS3Filename : INVALID_S3_FILENAME, numLikes: 0, userLiked: false, postedByUserID : 19, nameOfPoster: "Taddy", profilePicS3Filename : "profilePics/profilePic.jpg"},
-            {recipeID : 2, title: "Linguini", caption: "Delicious!", imageS3Filename : INVALID_S3_FILENAME, numLikes: 0, userLiked: false, postedByUserID : 19, nameOfPoster: "Taddy", profilePicS3Filename : "profilePics/profilePic.jpg"}, 
-            {recipeID : 3, title: "Herb special", caption: "Yum!", imageS3Filename : INVALID_S3_FILENAME, numLikes: 0, userLiked: false, postedByUserID : 19, nameOfPoster: "Taddy", profilePicS3Filename : "profilePics/profilePic.jpg"}, 
-            {recipeID : 4, title: "Louis special", caption: "Louis better than Herb", imageS3Filename : INVALID_S3_FILENAME, numLikes: 0, userLiked: false, postedByUserID : 19, nameOfPoster: "Taddy", profilePicS3Filename : "profilePics/profilePic.jpg"},
+            {recipeID : 1, title: "Pasta", caption: "Yum!", imageS3Filename : INVALID_S3_FILENAME, numLikes: 0, userLiked: false, postedByUserID : 19, nameOfPoster: "Taddy", profilePicS3Filename : "profilePics/profilePic.jpg", numRatings : 5, avgRating : 3.7},
         ]})
 
     }, 200);

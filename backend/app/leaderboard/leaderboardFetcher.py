@@ -79,9 +79,8 @@ class LeaderboardFetcher:
             
         """
         )
-        recipes = [RecipeOnFeed(*row) for row in rows]
-        return recipes
-
+        recipe_info_list = RecipeOnFeed.add_likes_info(rows)
+        return recipe_info_list
 
 class LeaderJSONEncoder(json.JSONEncoder):
     def default(self, obj):
