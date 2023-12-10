@@ -23,8 +23,15 @@ def paginated_search(pageNum):
 
     try:
         args = request.args
+
+        print(args)
+
         term = args.get("term")
-        recipes = Recipes.get_by_term(term, paginated=True, pageNum=pageNum)
+        filters = args.getlist("filters[]")
+
+        recipes = Recipes.get_by_term(
+            term, filters=filters, paginated=True, pageNum=pageNum
+        )
         serialized_recipes = [obj.to_json_recipe() for obj in recipes]
         return jsonify({"results": serialized_recipes}), 201
     except Exception as e:

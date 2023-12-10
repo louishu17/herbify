@@ -23,6 +23,7 @@ def search():
     try:
         args = request.args
         term = args.get("term")
+
         recipes = Recipes.get_by_term(term)
         serialized_recipes = [obj.to_json_recipe() for obj in recipes]
         return jsonify({"results": serialized_recipes}), 201

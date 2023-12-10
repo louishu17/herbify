@@ -12,7 +12,7 @@ import axios from 'axios';
 import { useRouter } from "next/router";
 import { withAuth } from '@/lib/authCheck';
 
-export const getServerSideProps = withAuth();
+// export const getServerSideProps = withAuth();
 
 export default function CreateRecipePage() {
     const [errorMessage, setErrorMessage] = useState<string>("");
