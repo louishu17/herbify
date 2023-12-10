@@ -19,7 +19,6 @@ export const RecipeOnProfile : React.FC<RecipeOnProfileProps> = (props : RecipeO
             profilePicS3Filename : props.profilePicS3Filename,
             postedByUserID : props.recipeSpecificData.postedByUserID,
             
-            
         }} isProfile = {true} ></RecipeOnFeed>
 
     )

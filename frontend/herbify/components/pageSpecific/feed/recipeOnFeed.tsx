@@ -173,9 +173,9 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                             <Typography variant="subtitle1" color="text.secondary" noWrap style={{ marginBottom: '15px' }}>
                                 {info.caption}
                             </Typography>
-                            <Typography variant="caption" color="text.secondary" noWrap>
+                            {info.createdDate && <Typography variant="caption" color="text.secondary" noWrap>
                                 {relativeTime(info.createdDate)}
-                            </Typography>
+                            </Typography>}
                         </CardContent>
                     </MuiLink>
                 </Link>
