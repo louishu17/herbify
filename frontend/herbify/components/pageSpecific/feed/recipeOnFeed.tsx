@@ -84,6 +84,34 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
         postComment({ recipeID: props.info.recipeID, text, parentID }); // Include recipeID here
     };
 
+    function relativeTime(datetimeStr: string): string {
+        const givenTime = new Date(datetimeStr);
+        const currentTime = new Date();
+    
+        const diff = currentTime.getTime() - givenTime.getTime();
+    
+        // Calculate difference in days, hours, minutes
+        const minutesDiff = Math.floor(diff / 60000);
+        const hoursDiff = Math.floor(minutesDiff / 60);
+        const daysDiff = Math.floor(hoursDiff / 24);
+    
+        if (daysDiff === 0) {
+            if (hoursDiff === 0) {
+                if (minutesDiff <= 1) {
+                    return "just now";
+                }
+                return `${minutesDiff} minutes ago`;
+            }
+            return `${hoursDiff} hours ago`;
+        } else if (daysDiff === 1) {
+            return "yesterday";
+        } else if (daysDiff < 30) {
+            return `${daysDiff} days ago`;
+        } else {
+            // Format date as "Month day"
+            return givenTime.toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
+        }
+    }
 
 
     useEffect(() => {
@@ -142,8 +170,11 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                                     {info.title}
                                 </Typography>
                             </Stack>
-                            <Typography variant="body2" color="text.secondary" noWrap>
+                            <Typography variant="subtitle1" color="text.secondary" noWrap style={{ marginBottom: '15px' }}>
                                 {info.caption}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary" noWrap>
+                                {relativeTime(info.createdDate)}
                             </Typography>
                         </CardContent>
                     </MuiLink>

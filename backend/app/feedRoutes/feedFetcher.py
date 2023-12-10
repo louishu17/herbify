@@ -66,7 +66,7 @@ class RecipeOnFeed:
         """
         self.recipeID = recipeID
         self.postedByUserID = postedByUserID
-        self.createdDate = createdDate
+        self.createdDate = createdDate.strftime("%Y-%m-%d %H:%M:%S")
         self.title = title
         self.caption = caption
         self.imageS3Filename = imageS3Filename
@@ -125,7 +125,8 @@ class RecipeOnFeed:
             "isDairyFree": self.isDairyFree,
             "isNutFree": self.isNutFree,
             "numRatings" : self.numRatings,
-            "avgRating" : self.avgRating
+            "avgRating" : self.avgRating,
+            "createdDate": self.createdDate,
         }
 
     @staticmethod
@@ -237,7 +238,7 @@ class FeedFetcher:
         upper_limit = 8 * (i + 1) - 1
         rows = app.db.execute(
             """
-                SELECT \"recipeID\", \"postedByUserID\", \"fullRecipeString\", \"createdDate\", \"title\", \"caption\", \"imageS3Filename\", \"firstName\", \"lastName\", \"profilePicS3Filename\"
+                SELECT \"recipeID\", \"postedByUserID\", \"fullRecipeString\", \"createdDate\", \"title\", \"caption\", \"imageS3Filename\", \"firstName\", \"lastName\", \"profilePicS3Filename\", numRatings, avgRating, numLikes
                 FROM (
                     SELECT *, ROW_NUMBER() OVER (ORDER BY \"createdDate\" DESC) AS \"row_num\"
                     FROM RecipesForFeed
