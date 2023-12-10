@@ -1,5 +1,6 @@
-from flask import current_app as app
+from flask import current_app as app, jsonify
 import json
+from feedRoutes.feedFetcher import RecipeOnFeed, RecipeOnFeedJSONEncoder
 
 
 class Leader:
@@ -17,7 +18,7 @@ class Leader:
             "profilePicS3Filename" : self.profilePicS3Filename
         }
 
-class Leaderboard:
+class LeaderboardFetcher:
         
 
     def get_leaders():
@@ -40,6 +41,16 @@ class Leaderboard:
 
                                ''')              
         return [Leader(*row) for row in rows]
+    
+    def get_leading_posts():
+        rows = app.db.execute('''
+            SELECT * FROM RecipesForFeed
+            ORDER BY numLikes DESC
+            LIMIT 10
+            
+        ''')
+        recipes = [RecipeOnFeed(*row) for row in rows]
+        return recipes
 
 
 

@@ -61,8 +61,10 @@ class RecipeOnFeed:
 
     def to_feed_json(self):
         name = ""
-        if type(self.firstName) == "str" and type(self.lastName) == "str":
+        try:
             name = self.firstName + " " + self.lastName
+        except: 
+            name=""
         return {
             "recipeID": self.recipeID,
             "title": self.title,
@@ -201,7 +203,7 @@ class FeedFetcher:
 
     def get_ith_set_of_most_recent_feed_recipes_from_ppl_you_follow(i: int):
         uid = Users.get_current_user_id()
-        # uid = 19
+        #uid = 19
         lower_limit = 8 * i
         upper_limit = 8 * (i + 1) - 1
         rows = app.db.execute(
