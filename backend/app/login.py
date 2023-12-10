@@ -42,7 +42,8 @@ def login():
 @cross_origin(supports_credentials=True)
 def logout():
     print("Logging out")
-    session.pop("user", None)
+    session.clear()
+    print(session)
     return jsonify({"message": "Logout successful"}), 200
 
 

@@ -73,10 +73,17 @@ export default function RecipePage() {
     
     return (
         <BaseHerbifyLayout>
-            <Container maxWidth="lg">
+            <Container maxWidth="lg" sx={{ my: 4 }}> {/* Margin top and bottom */}
+            
                 <RecipeHeader />
-                <PictureSection/>
-                <Box display="flex" alignItems="center" gap={4}>
+
+                {/* Centering Picture Section */}
+                <Box display="flex" justifyContent="center" alignItems="center" gap={4} my={2}> {/* Margin top and bottom */}
+                    <PictureSection />
+                </Box>
+
+                {/* Likes and Rating Components */}
+                <Box display="flex" justifyContent="center" alignItems="center" gap={4} my={2}>
                     <LikesComponent 
                         userLiked={userLiked} 
                         likesCount={likes} 
@@ -88,14 +95,22 @@ export default function RecipePage() {
                         onRatingChange={handleRatingChange} 
                     />
                 </Box>
-                <IngredientsSection />
-                <DirectionsSection/>
-                <CommentsSection/>
-                <div>
-            </div>
+
+                {/* Ingredients and Directions Sections */}
+                <Box bgcolor="#FFFAF7" p={2} borderRadius={2}>
+                    <IngredientsSection />
+                </Box>
+                <Box bgcolor="#FFFAF7" p={2} borderRadius={2}>
+                    <DirectionsSection />
+                </Box>
+
+                {/* Comments Section */}
+                <Box my={2}> {/* Margin top and bottom */}
+                    <CommentsSection />
+                </Box>
             </Container>
         </BaseHerbifyLayout>
-    )
+    );
 }
 
 

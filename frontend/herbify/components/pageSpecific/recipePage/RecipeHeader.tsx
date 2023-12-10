@@ -44,7 +44,7 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = (props: RecipeHeaderPro
     } else if (data && !isError) {
         return (
             <Container>
-                <Typography variant="h2">{data.title}</Typography>
+                <Typography variant="h2" style={{marginBottom: 13}}>{data.title}</Typography>
                 <Box display="flex" flexDirection="row">
                     <Avatar 
                         src={(profilePicImgSrc && !isLoadingProfilePic && !isErrorLoadingProfilePic) ? profilePicImgSrc : INVALID_S3_FILENAME}

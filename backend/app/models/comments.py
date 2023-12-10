@@ -106,7 +106,7 @@ class RecipeComment:
         Returns:
             list: A list of dictionaries representing the formatted comments and their replies.
         """
-        print("getting comments")
+        
         try:
             if comment_id is None:
                 query = """
@@ -125,7 +125,7 @@ class RecipeComment:
                 """
                 comments = app.db.execute(query, comment_id=comment_id, post_id=post_id)
 
-            print(comments)
+            
             comments = (
                 [
                     RecipeComment(
