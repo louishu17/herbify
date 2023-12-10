@@ -594,6 +594,49 @@ WHERE \"postID\" = :recipeID
 
         return []
 
+    @staticmethod
+    def get_user_rated_recipes(user_id: int):
+        """
+        Retrieves recipes liked by a user and their ratings.
+
+        Args:
+            user_id (int): The user ID of the user whose liked recipes and ratings are retrieved.
+
+        Returns:
+            list: A list of dictionaries containing information about liked recipes and their ratings.
+        """
+
+        # Select recipe details and ratings for the user
+
+        if user_id is not None:
+            rows = app.db.execute(
+                """
+                SELECT r.*, rt."rating"
+                FROM "Recipes" r
+                INNER JOIN "Ratings" rt ON r."recipeID" = rt."RecipeID"
+                WHERE rt."RatedByUserID" = :userID
+                """,
+                userID=user_id,
+            )
+
+            return (
+                [
+                    {
+                        "title": recipe.title,
+                        "caption": recipe.caption,
+                        "imageS3Filename": recipe.imageS3Filename,
+                        "recipeID": recipe.recipeID,
+                        "postedByUserID": recipe.postedByUserID,
+                        "rating": recipe.rating,
+                    }
+                    for recipe in rows
+                ]
+                if rows
+                else [None]
+            )
+
+        return []
+
 
 class RecipeJSONEncoder(json.JSONEncoder):
     def default(self, obj):

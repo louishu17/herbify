@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import {  BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
 import { Grid, Paper, Typography, Box, Avatar, Button, Tabs, Tab} from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useFetchProfile, useUserID, useFollow, fetchFollowedBy, fetchFollowing, fetchLiked, fetchSessionId } from '@/lib/profileHooks';
+import { useFetchProfile, useUserID, useFollow, fetchFollowedBy, fetchFollowing, fetchLiked, fetchRated, fetchSessionId } from '@/lib/profileHooks';
 import { UserRecipesSection, LikedPostsSection } from '@/components/pageSpecific/profile/recipesSection';
 import { HerbifyLoadingContainer } from '@/components/shared/loading';
 import { ProfileListModal } from '@/components/pageSpecific/profile/followModal';
@@ -63,6 +63,7 @@ export default function ProfilePage() {
   const [modalProfileData, setModalProfileData] = useState<User[]>([]);
   const [modalRecipeData, setModalRecipeData] = useState<Recipe[]>([]);
   const [isRecipes, setIsRecipes] = useState<boolean>(true);
+  const [isRatings, setisRatings] = useState<boolean>(true);
   const [tabValue, setTabValue] = useState(0);
 
   const handleTabChange = (event: any, newValue: React.SetStateAction<number>) => {
@@ -78,12 +79,18 @@ export default function ProfilePage() {
     if (getType === "followers") { 
       followersList = await fetchFollowedBy(currId);
       setIsRecipes(false);
+      setisRatings(false);
     }
     if (getType === "following") { 
       followersList = await fetchFollowing(currId);
       setIsRecipes(false);
+      setisRatings(false);
     }
-
+    if (getType === "rated") { 
+      recipesList = await fetchRated(currId, );
+      setIsRecipes(true);
+      setisRatings(true);
+    }
     setModalProfileData(followersList);
     setModalRecipeData(recipesList);
 
@@ -94,10 +101,12 @@ export default function ProfilePage() {
 
   let followButton = null;
   let likedModal = null;
+  let ratedModal = null;
 
   useEffect(() => {
     const getSessionId = async () => {
       const id = await fetchSessionId();
+
       // TODO: Remove this hardcoding
       setSessionUserId(id);
     };
@@ -130,6 +139,15 @@ export default function ProfilePage() {
       <FollowersClickableArea onClick={() => handleOpenModal("liked")}>
         <Typography variant="h6">View</Typography>
         <Typography variant="body2">Liked Posts</Typography>
+      </FollowersClickableArea>
+    </Grid>
+    );
+
+    ratedModal = (
+      <Grid item xs={4} sm={2.5} container direction="column" alignItems="center">
+      <FollowersClickableArea onClick={() => handleOpenModal("rated")}>
+        <Typography variant="h6">View</Typography>
+        <Typography variant="body2">Rated Posts</Typography>
       </FollowersClickableArea>
     </Grid>
     );
@@ -176,6 +194,9 @@ export default function ProfilePage() {
                       <Typography variant="body2">Following</Typography>
                     </FollowersClickableArea>
                   </Grid>
+                  <Grid item>
+                    {ratedModal}
+                  </Grid>
                 </Grid>
                 <Grid item>
                   <Typography>{profileData.user[0].bio}</Typography>
@@ -190,12 +211,11 @@ export default function ProfilePage() {
                 profiles={modalProfileData}
                 recipes={modalRecipeData}
                 isRecipes={isRecipes}
+                isRatings={isRatings}
               />
             </Grid>
           </Grid>
         </ProfilePaper>
-
-
         </ProfileGrid>
         <Box sx={{ width: '100%' }}>
           {/* Tabs for switching between views */}
