@@ -4,6 +4,7 @@ import { useFetchPaginatedSearchRecipeByTerm, INITIAL_TERM } from '@/lib/searchP
 import { HerbifyLoadingCircle } from '@/components/shared/loading';
 import Link from "next/link";
 import { useImageForProfilePic, INVALID_S3_FILENAME } from '@/lib/profilePicHooks';
+import Rating from '@mui/material/Rating';
 
 export interface Recipe {
     recipeID: number;
@@ -23,6 +24,7 @@ export interface RecipesListProps {
 interface RecipeResultProps {
   recipe: Recipe;
   onClose?: () => void;
+  isRatings: boolean;
 }
 
 const avatarStyle = {
@@ -48,10 +50,7 @@ export const RecipeResult: React.FC<RecipeResultProps> = ({ recipe, isRatings })
           </Link>
           {
             isRatings && (
-                <ListItemText 
-                primary={recipe.rating} 
-                sx={{ textAlign: 'right' }}
-            />
+                <Rating name="read-only" value={recipe.rating}  precision={0.5} readOnly />
             )
           }
       </ListItem>
@@ -68,7 +67,7 @@ export const RecipesList: React.FC<RecipesListProps> = ({ results, isRatings }) 
 
   return (
       <>
-          <List style={{ marginLeft: '20%' }}>
+          <List style={{ marginLeft: '5%' }}>
               {results.map(recipe => <RecipeResult key={recipe.recipeID} recipe={recipe} isRatings={isRatings} />)}
           </List>
           {isLoading || isFetchingNextPage ? <Typography align="center"><HerbifyLoadingCircle/></Typography> : null}
@@ -88,7 +87,7 @@ export const SearchResults: React.FC = () => {
 
     return (
         <>
-            <RecipesList results={results || []} />
+            <RecipesList results={results || []} isRatings={false}/>
             {isLoading || isFetchingNextPage ? <Typography align="center"><HerbifyLoadingCircle/></Typography> : null}
             {isError ? <Typography align="center">An Error Occurred</Typography> : null}
             {atLeastOneLoad ? 
