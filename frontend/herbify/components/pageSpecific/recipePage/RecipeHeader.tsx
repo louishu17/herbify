@@ -17,8 +17,6 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = (props: RecipeHeaderPro
     const { data, isLoading, isError } = useBasicRecipeInfo(recipeID);
     const {data : profilePicImgSrc, isLoading : isLoadingProfilePic, isError : isErrorLoadingProfilePic} = useImageForProfilePic(data ? data.profilePicS3Filename : INVALID_S3_FILENAME);
 
-
-    
     const avatarStyle = { width: '50px', height: '50px', marginRight: '15px' };
 
     const iconStyle = { width: '24px', height: '24px' };
