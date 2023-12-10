@@ -4,14 +4,14 @@ export const handleLogout = async (router : NextRouter) => {
     try {
         const response = await fetch('http://127.0.0.1:5000/logout', {
             method: 'POST',
-            credentials: 'include', // Needed if you're using cookies
-            // Add headers if required, e.g., Content-Type, Authorization
+            credentials: 'include',
         });
         const data = await response.json();
-        console.log(data.message); // "Logout successful"
-        router.push('/login');
+        console.log(data.message);
 
-        // Redirect to login page or update state as needed
+        document.cookie = 'session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
+        router.push('/login');
     } catch (error) {
         console.error('Logout failed', error);
     }

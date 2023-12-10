@@ -18,7 +18,7 @@ def get_comments(recipeID):
     Returns:
         Response: A JSON response containing comments for the specified recipe.
     """
-    print("getting comments")
+    
     try:
         comments = RecipeComment.format_comments(post_id=recipeID)
         return jsonify({"comments": comments}), 201
