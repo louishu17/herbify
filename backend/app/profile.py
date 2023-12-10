@@ -130,7 +130,7 @@ def users_liked_by_current(profileId):
 
 @profile_blueprint.route("/users_rated_by_current/<path:profileId>", methods=["GET"])
 @cross_origin(supports_credentials=True)
-def users_liked_by_current(profileId):
+def users_rated_by_current(profileId):
     print("getting users rated by current user")
 
     try:

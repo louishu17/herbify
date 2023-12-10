@@ -606,16 +606,22 @@ WHERE \"postID\" = :recipeID
         # Select recipe details and ratings for the user
 
         if user_id is not None:
-            rows = app.db.execute(
-                """
-                SELECT R.*, L."ratedByUserID", L."rating"
-                FROM "Recipes" R
-                INNER JOIN "Likes" L ON R."recipeID" = L."postID"
-                LEFT JOIN "Ratings" RA ON R."recipeID" = RA."RecipeID" AND L."likedByUserID" = RA."RatedByUserID"
-                WHERE L."likedByUserID" = :userID
-                """,
-                userID=user_id,
-            )
+            try:
+                rows = app.db.execute(
+                    """
+                    SELECT r.*, rt."rating"
+                    FROM "Recipes" r
+                    INNER JOIN "Ratings" rt ON r."recipeID" = rt."RecipeID"
+                    WHERE rt."RatedByUserID" = :userID
+                    """,
+                    userID=user_id,
+                )
+            except Exception as e:
+                print(e)
+                app.db.rollback()
+                raise
+
+            print(rows)
 
             return (
                 [
