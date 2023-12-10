@@ -37,8 +37,8 @@ class Recipes:
         get(recipeID: int):
             Retrieves a recipe object by its ID.
 
-        get_by_term(term: str, paginated=False, pageNum=0):
-            Retrieves recipes that match a search term, optionally paginated.
+        get_by_term(term: str, filters: [], paginated=False, pageNum=0):
+            Retrieves recipes that match a search term, optionally paginated and optionally filtered by tag.
 
         get_by_user(uid: int):
             Retrieves recipes posted by a specific user.
