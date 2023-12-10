@@ -3,6 +3,7 @@ import { AppBar, Drawer, List, ListItem, Button,IconButton } from '@mui/material
 import { useRouter, NextRouter } from 'next/router';
 import { handleLogout } from '@/lib/logoutHooks';
 import HomeButton from '@/components/shared/homeButton';
+import styles from './HerbifyNavBarGivenOptions.module.css';
 
 
 
@@ -14,7 +15,7 @@ interface HerbifyNavBarGivenOptionsProps {
 const HerbifyNavBarGivenOptions : React.FC<HerbifyNavBarGivenOptionsProps> = (props : HerbifyNavBarGivenOptionsProps) => {
     const router = useRouter();
   return (
-    <Drawer variant="permanent">
+    <Drawer variant="permanent" className='no-print'>
       <List>
         <ListItem style={{justifyContent: 'center'}}>
         <IconButton 
