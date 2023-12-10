@@ -13,6 +13,29 @@ const theme = createTheme({
     },
   },
   components: {
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          color: '#05353B', // Default color
+          '&:hover': {
+            color: '#05353B', // Color on hover
+            opacity: 0.8,
+          },
+          '&.Mui-selected': {
+            color: '#05353B', // Color when selected
+            fontWeight: 'bold', // Makes selected tab bolder
+          },
+        },
+        
+      },
+    },
+    MuiTabs: {
+      styleOverrides: { 
+          indicator: {
+          backgroundColor: '#05353B', // Set the indicator color to green
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         contained: {
