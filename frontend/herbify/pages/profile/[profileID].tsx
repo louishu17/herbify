@@ -74,6 +74,7 @@ export default function ProfilePage() {
   const [modalProfileData, setModalProfileData] = useState<User[]>([]);
   const [modalRecipeData, setModalRecipeData] = useState<Recipe[]>([]);
   const [isRecipes, setIsRecipes] = useState<boolean>(true);
+  const [isRatings, setisRatings] = useState<boolean>(true);
 
   const handleOpenModal = async (getType: string) => {
     let followersList: User[] = [];
@@ -84,18 +85,22 @@ export default function ProfilePage() {
     if (getType === "followers") { 
       followersList = await fetchFollowedBy(currId);
       setIsRecipes(false);
+      setisRatings(false);
     }
     if (getType === "following") { 
       followersList = await fetchFollowing(currId);
       setIsRecipes(false);
+      setisRatings(false);
     }
     if (getType === "liked") { 
       recipesList = await fetchLiked(currId);
       setIsRecipes(true);
+      setisRatings(false);
     }
     if (getType === "rated") { 
-      recipesList = await fetchRated(currId);
+      recipesList = await fetchRated(currId, );
       setIsRecipes(true);
+      setisRatings(true);
     }
 
     setModalProfileData(followersList);
@@ -221,6 +226,7 @@ export default function ProfilePage() {
                 profiles={modalProfileData}
                 recipes={modalRecipeData}
                 isRecipes={isRecipes}
+                isRatings={isRatings}
               />
             </Grid>
           </Grid>

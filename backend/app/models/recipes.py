@@ -606,22 +606,15 @@ WHERE \"postID\" = :recipeID
         # Select recipe details and ratings for the user
 
         if user_id is not None:
-            try:
-                rows = app.db.execute(
-                    """
-                    SELECT r.*, rt."rating"
-                    FROM "Recipes" r
-                    INNER JOIN "Ratings" rt ON r."recipeID" = rt."RecipeID"
-                    WHERE rt."RatedByUserID" = :userID
-                    """,
-                    userID=user_id,
-                )
-            except Exception as e:
-                print(e)
-                app.db.rollback()
-                raise
-
-            print(rows)
+            rows = app.db.execute(
+                """
+                SELECT r.*, rt."rating"
+                FROM "Recipes" r
+                INNER JOIN "Ratings" rt ON r."recipeID" = rt."RecipeID"
+                WHERE rt."RatedByUserID" = :userID
+                """,
+                userID=user_id,
+            )
 
             return (
                 [
@@ -631,7 +624,6 @@ WHERE \"postID\" = :recipeID
                         "imageS3Filename": recipe.imageS3Filename,
                         "recipeID": recipe.recipeID,
                         "postedByUserID": recipe.postedByUserID,
-                        "ratedByUserID": recipe.ratedByUserID,
                         "rating": recipe.rating,
                     }
                     for recipe in rows

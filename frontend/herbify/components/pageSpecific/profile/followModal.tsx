@@ -24,9 +24,10 @@ interface ProfileListModalProps {
   profiles: User[];
   recipes: Recipe[];
   isRecipes: boolean;
+  isRatings: boolean;
 }
 
-export const ProfileListModal: React.FC<ProfileListModalProps> = ({ open, handleClose, profiles, recipes, isRecipes }) => {
+export const ProfileListModal: React.FC<ProfileListModalProps> = ({ open, handleClose, profiles, recipes, isRecipes, isRatings }) => {
   // if isRecipes than UsersList else RecipesList
 
   return (
@@ -38,7 +39,7 @@ export const ProfileListModal: React.FC<ProfileListModalProps> = ({ open, handle
       <Box sx={modalStyle}>
         {
           isRecipes ? 
-          <RecipesList results={recipes} onClose={handleClose}/> :
+          <RecipesList results={recipes} onClose={handleClose} isRatings={isRatings} /> :
           <UsersList results={profiles} onClose={handleClose}/>
         }
       </Box>
