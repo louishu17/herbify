@@ -37,8 +37,8 @@ class Recipes:
         get(recipeID: int):
             Retrieves a recipe object by its ID.
 
-        get_by_term(term: str, paginated=False, pageNum=0):
-            Retrieves recipes that match a search term, optionally paginated.
+        get_by_term(term: str, filters: [], paginated=False, pageNum=0):
+            Retrieves recipes that match a search term, optionally paginated and optionally filtered by tag.
 
         get_by_user(uid: int):
             Retrieves recipes posted by a specific user.
@@ -168,12 +168,13 @@ WHERE recipeID = :recipeID
         return Recipes(*(rows[0])) if rows else None
 
     @staticmethod
-    def get_by_term(term: str, paginated=False, pageNum=0):
+    def get_by_term(term: str, filters=None, paginated=False, pageNum=0):
         """
-        Retrieves recipes that match a search term, optionally paginated.
+        Retrieves recipes that match a search term, optionally filtered and paginated.
 
         Args:
             term (str): The search term to match recipes.
+            filters (list of str, optional): List of filters to apply. Defaults to None.
             paginated (bool, optional): If True, paginates the results. Defaults to False.
             pageNum (int, optional): The page number for paginated results. Defaults to 0.
 
@@ -183,32 +184,58 @@ WHERE recipeID = :recipeID
 
         search_term = "%" + term + "%"
         rows = []
+
+        # Define a dictionary to map filters to their corresponding database columns
+        filter_mapping = {
+            "Vegan": "isVegan",
+            "Gluten-Free": "isGlutenFree",
+            "High-Protein": "isHighProtein",
+            "Keto": "isKeto",
+            "Kid-Friendly": "isKidFriendly",
+            "Nut-Free": "isNutFree",
+            "Spicy": "isSpicy",
+            "Vegetarian": "isVegetarian",
+        }
+
+        # Build the SQL query dynamically based on selected filters
+        query = f"""
+            SELECT *
+            FROM \"Recipes\"
+            WHERE LOWER(title) LIKE LOWER(:term)
+        """
+
+        if filters:
+            # Add filter conditions to the query
+            filter_conditions = []
+            for filter_option in filters:
+                if filter_option in filter_mapping:
+                    column_name = filter_mapping[filter_option]
+                    filter_conditions.append(f"CAST({column_name} AS BOOLEAN) = TRUE")
+
+            if filter_conditions:
+                query += " AND " + " AND ".join(filter_conditions)
+
         if paginated:
             lower_limit = 8 * pageNum
             upper_limit = 8 * (pageNum + 1) - 1
-            rows = app.db.execute(
-                """
+            query = f"""
                 SELECT *
                 FROM (
-                    SELECT *, ROW_NUMBER() OVER (ORDER BY \"Recipes\".\"createdDate\" DESC) AS row_num
-                    FROM \"Recipes\"
-                    WHERE LOWER(title) LIKE(:term)
+                    SELECT *, ROW_NUMBER() OVER (ORDER BY \"createdDate\" DESC) AS row_num
+                    FROM ({query}) AS filtered_recipes
                 ) AS ranked_posts
                 WHERE row_num BETWEEN :lower_limit AND :upper_limit;
-                              """,
+            """
+
+            rows = app.db.execute(
+                query,
                 term=search_term,
                 lower_limit=lower_limit,
                 upper_limit=upper_limit,
             )
+
         else:
-            rows = app.db.execute(
-                f"""
-                SELECT *
-                FROM \"Recipes\"
-                WHERE LOWER(title) LIKE LOWER(:term)
-                """,
-                term=search_term,
-            )
+            rows = app.db.execute(query, term=search_term)
 
         return [Recipes(*row) for row in rows]
 
