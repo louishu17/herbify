@@ -12,7 +12,7 @@ import { Recipe } from "@/components/pageSpecific/search/searchResultsRecipe";
 import { INVALID_S3_FILENAME, useImageForProfilePic } from '@/lib/profilePicHooks';
 import { withAuth } from '@/lib/authCheck';
 
-// export const getServerSideProps = withAuth();
+export const getServerSideProps = withAuth();
 
 const FollowersClickableArea = styled(Button)({
   background: 'none',
@@ -117,8 +117,8 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const getSessionId = async () => {
-      // const id = await fetchSessionId();
-      const id = 16;
+      const id = await fetchSessionId();
+
       // TODO: Remove this hardcoding
       setSessionUserId(id);
     };
@@ -145,7 +145,7 @@ export default function ProfilePage() {
     );
   }
 
-  if (userId === -1 || sessionUserId === userId) {
+  if (userId === -1) {
     likedModal = (
       <Grid item xs={4} sm={2.5} container direction="column" alignItems="center">
       <FollowersClickableArea onClick={() => handleOpenModal("liked")}>
