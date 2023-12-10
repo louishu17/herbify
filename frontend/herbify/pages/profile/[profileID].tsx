@@ -1,10 +1,10 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import {  BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
-import { Grid, Paper, Typography, Modal, Box, Avatar, Button} from '@mui/material';
+import { Grid, Paper, Typography, Box, Avatar, Button, Tabs, Tab} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useFetchProfile, useUserID, useFollow, fetchFollowedBy, fetchFollowing, fetchLiked, fetchSessionId } from '@/lib/profileHooks';
-import { RecipesSection } from '@/components/pageSpecific/profile/recipesSection';
+import { UserRecipesSection, LikedPostsSection } from '@/components/pageSpecific/profile/recipesSection';
 import { HerbifyLoadingContainer } from '@/components/shared/loading';
 import { ProfileListModal } from '@/components/pageSpecific/profile/followModal';
 import { User } from "@/components/pageSpecific/search/searchResultsUser";
@@ -46,23 +46,12 @@ const ProfilePaper = styled(Paper)(({ theme }) => ({
   margin: 'auto', // Center the paper in the grid
 }));
 
-const RecipesGrid = styled(Grid)(({ theme }) => ({
-  flexGrow: 1,
-  marginTop: theme.spacing(2),
-}));
-
-const RecipeThumbnail = styled('img')({
-  width: '100%',
-  height: 'auto',
-});
 
 export default function ProfilePage() {
 
   const userId = useUserID();
   const {data : profileData, isLoading, isError, refetch } = useFetchProfile(userId);
   const {data : profilePicSrc, isLoading : isLoadingProfilePicSrc, isError : isErrorLoadingProfilePicSrc} = useImageForProfilePic(profileData ? profileData.user[0].profilePicS3Filename : INVALID_S3_FILENAME);
-
-  const currFollowers = profileData ? profileData.followers : 0
   
   const avatarStyle = { width: '100px', height: '100px' };
 
@@ -74,6 +63,11 @@ export default function ProfilePage() {
   const [modalProfileData, setModalProfileData] = useState<User[]>([]);
   const [modalRecipeData, setModalRecipeData] = useState<Recipe[]>([]);
   const [isRecipes, setIsRecipes] = useState<boolean>(true);
+  const [tabValue, setTabValue] = useState(0);
+
+  const handleTabChange = (event: any, newValue: React.SetStateAction<number>) => {
+    setTabValue(newValue);
+  };
 
   const handleOpenModal = async (getType: string) => {
     let followersList: User[] = [];
@@ -88,10 +82,6 @@ export default function ProfilePage() {
     if (getType === "following") { 
       followersList = await fetchFollowing(currId);
       setIsRecipes(false);
-    }
-    if (getType === "liked") { 
-      recipesList = await fetchLiked(currId);
-      setIsRecipes(true);
     }
 
     setModalProfileData(followersList);
@@ -186,9 +176,6 @@ export default function ProfilePage() {
                       <Typography variant="body2">Following</Typography>
                     </FollowersClickableArea>
                   </Grid>
-                  <Grid item>
-                    {likedModal}
-                  </Grid>
                 </Grid>
                 <Grid item>
                   <Typography>{profileData.user[0].bio}</Typography>
@@ -210,7 +197,24 @@ export default function ProfilePage() {
 
 
         </ProfileGrid>
-        <RecipesSection/>
+        <Box sx={{ width: '100%' }}>
+          {/* Tabs for switching between views */}
+          <Tabs value={tabValue} onChange={handleTabChange} centered>
+            <Tab label="Current Posts" />
+            <Tab label="Liked Posts" />
+          </Tabs>
+
+          {/* Display content based on selected tab */}
+          {tabValue === 0 && (
+            <UserRecipesSection />  // Component for current posts
+          )}
+          {tabValue === 1 && (
+            <LikedPostsSection />  // Component for liked posts
+          )}
+
+          {/* Rest of your profile page content */}
+        </Box>
+        
       </ProfileGrid>
     );
   } else {
