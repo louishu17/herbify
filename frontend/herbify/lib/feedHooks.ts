@@ -63,7 +63,7 @@ export const useFetchPaginatedFeed = () : usePaginatedFeedResult => {
         {
             onSuccess : (data) => {
                 let newRecipes : RecipeInfoFromFeed[] = [];
-                data.pages.forEach((recipes) => recipes.descriptions.forEach((recipe) => descriptions.push(recipe)));
+                data.pages[data.pages.length -1].descriptions.forEach((recipe) => newRecipes.push(recipe));
                 setDescriptions([...descriptions, ...newRecipes])
             },
             getNextPageParam: (lastPage, pages) => {
