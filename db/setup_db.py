@@ -12,8 +12,6 @@ from sqlalchemy import (
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
-DATABASE_URL = "postgresql://herbert123:picklesgalore@rds-postgresql-herbify.c0j4yuovxdsu.us-east-2.rds.amazonaws.com/postgres"
-
 engine = create_engine(DATABASE_URL, echo=True)
 
 Base = declarative_base()
