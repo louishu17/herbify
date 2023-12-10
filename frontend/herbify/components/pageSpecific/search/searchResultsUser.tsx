@@ -35,8 +35,10 @@ const UserResult : React.FC<UserResultProps> = (props : UserResultProps) => {
                 style={avatarStyle}
                 sx={{ marginRight: 2 }}
             />
-            <Link onClick={props.onClose ? props.onClose : () => {}} href={`/profile/${props.user.uid}`} passHref>
-                <ListItemText primary={props.user.firstName} />
+            <Link href={`/profile/${props.user.uid}`} passHref>
+                <div onClick={props.onClose ? props.onClose : () => {}}>
+                    <ListItemText primary={props.user.firstName} />
+                </div>
             </Link>
         </ListItem>
     );
@@ -46,7 +48,7 @@ const UserResult : React.FC<UserResultProps> = (props : UserResultProps) => {
 export const UsersList : React.FC<SearchResultsUsersProps>  = (props : SearchResultsUsersProps) => {
     return (
         <List style={{ marginLeft: '20%' }}>   
-            {props.results && props.results.map(user => <UserResult key={user.uid} user={user}/>)}
+            {props.results && props.results.map(user => <UserResult key={user.uid} user={user} onClose={props.onClose}/>)}
         </List>
     );
 

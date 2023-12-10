@@ -11,11 +11,13 @@ export interface Recipe {
     title: string;
     caption?: string;
     imageS3Filename: string;
+    rating?: number;
 }
 
 export interface RecipesListProps {
   results: Recipe[];
   onClose?: () => void;
+  isRatings: boolean;
 }
 
 interface RecipeResultProps {
@@ -27,7 +29,7 @@ const avatarStyle = {
   // Define your avatar styles here
 };
 
-export const RecipeResult: React.FC<RecipeResultProps> = ({ recipe }) => {
+export const RecipeResult: React.FC<RecipeResultProps> = ({ recipe, isRatings }) => {
   const {data : profilePicImgSrc, isLoading : isLoadingProfilePic, isError : isErrorLoadingProfilePic} = useImageForProfilePic(recipe.imageS3Filename);
 
   return (
@@ -44,15 +46,21 @@ export const RecipeResult: React.FC<RecipeResultProps> = ({ recipe }) => {
                   secondary={recipe.caption} 
               />
           </Link>
+          {
+            isRatings && (
+                <ListItemText 
+                primary={recipe.rating} 
+                sx={{ textAlign: 'right' }}
+            />
+            )
+          }
       </ListItem>
   );
 };
 
-export const RecipesList: React.FC<RecipesListProps> = ({ results }) => {
+export const RecipesList: React.FC<RecipesListProps> = ({ results, isRatings }) => {
 
   const { isLoading, isFetchingNextPage, isError, loadMore } = useFetchPaginatedSearchRecipeByTerm();
-
-  console.log(results);
 
   if ( (!results || results.length === 0) && !isLoading && !isFetchingNextPage) {
       return <Typography>No recipes found.</Typography>;
@@ -61,7 +69,7 @@ export const RecipesList: React.FC<RecipesListProps> = ({ results }) => {
   return (
       <>
           <List style={{ marginLeft: '20%' }}>
-              {results.map(recipe => <RecipeResult key={recipe.recipeID} recipe={recipe} />)}
+              {results.map(recipe => <RecipeResult key={recipe.recipeID} recipe={recipe} isRatings={isRatings} />)}
           </List>
           {isLoading || isFetchingNextPage ? <Typography align="center"><HerbifyLoadingCircle/></Typography> : null}
           {isError ? <Typography align="center">An Error Occurred</Typography> : null}
