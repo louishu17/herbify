@@ -46,23 +46,12 @@ const ProfilePaper = styled(Paper)(({ theme }) => ({
   margin: 'auto', // Center the paper in the grid
 }));
 
-const RecipesGrid = styled(Grid)(({ theme }) => ({
-  flexGrow: 1,
-  marginTop: theme.spacing(2),
-}));
-
-const RecipeThumbnail = styled('img')({
-  width: '100%',
-  height: 'auto',
-});
 
 export default function ProfilePage() {
 
   const userId = useUserID();
   const {data : profileData, isLoading, isError, refetch } = useFetchProfile(userId);
   const {data : profilePicSrc, isLoading : isLoadingProfilePicSrc, isError : isErrorLoadingProfilePicSrc} = useImageForProfilePic(profileData ? profileData.user[0].profilePicS3Filename : INVALID_S3_FILENAME);
-
-  const currFollowers = profileData ? profileData.followers : 0
   
   const avatarStyle = { width: '100px', height: '100px' };
 
@@ -93,10 +82,6 @@ export default function ProfilePage() {
     if (getType === "following") { 
       followersList = await fetchFollowing(currId);
       setIsRecipes(false);
-    }
-    if (getType === "liked") { 
-      recipesList = await fetchLiked(currId);
-      setIsRecipes(true);
     }
 
     setModalProfileData(followersList);
@@ -190,9 +175,6 @@ export default function ProfilePage() {
                       <Typography variant="h6"><b>{profileData.following}</b></Typography>
                       <Typography variant="body2">Following</Typography>
                     </FollowersClickableArea>
-                  </Grid>
-                  <Grid item>
-                    {likedModal}
                   </Grid>
                 </Grid>
                 <Grid item>

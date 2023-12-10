@@ -569,6 +569,8 @@ WHERE \"postID\" = :recipeID
                 """
     SELECT *
     FROM \"Recipes\"
+    INNER JOIN \"Users\" 
+    ON \"Recipes\".\"postedByUserID\" = \"Users\".\"uid\"
     WHERE \"recipeID\" IN (SELECT \"postID\" FROM \"Likes\" WHERE \"likedByUserID\" = :userID)
                                   """,
                 userID=user_id,
@@ -581,6 +583,7 @@ WHERE \"postID\" = :recipeID
                         "caption": recipe.caption,
                         "imageS3Filename": recipe.imageS3Filename,
                         "recipeID": recipe.recipeID,
+                        "profilePicS3Filename": recipe.profilePicS3Filename,
                         "postedByUserID": recipe.postedByUserID,
                     }
                     for recipe in rows
