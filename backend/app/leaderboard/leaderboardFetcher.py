@@ -1,5 +1,6 @@
-from flask import current_app as app
+from flask import current_app as app, jsonify
 import json
+from feedRoutes.feedFetcher import RecipeOnFeed, RecipeOnFeedJSONEncoder
 
 
 class Leader:
@@ -41,7 +42,7 @@ class Leader:
         }
 
 
-class Leaderboard:
+class LeaderboardFetcher:
     def get_leaders():
         """
         Retrieve a list of leaders for the leaderboard.
@@ -68,6 +69,18 @@ class Leaderboard:
                                """
         )
         return [Leader(*row) for row in rows]
+
+    def get_leading_posts():
+        rows = app.db.execute(
+            """
+            SELECT * FROM RecipesForFeed
+            ORDER BY numLikes DESC
+            LIMIT 10
+            
+        """
+        )
+        recipes = [RecipeOnFeed(*row) for row in rows]
+        return recipes
 
 
 class LeaderJSONEncoder(json.JSONEncoder):

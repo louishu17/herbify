@@ -1,13 +1,13 @@
 import React from "react";
 import { Typography, Stack, Avatar, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, List, ListItem, ListItemText, Link as MuiLink } from '@mui/material';
-import { useFetchMockLeaderboard, useFetchLocallyRunningLeaderboard } from "@/lib/leaderboardHooks";
+import { useFetchMockLeadingUsers, useFetchLocallyRunningLeadingUsers } from "@/lib/leaderboardPage/leadingUsersHooks";
 import { HerbifyLoadingContainer } from "@/components/shared/loading";
 import Link from "next/link";
 import { useImageForProfilePic, INVALID_S3_FILENAME } from "@/lib/profilePicHooks";
 import { LeaderOnLeaderboardData } from "@/pages/api/leaderboard";
 
-export const LeaderboardTableBody : React.FC = () => {
-    const {data : leaderboardData, isLoading, isError} = useFetchLocallyRunningLeaderboard();
+export const LeadingUsersTableBody : React.FC = () => {
+    const {data : leaderboardData, isLoading, isError} = useFetchLocallyRunningLeadingUsers();
 
     if (isLoading){
         return <HerbifyLoadingContainer/>

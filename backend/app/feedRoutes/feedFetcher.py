@@ -94,8 +94,10 @@ class RecipeOnFeed:
             dict: A JSON dictionary representing the RecipeOnFeed object.
         """
         name = ""
-        if type(self.firstName) == "str" and type(self.lastName) == "str":
+        try:
             name = self.firstName + " " + self.lastName
+        except: 
+            name=""
         return {
             "recipeID": self.recipeID,
             "title": self.title,
@@ -300,7 +302,7 @@ class FeedFetcher:
         """
 
         uid = Users.get_current_user_id()
-        # uid = 19
+        #uid = 19
         lower_limit = 8 * i
         upper_limit = 8 * (i + 1) - 1
         rows = app.db.execute(
