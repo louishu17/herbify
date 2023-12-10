@@ -1,10 +1,10 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import {  BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
-import { Grid, Paper, Typography, Modal, Box, Avatar, Button} from '@mui/material';
+import { Grid, Paper, Typography, Box, Avatar, Button, Tabs, Tab} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useFetchProfile, useUserID, useFollow, fetchFollowedBy, fetchFollowing, fetchLiked, fetchSessionId } from '@/lib/profileHooks';
-import { RecipesSection } from '@/components/pageSpecific/profile/recipesSection';
+import { UserRecipesSection, LikedPostsSection } from '@/components/pageSpecific/profile/recipesSection';
 import { HerbifyLoadingContainer } from '@/components/shared/loading';
 import { ProfileListModal } from '@/components/pageSpecific/profile/followModal';
 import { User } from "@/components/pageSpecific/search/searchResultsUser";
@@ -74,6 +74,11 @@ export default function ProfilePage() {
   const [modalProfileData, setModalProfileData] = useState<User[]>([]);
   const [modalRecipeData, setModalRecipeData] = useState<Recipe[]>([]);
   const [isRecipes, setIsRecipes] = useState<boolean>(true);
+  const [tabValue, setTabValue] = useState(0);
+
+  const handleTabChange = (event: any, newValue: React.SetStateAction<number>) => {
+    setTabValue(newValue);
+  };
 
   const handleOpenModal = async (getType: string) => {
     let followersList: User[] = [];
@@ -210,7 +215,24 @@ export default function ProfilePage() {
 
 
         </ProfileGrid>
-        <RecipesSection/>
+        <Box sx={{ width: '100%' }}>
+          {/* Tabs for switching between views */}
+          <Tabs value={tabValue} onChange={handleTabChange} centered>
+            <Tab label="Current Posts" />
+            <Tab label="Liked Posts" />
+          </Tabs>
+
+          {/* Display content based on selected tab */}
+          {tabValue === 0 && (
+            <UserRecipesSection />  // Component for current posts
+          )}
+          {tabValue === 1 && (
+            <LikedPostsSection />  // Component for liked posts
+          )}
+
+          {/* Rest of your profile page content */}
+        </Box>
+        
       </ProfileGrid>
     );
   } else {
