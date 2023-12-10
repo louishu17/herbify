@@ -1,5 +1,5 @@
 import { BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
-import {Stack, Container, Button} from "@mui/material";
+import { Stack, Container, Button, Box } from "@mui/material";
 import {IngredientsForm} from "@/components/pageSpecific/create/addIngredientsForm";
 import {DirectionsForm} from "@/components/pageSpecific/create/addDirectionsForm";
 import { TagsForm } from "@/components/pageSpecific/create/addTagsForm";
@@ -66,16 +66,33 @@ export default function CreateRecipePage() {
     return (
         <BaseHerbifyLayoutWithTitle title="Create Recipe">
             <NewRecipeContext.Provider value={{title, setTitle, imageFile, setImageFile, caption, setCaption, ingredients, setIngredients, directions, setDirections, tags, setTags, hours, setHours, minutes, setMinutes}}>
-                <Container maxWidth="lg">
-                <Stack width={400} spacing={6} style={{ paddingBottom: 6, justifyContent: "center", alignItems: "center", display: "flex", flexDirection: "column" }} >
-                        <AddTitleForm/>
-                        <ImageForm/>
-                        <IngredientsForm/>
-                        <DirectionsForm/>
-                        <TimeForm/>
-                        <TagsForm/>
+            <Container maxWidth="lg" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+                    <Stack spacing={6} style={{ width: '100%', maxWidth: 500, paddingBottom: 6 }}>
+                        <ImageForm />
+                        <Box bgcolor="#FFFAF7" p={2} borderRadius={2}>
+                            <AddTitleForm />
+                            <TimeForm />
+                        </Box>
+                        <Box bgcolor="#FFFAF7" p={2} borderRadius={2}>
+                            <IngredientsForm />
+                        </Box>
+                        <Box bgcolor="#FFFAF7" p={2} borderRadius={2}>
+                            <DirectionsForm />
+                        </Box>
+                        <Box bgcolor="#FFFAF7" p={2} borderRadius={2}>
+                            <TagsForm />
+                        </Box>
                     </Stack>
-                    <Button variant="contained" onClick={handleSubmit} style={{backgroundColor: "Highlight", marginTop : 40, marginBottom : 40, display: "block", margin: "0 auto"}}>Submit Recipe</Button>
+                    <Box style={{ width: '100%', maxWidth: 400, marginTop: 40, marginBottom: 40 }}>
+                        <Button 
+                            variant="contained" 
+                            onClick={handleSubmit} 
+                            fullWidth
+                            style={{ backgroundColor: "Highlight" }}
+                        >
+                            Submit Recipe
+                        </Button>
+                    </Box>
                 </Container>
             </NewRecipeContext.Provider>
         </BaseHerbifyLayoutWithTitle>

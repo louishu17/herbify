@@ -1,15 +1,3 @@
-// import FeedPage from "./feed";
-// import { useRouter } from "next/router";
-// import { withAuth } from '@/lib/authCheck';
-
-// export const getServerSideProps = withAuth();
-
-// export default function HomePage() {
-//   const router = useRouter();
-//   //router.push("/feed");
-//   return <FeedPage/>;
-// }
-
 import React from 'react';
 import { Typography, Button, Stack, Box } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -72,14 +60,6 @@ const handleRegisterClick = () => {
               <Stack direction="row" spacing={2} style={{paddingTop: 20}}>
                   <Button
                     variant="outlined"
-                    sx={{
-                      borderRadius: '20px',
-                      color: '#05353B', 
-                      borderColor: '#05353B', 
-                      '&:hover': {
-                        borderColor: '#05353B', 
-                      },
-                    }}
                     onClick={handleLoginClick}
                   >
                       Login
