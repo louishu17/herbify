@@ -120,7 +120,9 @@ def users_liked_by_current(profileId):
     print("getting users liked by current user")
 
     try:
-        liked_users = Recipes.get_user_liked_recipes(profileId)
+        session_id = Users.get_current_user_id() if profileId == "-1" else profileId
+        liked_users = Recipes.get_user_liked_recipes(session_id)
+        print(liked_users)
 
         return jsonify({"recipes": liked_users}), 201
 
