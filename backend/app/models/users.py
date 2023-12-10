@@ -257,12 +257,15 @@ class Users:
         user_rating_recipe_result = None
         if user_id is not None:
             try:
-                user_rating_recipe_result = app.db.execute('''
+                user_rating_recipe_result = app.db.execute(
+                    """
             SELECT \"rating\" 
             FROM \"Ratings\"
             WHERE \"RecipeID\" = :recipeID AND \"RatedByUserID\" = :userID
-            ''',
-                                        recipeID=recipeID, userID=user_id)
+            """,
+                    recipeID=recipeID,
+                    userID=user_id,
+                )
             except Exception as e:
                 print(e)
                 app.db.rollback()

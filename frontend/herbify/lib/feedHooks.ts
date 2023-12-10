@@ -1,6 +1,6 @@
-import {useQuery, UseQueryResult} from "react-query";
+import {useQuery, UseQueryResult, useQueryClient, useInfiniteQuery} from "react-query";
 import { useState } from "react";
-import { FeedData } from "@/pages/api/feed";
+import { FeedData, RecipeInfoFromFeed } from "@/pages/api/feed";
 import axios from 'axios';
 
 
@@ -55,33 +55,45 @@ export const useFetchPaginatedFeed = () : usePaginatedFeedResult => {
     const [lastPageNumber, setLastPageNumber] = useState<number>(0);
     const [fetchingCustomized, setFetchingCustomized] = useState<boolean>(true);
     const [pageNumber, setPageNumber] = useState<number>(0);
-    const [lastPageFetched, setLastPageFetched] = useState<number>(-1);
-    const [data, setData] = useState<FeedData>({descriptions : []});
+    const [descriptions, setDescriptions] = useState<RecipeInfoFromFeed[]>([]);
 
-    const {data : queryData, isLoading, isError, refetch} = useQuery<FeedData>(["fetchFeed", pageNumber], () => fetchLocallyRunningPaginatedFeed(pageNumber, fetchingCustomized), 
+    const {data : queryData, isLoading, isFetchingNextPage , isError, refetch, fetchNextPage} = useInfiniteQuery<FeedData>(
+        ["fetchFeed", pageNumber, fetchingCustomized], 
+        ({pageParam = 0}) => fetchLocallyRunningPaginatedFeed(pageParam, fetchingCustomized), 
         {
-            onSuccess : (newData) => {
-                if (lastPageFetched < pageNumber){
-                    setData((oldData) => {
-                        return {descriptions : [...oldData.descriptions, ...newData.descriptions]}
-                    })
-                }
-                setLastPageFetched(pageNumber);   
-                if (newData.descriptions.length < 7 && fetchingCustomized){
+            onSuccess : (data) => {
+                let newRecipes : RecipeInfoFromFeed[] = [];
+                data.pages.forEach((recipes) => recipes.descriptions.forEach((recipe) => descriptions.push(recipe)));
+                setDescriptions([...descriptions, ...newRecipes])
+            },
+            getNextPageParam: (lastPage, pages) => {
+                if (fetchingCustomized && lastPage.descriptions.length < 7){
                     setFetchingCustomized(false);
-                    setPageNumber(0);
-                }  
+                    return 0;
+                } else {
+                    return pages.length;
+                }
             }
         },
     );
 
-    const loadMore = () => {
-        if (queryData){
-            setPageNumber((oldPageNum) => oldPageNum + 1);
-            setLastPageNumber(pageNumber);
-            refetch();
-        }   
-    }
-
-    return {data, isLoading, isError, loadMore}
+    return {data : {descriptions : descriptions}, isLoading : isLoading || isFetchingNextPage, isError, loadMore : fetchNextPage}
 }
+
+interface UserLikedRecipeAPIData {
+    userLiked : boolean;
+}
+const fetchIfUserLikedRecipe = async (recipeID : number) : Promise<UserLikedRecipeAPIData> => {
+    const response = await axios.get('http://127.0.0.1:5000/check_user_liked/' + recipeID, {withCredentials : true})
+    if (response.status > 300){
+        throw new Error("Error fetching feed");
+    } 
+    return response.data;
+}
+
+export const useCheckIfUserLikedRecipe = (recipeID : number) : UseQueryResult<UserLikedRecipeAPIData> => {
+    return useQuery(["fetch if user liked recipe", recipeID], () => fetchIfUserLikedRecipe(recipeID))
+
+}
+
+

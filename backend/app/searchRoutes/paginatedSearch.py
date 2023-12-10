@@ -10,14 +10,30 @@ paginated_search_blueprint = Blueprint("paginated search", __name__)
 @paginated_search_blueprint.route("/search/<int:pageNum>", methods=["GET"])
 @cross_origin()
 def paginated_search(pageNum):
+    """
+    Retrieve paginated search results for recipes based on a search term.
+
+    Args:
+        pageNum (int): The page number for paginated results.
+
+    Returns:
+        Response: A JSON response containing paginated search results (recipes) based on the provided search term.
+    """
     print("getting paginated search")
 
     try:
         args = request.args
+
+        print(args)
+
         term = args.get("term")
-        recipes = Recipes.get_by_term(term, paginated=True, pageNum=pageNum)
-        serialized_recipies = [obj.to_json_recipe() for obj in recipes]
-        return jsonify({"results": serialized_recipies}), 201
+        filters = args.getlist("filters[]")
+
+        recipes = Recipes.get_by_term(
+            term, filters=filters, paginated=True, pageNum=pageNum
+        )
+        serialized_recipes = [obj.to_json_recipe() for obj in recipes]
+        return jsonify({"results": serialized_recipes}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -25,6 +41,15 @@ def paginated_search(pageNum):
 @paginated_search_blueprint.route("/search_user/<int:pageNum>", methods=["GET"])
 @cross_origin()
 def search_user(pageNum):
+    """
+    Retrieve paginated search results for users based on a search term.
+
+    Args:
+        pageNum (int): The page number for paginated results.
+
+    Returns:
+        Response: A JSON response containing paginated search results (users) based on the provided search term.
+    """
     print("getting search for user")
 
     try:
@@ -36,16 +61,28 @@ def search_user(pageNum):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 @paginated_search_blueprint.route("/search_ingredient/<int:pageNum>", methods=["GET"])
 @cross_origin()
 def search_ingredient(pageNum):
+    """
+    Retrieve paginated search results for recipes by ingredient based on a search term.
+
+    Args:
+        pageNum (int): The page number for paginated results.
+
+    Returns:
+        Response: A JSON response containing paginated search results (recipes) based on the provided ingredient search term.
+    """
     print("getting search for recipes by ingredient")
 
     try:
         args = request.args
         term = args.get("term")
-        recipes = SearchFetcher.get_by_ingredient_term(term=term, paginated=True, pageNum=pageNum)
-        serialized_recipies = [obj.to_json_recipe() for obj in recipes]
-        return jsonify({"results": serialized_recipies}), 201
+        recipes = SearchFetcher.get_by_ingredient_term(
+            term=term, paginated=True, pageNum=pageNum
+        )
+        serialized_recipes = [obj.to_json_recipe() for obj in recipes]
+        return jsonify({"results": serialized_recipes}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500

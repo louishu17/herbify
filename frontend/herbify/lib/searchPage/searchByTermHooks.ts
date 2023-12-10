@@ -4,20 +4,22 @@ import { SearchResults, Recipe } from "@/components/pageSpecific/search/searchRe
 import { useState } from "react";
 
 export const INITIAL_TERM = ""
-const fetchLocallyRunningPaginatedSearchRecipe = async (term: string, pageNum : number, searchingByIngredient : boolean) : Promise<SearchResults> => {
+const fetchLocallyRunningPaginatedSearchRecipe = async (term: string, pageNum : number, searchingByIngredient : boolean, filters: string[]) : Promise<SearchResults> => {
     console.log("term is " + term);
+    console.log("filters are " + filters);
+
     if (term === INITIAL_TERM){
         return {results : []};
     }
     if (searchingByIngredient){
-        const response = await axios.get('http://127.0.0.1:5000/search_ingredient/' + pageNum, {params: {term: term}});
+        const response = await axios.get('http://127.0.0.1:5000/search_ingredient/' + pageNum, {params: {term: term, filters: filters}});
         if (response.status > 300){
             throw new Error("Error fetching recipes by ingredient");
         } 
         return response.data;
 
     } else {
-        const response = await axios.get('http://127.0.0.1:5000/search/' + pageNum, {params: {term: term}});
+        const response = await axios.get('http://127.0.0.1:5000/search/' + pageNum, {params: {term: term, filters: filters}});
         if (response.status > 300){
             throw new Error("Error fetching recipes by title");
         } 
@@ -36,14 +38,18 @@ export interface useFetchPaginatedSearchByTermResult {
     setTerm : (s : string) => void;
     searchingByIngredient : boolean;
     setSearchingByIngredient : (b : boolean) => void;
-
-
+    selectedFilters: string[];
 }
 
 export const useFetchPaginatedSearchRecipeByTerm  = ()  => {
     const {data : term} = useQuery(['RecipeTerm'], () => "", {initialData : INITIAL_TERM});
     const {data : searchingByIngredient} = useQuery(['SearchingByIngredient'], () => false, {initialData : false});
-    
+    const { data: selectedFilters } = useQuery(['SelectedFilters'], () => selectedFilters, {
+        initialData: [],
+      });
+
+    console.log(selectedFilters);
+
     const queryClient = useQueryClient();
     const setTerm = (t : string) => {
         queryClient.setQueryData(['RecipeTerm'], t)
@@ -51,30 +57,36 @@ export const useFetchPaginatedSearchRecipeByTerm  = ()  => {
     const setSearchingByIngredient = (b : boolean) => {
         queryClient.setQueryData(['SearchingByIngredient'], b);
     }
+    const setSelectedFilters = (b : boolean) => {
+        queryClient.setQueryData(['SelectedFilters'], b);
+    }
+
     const {data, isError, isFetchingNextPage, isLoading, fetchNextPage} = useInfiniteQuery<SearchResults>(
-        ['fetchRecipeByTerm', term, searchingByIngredient],
-        ({pageParam = 0}) => fetchLocallyRunningPaginatedSearchRecipe(term ? term : INITIAL_TERM, pageParam, searchingByIngredient ? searchingByIngredient : false ),
+        ['fetchRecipeByTerm', term, searchingByIngredient, selectedFilters],
+        ({pageParam = 0}) => fetchLocallyRunningPaginatedSearchRecipe(term ? term : INITIAL_TERM, pageParam, searchingByIngredient ? searchingByIngredient : false, selectedFilters ),
         {
             getNextPageParam: (lastPage, pages) => {
                 return pages.length;
             }
         }
     );
-    const searchResults : Recipe[] = []
+    const searchResultsValue : Recipe[] = []
     if (data){
         data.pages.map((page) => {
-            page.results.map((result) => searchResults.push(result))
+            page.results.map((result) => searchResultsValue.push(result))
 
         })
     }
     return {
-        data : {results: searchResults}, 
+        data : {results: searchResultsValue}, 
         isError : isError, 
         isFetchingNextPage : isFetchingNextPage, 
         isLoading, loadMore : () => fetchNextPage(), 
         term : term ? term : INITIAL_TERM, 
         setTerm,
         searchingByIngredient : searchingByIngredient ? searchingByIngredient : false,
-        setSearchingByIngredient
+        setSearchingByIngredient,
+        selectedFilters : selectedFilters ? selectedFilters : [],
+        setSelectedFilters
     }
 }

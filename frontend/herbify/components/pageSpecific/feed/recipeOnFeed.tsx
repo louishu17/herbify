@@ -12,6 +12,7 @@ import { useImageForProfilePic } from "@/lib/profilePicHooks";
 import CommentsModal from '../../commentsModal';
 import CommentIcon from '@mui/icons-material/Comment';
 import { useComments, usePostComment } from "@/lib/recipePage/commentRecipeHooks";
+import Rating from '@mui/material/Rating';
 
 interface RecipeComment {
     id: number;
@@ -120,7 +121,6 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
     const handleCloseModal = () => {
         setModalOpen(false);
     };
-
     
     const borderRadiusValue = '5px'; 
     return (
@@ -159,6 +159,7 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                                 <CommentIcon />
                             </IconButton>
                             {commentsResponse && <CommentsModal open={modalOpen} handleClose={handleCloseModal} comments={commentsResponse.comments} onCommentSubmit={handleCommentSubmit}  />}
+                            {info.numRatings > 0 ?  <Rating name="read-only" value={info.avgRating}  precision={0.5} readOnly />: null}
                 </CardActions>}
                 <AttributeTags info={info}/>
             </Box>

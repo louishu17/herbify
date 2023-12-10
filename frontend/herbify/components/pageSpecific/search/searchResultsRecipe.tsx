@@ -52,6 +52,8 @@ export const RecipesList: React.FC<RecipesListProps> = ({ results }) => {
 
   const { isLoading, isFetchingNextPage, isError, loadMore } = useFetchPaginatedSearchRecipeByTerm();
 
+  console.log(results);
+
   if ( (!results || results.length === 0) && !isLoading && !isFetchingNextPage) {
       return <Typography>No recipes found.</Typography>;
   }

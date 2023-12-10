@@ -18,7 +18,7 @@ const fetchLocallyRunningPaginatedSearchUser = async (term: string, pageNum : nu
 }
 
 export interface useFetchPaginatedSearchByTermResult {
-    data : SearchResults;
+    data : { results : User[]};
     isError : boolean;
     isFetchingNextPage : boolean;
     isLoading : boolean;
@@ -27,7 +27,7 @@ export interface useFetchPaginatedSearchByTermResult {
     setTerm : (s : string) => void;
 
 }
-export const useFetchPaginatedSearchUserByTerm  = ()  => {
+export const useFetchPaginatedSearchUserByTerm  = () : useFetchPaginatedSearchByTermResult => {
     const {data : term} = useQuery(['UserTerm'], () => "", {initialData : INITIAL_TERM});
     
     const queryClient = useQueryClient();
