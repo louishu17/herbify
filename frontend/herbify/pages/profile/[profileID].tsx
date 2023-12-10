@@ -18,7 +18,7 @@ const FollowersClickableArea = styled(Button)({
   background: 'none',
   border: 'none',
   boxShadow: 'none',
-  padding: 0,
+  paddingTop: 3,
   margin: 0,
   textTransform: 'none',
   display: 'flex',
@@ -144,12 +144,11 @@ export default function ProfilePage() {
     );
 
     ratedModal = (
-      <Grid item xs={4} sm={2.5} container direction="column" alignItems="center">
-      <FollowersClickableArea onClick={() => handleOpenModal("rated")}>
-        <Typography variant="h6">View</Typography>
-        <Typography variant="body2">Rated Posts</Typography>
-      </FollowersClickableArea>
-    </Grid>
+      <Grid item>
+        <FollowersClickableArea onClick={() => handleOpenModal("rated")}>
+          <Typography variant="body2">View Rated Posts</Typography>
+        </FollowersClickableArea>
+      </Grid>
     );
   }
 
@@ -194,13 +193,14 @@ export default function ProfilePage() {
                       <Typography variant="body2">Following</Typography>
                     </FollowersClickableArea>
                   </Grid>
-                  <Grid item>
-                    {ratedModal}
-                  </Grid>
+                  
                 </Grid>
                 <Grid item>
                   <Typography>{profileData.user[0].bio}</Typography>
                 </Grid>
+              </Grid>
+              <Grid item>
+                {ratedModal}
               </Grid>
               <Grid item>
                 {followButton}
