@@ -45,8 +45,8 @@ app.config['SESSION_REDIS'] = redis.Redis(
     port=18045,
     password='kfH6jONl9ziC5VtqkPIHibM6sHEanVgJ'
 )
-app.config['SESSION_COOKIE_SECURE'] = False
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 
 app.register_blueprint(register_blueprint)
 app.register_blueprint(login_blueprint)
