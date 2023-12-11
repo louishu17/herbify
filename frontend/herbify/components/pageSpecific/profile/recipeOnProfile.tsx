@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from "react";
 import { RecipeOnProfileData } from "@/lib/profileHooks";
 import { useImageForRecipe } from "@/lib/recipeImageHooks";

@@ -21,7 +21,7 @@
     "axios": "^1.5.1",
     "date-fns": "^2.30.0",
     "formik": "^2.4.5",
-    "framer-motion": "^4.1.17",
+    "framer-motion": "^10.16.16",
     "js-cookie": "^3.0.5",
     "next": "latest",
     "react": "latest",
