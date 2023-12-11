@@ -8,7 +8,7 @@ import { useState } from "react";
 import { NewRecipeContext } from "@/lib/createRecipePage/newRecipeContext";
 import { AddTitleForm } from "@/components/pageSpecific/create/addTitleForm";
 import { TimeForm } from "@/components/pageSpecific/create/addTimeForm";
-import axios from 'axios';
+import axios from '@/utils/axiosInstance';
 import { useRouter } from "next/router";
 import { withAuth } from '@/lib/authCheck';
 
@@ -49,7 +49,7 @@ export default function CreateRecipePage() {
             }
             
 
-            const response = await axios.post('http://127.0.0.1:5000/create-recipe', formData, {withCredentials: true});
+            const response = await axios.post('/create-recipe', formData, {withCredentials: true});
 
             router.push("/feed");
         }

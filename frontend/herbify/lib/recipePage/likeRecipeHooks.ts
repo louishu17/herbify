@@ -1,47 +1,37 @@
 import { useMutation } from 'react-query';
+import axios from '../../utils/axiosInstance';
 
 const likeRecipe = async (recipeId: string) => {
     try {
-        const response = await fetch('http://127.0.0.1:5000/like-recipe', {
-            method: 'POST',
+        const response = await axios.post('/like-recipe', { recipeID: recipeId }, {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ recipeID: recipeId }),
-            credentials: 'include',
+            withCredentials: true,
         });
         
-        if (!response.ok) {
-            throw new Error('Error in liking the recipe');
-        }
-
-        return response.json();
+        return response.data;
     } catch (error) {
         console.error('Error in likeRecipeAPI:', error);
+        throw new Error('Error in liking the recipe');
     }
 }
 
 const unlikeRecipe = async (recipeId: string) => {
     try {
-        const response = await fetch('http://127.0.0.1:5000/unlike-recipe', {
-            method: 'POST',
+        const response = await axios.post('/unlike-recipe', { recipeID: recipeId }, {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ recipeID: recipeId }),
-            credentials: 'include',
+            withCredentials: true,
         });
 
-        if (!response.ok) {
-            throw new Error('Error in unliking the recipe');
-        }
-
-        return response.json();
+        return response.data;
     } catch (error) {
         console.error('Error in unlikeRecipeAPI:', error);
+        throw new Error('Error in unliking the recipe');
     }
 }
-
 export const useLikeRecipe = () => {
     return useMutation(likeRecipe, {
         

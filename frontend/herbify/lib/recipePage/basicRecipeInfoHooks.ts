@@ -4,14 +4,14 @@ import { useRouter } from "next/router";
 import { IngredientsData } from "@/pages/api/recipe/[recipeID]/ingredients";
 import { DirectionsData } from "@/pages/api/recipe/[recipeID]/directions";
 import { CommentsResponse } from "@/pages/api/recipe/[recipeID]/comments";
+import axios from '../../utils/axiosInstance';
 
 const fetchBasicRecipeInfo = async (recipeID : number) : Promise<BasicRecipeInfo> => {
-    let route = 'http://127.0.0.1:5000/recipe/' + recipeID + '/basicInfo';
-    const response = await fetch(route,{
-        credentials: 'include'  // Include cookies with the request
+    const response = await axios.get(`/recipe/${recipeID}/basicInfo`, {
+        withCredentials: true
     });
-    if (response.ok) {
-        return response.json();
+    if (response.status === 200) {
+        return response.data;
     } else {
         throw new Error("Failed loading recipe");
     }
@@ -23,10 +23,9 @@ export const useBasicRecipeInfo = (recipeID : number) : UseQueryResult<BasicReci
 }
 
 const fetchIngredients = async (recipeID : number) : Promise<IngredientsData> => {
-    let route = 'http://127.0.0.1:5000/recipe/' + recipeID + '/ingredients';
-    const response = await fetch(route);
-    if (response.ok) {
-        return response.json();
+    const response = await axios.get(`/recipe/${recipeID}/ingredients`);
+    if (response.status === 200) {
+        return response.data;
     } else {
         throw new Error("Failed loading ingredients");
     }
@@ -38,14 +37,12 @@ export const useIngredients = (recipeID : number) : UseQueryResult<IngredientsDa
 }
 
 const fetchDirections = async (recipeID : number) : Promise<DirectionsData> => {
-    let route = 'http://127.0.0.1:5000/recipe/' + recipeID + '/directions';
-    const response = await fetch(route);
-    if (response.ok) {
-        return response.json();
+    const response = await axios.get(`/recipe/${recipeID}/directions`);
+    if (response.status === 200) {
+        return response.data;
     } else {
         throw new Error("Failed loading directions");
     }
-
 }
 
 export const useDirections = (recipeID : number) : UseQueryResult<DirectionsData> => {

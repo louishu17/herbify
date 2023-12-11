@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import axios from 'axios';
+import axios from '../utils/axiosInstance';
 import { useQuery, UseQueryResult } from 'react-query';
 import { useState, useEffect } from 'react';
 import { User } from "@/components/pageSpecific/search/searchResultsUser";
@@ -49,12 +49,8 @@ export interface ProfileData {
 }
 
 
-const instance = axios.create({
-    withCredentials: true
-  })  
-
 const fetchProfileData = async (userId : number) :  Promise<ProfileData>=> {
-    const response = await instance.get(`http://127.0.0.1:5000/profile/${userId}`);
+    const response = await axios.get(`/profile/${userId}`);
     if (response.status > 300){
         throw new Error("Error fetching profile data");
     } 
@@ -67,7 +63,7 @@ export const useFetchProfile = (userID : number) : UseQueryResult<ProfileData> =
 }
 
 export const fetchSessionId = async () : Promise<number> => {
-    const response = await instance.get(`http://127.0.0.1:5000/curr_session`);
+    const response = await axios.get(`/curr_session`);
     
     if (response.status > 300){
         throw new Error("Error session id");
@@ -76,7 +72,7 @@ export const fetchSessionId = async () : Promise<number> => {
 };
 
 export const fetchSessionIdServerSide = async (cookies: string) : Promise<number> => {
-    const response = await instance.get(`http://127.0.0.1:5000/curr_session`, {headers: {
+    const response = await axios.get(`/curr_session`, {headers: {
         'Cookie': cookies,
     },});
     
@@ -90,7 +86,7 @@ const fetchFollowStatus = async (profileUserId: number) : Promise<boolean> => {
     if (profileUserId === INVALID_USER_ID) {
         return false;
     }
-    const response = await instance.get(`http://127.0.0.1:5000/following/${profileUserId}`);
+    const response = await axios.get(`/following/${profileUserId}`);
     
     if (response.status > 300){
         throw new Error("Error follow status");
@@ -100,10 +96,10 @@ const fetchFollowStatus = async (profileUserId: number) : Promise<boolean> => {
 
 const updateFollowStatus = async (profileUserId: number, newFollowStatus: boolean) => {
     if (newFollowStatus) {
-        const response = await instance.post(`http://127.0.0.1:5000/follow/${profileUserId}`);
+        const response = await axios.post(`/follow/${profileUserId}`);
     }
     else {
-        const response = await instance.post(`http://127.0.0.1:5000/unfollow/${profileUserId}`);
+        const response = await axios.post(`/unfollow/${profileUserId}`);
     }
     // if (response.status > 300){
     //     throw new Error("Error updating follow status");
@@ -141,7 +137,7 @@ export const useFollow = (profileUserId: number, prevNumFollowers: number, setNu
 };
 
 export const fetchFollowing = async (profileUserId: number) : Promise<User[]> => {
-    const response = await instance.get(`http://127.0.0.1:5000/following_users/${profileUserId}`)
+    const response = await axios.get(`/following_users/${profileUserId}`)
     if (response.status > 300){
         throw new Error("Error session id");
     } 
@@ -149,7 +145,7 @@ export const fetchFollowing = async (profileUserId: number) : Promise<User[]> =>
 };
 
 export const fetchFollowedBy = async (profileUserId: number) : Promise<User[]> => {
-    const response = await instance.get(`http://127.0.0.1:5000/followed_by_users/${profileUserId}`)
+    const response = await axios.get(`/followed_by_users/${profileUserId}`)
     if (response.status > 300){
         throw new Error("Error session id");
     } 
@@ -157,7 +153,7 @@ export const fetchFollowedBy = async (profileUserId: number) : Promise<User[]> =
 };
 
 export const fetchLiked = async (profileUserId: number) : Promise<Recipe[]> => {
-    const response = await instance.get(`http://127.0.0.1:5000/users_liked_by_current/${profileUserId}`)
+    const response = await axios.get(`/users_liked_by_current/${profileUserId}`)
     if (response.status > 300){
         throw new Error("Error session id");
     } 
@@ -166,7 +162,7 @@ export const fetchLiked = async (profileUserId: number) : Promise<Recipe[]> => {
 };
 
 export const fetchRated = async (profileUserId: number) : Promise<Recipe[]> => {
-    const response = await instance.get(`http://127.0.0.1:5000/users_rated_by_current/${profileUserId}`)
+    const response = await axios.get(`/users_rated_by_current/${profileUserId}`)
     if (response.status > 300){
         throw new Error("Error session id");
     } 

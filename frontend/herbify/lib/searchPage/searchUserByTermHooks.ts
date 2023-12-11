@@ -1,5 +1,5 @@
 import {InfiniteData, UseInfiniteQueryResult, useInfiniteQuery, useQuery, useQueryClient} from "react-query";
-import axios from "axios";
+import axios from '../../utils/axiosInstance';
 import { SearchResults, Recipe } from "@/components/pageSpecific/search/searchResultsRecipe";
 import { SearchResultsUsers, SearchResultsUsersProps, User } from "@/components/pageSpecific/search/searchResultsUser";
 import { useState } from "react";
@@ -9,7 +9,7 @@ const fetchLocallyRunningPaginatedSearchUser = async (term: string, pageNum : nu
     if (term === INITIAL_TERM){
         return {results : []};
     }
-    const response = await axios.get('http://127.0.0.1:5000/search_user/' + pageNum, {params: {term: term}});
+    const response = await axios.get('/search_user/' + pageNum, {params: {term: term}});
 
     if (response.status > 300){
         throw new Error("Error fetching feed");

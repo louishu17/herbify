@@ -3,7 +3,7 @@ import { Typography, Box, Button, TextField } from "@mui/material";
 import { HerbifyForm } from "@/components/shared/textForm";
 import React, {useState, useEffect} from "react";
 import {object as YupObject, string as YupString} from 'yup';
-import axios from 'axios';
+import axios from '../utils/axiosInstance';
 import { useRouter } from "next/router";
 import { withAuthRedirect } from '@/lib/authCheck';
 import PageTransition from '@/components/shared/pageTransition';
@@ -34,7 +34,7 @@ export default function LoginPage(){
 
     const loginUser = async (values: LoginFormValues) => {
         try {
-            const response = await axios.post('http://127.0.0.1:5000/login', values, {withCredentials: true});
+            const response = await axios.post('/login', values, {withCredentials: true});
             setErrorMessage("User logged in");
 
             setTimeout(() => {

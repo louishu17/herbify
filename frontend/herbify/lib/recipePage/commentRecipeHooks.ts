@@ -1,17 +1,16 @@
 import { CommentsResponse } from "@/pages/api/recipe/[recipeID]/comments";
 import { PostCommentData } from "@/pages/api/recipe/[recipeID]/postComment";
+import axios from '../../utils/axiosInstance';
 
 import {useQuery, UseQueryResult, useMutation, UseMutationResult, UseMutationOptions} from "react-query";
 
 const fetchComments = async (recipeID : number) : Promise<CommentsResponse> => {
-    let route = 'http://127.0.0.1:5000/recipe/' + recipeID + '/comments';
-    const response = await fetch(route,
-        {
-            credentials: 'include'  // Include cookies with the request
+    try {
+        const response = await axios.get(`/recipe/${recipeID}/comments`, {
+            withCredentials: true
         });
-    if (response.ok) {
-        return response.json();
-    } else {
+        return response.data;
+    } catch (error) {
         throw new Error("Failed loading comments");
     }
 }
@@ -23,16 +22,14 @@ export const useComments = (recipeID : number) : UseQueryResult<CommentsResponse
 
 
 const postComment = async (commentData: PostCommentData): Promise<void> => {
-    let route = 'http://127.0.0.1:5000/comment'
-    const response = await fetch(route, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(commentData),
-        credentials: 'include',
-    });
-    if (!response.ok) {
+    try {
+        await axios.post('/comment', commentData, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+        });
+    } catch (error) {
         throw new Error('Network response was not ok');
     }
 }

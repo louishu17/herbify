@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
+import axios, { AxiosError } from 'axios'
 import { useRouter } from "next/router";
 import { Typography, Container } from "@mui/material";
 import { HerbifyForm } from "@/components/shared/textForm";
@@ -89,11 +90,11 @@ export default function SetProfilePage() {
             ...values,
             dateOfBirth: combinedDate,
         };
-        axios.post('http://127.0.0.1:5000/set-profile', modifiedValues, { withCredentials: true });
+        axiosInstance.post('/set-profile', modifiedValues, { withCredentials: true });
         if (newProfilePicFile){
             const formData = new FormData();
             formData.append('imageFile', newProfilePicFile);    
-            axios.post('http://127.0.0.1:5000/set-profile-pic', formData, {withCredentials: true});
+            axios.post('/set-profile-pic', formData, {withCredentials: true});
         }
     }
     const setUserProfile = async (values: SetUserProfileFormValues) => {
@@ -103,15 +104,19 @@ export default function SetProfilePage() {
         } catch (error) {
             console.error(error);
 
-            if (axios.isAxiosError(error) && error.response) {
-                if (error.response.status === 400) {
+        // Check if the error is an Axios error
+        if (axios.isAxiosError(error)) {
+            const axiosError = error as AxiosError; // Typecasting the error to AxiosError
+            if (axiosError.response) {
+                if (axiosError.response.status === 400) {
                     setErrorMessage("User with this email already exists");
-                } else if (error.response.status === 500) {
+                } else if (axiosError.response.status === 500) {
                     setErrorMessage("An error occurred during updating user");
                 }
-            } else {
-                setErrorMessage("An unexpected error occurred");
             }
+        } else {
+            setErrorMessage("An unexpected error occurred");
+        }
         }
     };
 

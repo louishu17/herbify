@@ -1,11 +1,11 @@
 import {useQuery, UseQueryResult, useQueryClient, useInfiniteQuery} from "react-query";
 import { useState } from "react";
 import { FeedData, RecipeInfoFromFeed } from "@/pages/api/feed";
-import axios from 'axios';
+import axios from '../utils/axiosInstance';
 
 
 const fetchLocallyRunningBasicFeed = async () : Promise<FeedData> => {
-    const response = await axios.get('http://127.0.0.1:5000/feed')
+    const response = await axios.get('/feed')
 
     if (response.status > 300){
         throw new Error("Error fetching feed");
@@ -16,13 +16,13 @@ const fetchLocallyRunningBasicFeed = async () : Promise<FeedData> => {
 const fetchLocallyRunningPaginatedFeed = async (pageNum : number, fetchingCustomized : boolean) : Promise<FeedData> => {
 
     if (fetchingCustomized){
-        const response = await axios.get('http://127.0.0.1:5000/customized_feed/' + pageNum, {withCredentials : true})
+        const response = await axios.get('/customized_feed/' + pageNum, {withCredentials : true})
         if (response.status > 300){
             throw new Error("Error fetching feed");
         } 
         return response.data;
     } else {
-        const response = await axios.get('http://127.0.0.1:5000/feed/' + pageNum, {withCredentials : true})
+        const response = await axios.get('/feed/' + pageNum, {withCredentials : true})
         if (response.status > 300){
             throw new Error("Error fetching feed");
         } 
@@ -84,7 +84,7 @@ interface UserLikedRecipeAPIData {
     userLiked : boolean;
 }
 const fetchIfUserLikedRecipe = async (recipeID : number) : Promise<UserLikedRecipeAPIData> => {
-    const response = await axios.get('http://127.0.0.1:5000/check_user_liked/' + recipeID, {withCredentials : true})
+    const response = await axios.get('/check_user_liked/' + recipeID, {withCredentials : true})
     if (response.status > 300){
         throw new Error("Error fetching feed");
     } 

@@ -2,18 +2,18 @@
 
 import {useMutation, UseMutationResult, UseMutationOptions} from "react-query";
 import { PostRatingData } from "@/pages/api/recipe/[recipeID]/ratings";
+import axios from '../../utils/axiosInstance';
 
-const postRating = async (ratingData: PostRatingData, recipeID : number): Promise<void> => {
-    let route = 'http://127.0.0.1:5000/recipe/' + recipeID + '/rate-recipe'
-    const response = await fetch(route, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(ratingData),
-        credentials: 'include',
-    });
-    if (!response.ok) {
+const postRating = async (ratingData: PostRatingData, recipeID: number): Promise<void> => {
+    try {
+        await axios.post(`/recipe/${recipeID}/rate-recipe`, ratingData, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+        });
+    } catch (error) {
+        console.error('Error in postRatingAPI:', error);
         throw new Error('Network response was not ok');
     }
 }

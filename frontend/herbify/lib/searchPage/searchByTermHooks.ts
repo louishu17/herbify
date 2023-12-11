@@ -1,5 +1,5 @@
 import {InfiniteData, UseInfiniteQueryResult, useInfiniteQuery, useQuery, useQueryClient} from "react-query";
-import axios from "axios";
+import axios from '../../utils/axiosInstance';
 import { SearchResults, Recipe } from "@/components/pageSpecific/search/searchResultsRecipe";
 import { useState } from "react";
 
@@ -12,14 +12,14 @@ const fetchLocallyRunningPaginatedSearchRecipe = async (term: string, pageNum : 
         return {results : []};
     }
     if (searchingByIngredient){
-        const response = await axios.get('http://127.0.0.1:5000/search_ingredient/' + pageNum, {params: {term: term, filters: filters}});
+        const response = await axios.get('/search_ingredient/' + pageNum, {params: {term: term, filters: filters}});
         if (response.status > 300){
             throw new Error("Error fetching recipes by ingredient");
         } 
         return response.data;
 
     } else {
-        const response = await axios.get('http://127.0.0.1:5000/search/' + pageNum, {params: {term: term, filters: filters}});
+        const response = await axios.get('/search/' + pageNum, {params: {term: term, filters: filters}});
         if (response.status > 300){
             throw new Error("Error fetching recipes by title");
         } 

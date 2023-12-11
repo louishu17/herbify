@@ -3,7 +3,7 @@ import { Typography, Box, Button } from "@mui/material";
 import { HerbifyForm } from "@/components/shared/textForm";
 import React, {useState} from "react";
 import {object as YupObject, string as YupString} from 'yup';
-import axios from 'axios';
+import axios from '../utils/axiosInstance';
 import { useRouter } from "next/router";
 import { withAuthRedirect } from '@/lib/authCheck';
 import PageTransition from '@/components/shared/pageTransition';
@@ -37,7 +37,7 @@ export default function RegisterPage(){
 
     const registerUser = async (values: RegisterFormValues) => {
         try {
-            const response = await axios.post('http://127.0.0.1:5000/register', values, {withCredentials: true});
+            const response = await axios.post('/register', values, {withCredentials: true});
 
             setErrorMessage("User created");
 

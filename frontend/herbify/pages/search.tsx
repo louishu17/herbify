@@ -3,7 +3,6 @@ import { Tabs, Tab, Button, Typography, Checkbox, FormControlLabel, Popover } fr
 import { HerbifyForm } from "@/components/shared/textForm";
 import React, { useState } from "react";
 import { object as YupObject, string as YupString } from 'yup';
-import axios from 'axios';
 import { SearchBar } from "@/components/pageSpecific/search/searchBar";
 import { SearchResults } from "@/components/pageSpecific/search/searchResultsRecipe";
 import { SearchPageUsersResults } from "@/components/pageSpecific/search/searchResultsUser";

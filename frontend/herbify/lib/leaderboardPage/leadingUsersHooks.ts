@@ -1,11 +1,11 @@
 import {useQuery, UseQueryResult} from "react-query";
 import { LeaderboardAPIData } from "@/pages/api/leaderboard";
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 import { FeedData } from "@/pages/api/feed";
 
 
 const fetchLocallyRunningLeadingUsers = async () : Promise<LeaderboardAPIData> => {
-    const response = await axios.get('http://127.0.0.1:5000/leading_users')
+    const response = await axios.get('/leading_users')
 
     if (response.status > 300){
         throw new Error("Error fetching leading users");
