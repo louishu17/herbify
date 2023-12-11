@@ -4,9 +4,10 @@ import { fetchSessionIdServerSide } from "@/lib/profileHooks";
 export const withAuth = () => async (context: GetServerSidePropsContext) => {
     try {
         const sessionId = await fetchSessionIdServerSide(context.req.headers.cookie || "");
-        console.log(context.req.headers.cookie);
+        console.log(context.req.headers);
         console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         console.log(context);
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         console.log(sessionId);
         
         if (!sessionId) {
