@@ -80,3 +80,5 @@ def return_top_recipes():
     return FeedFetcher.get_x_most_recent(5)
 
 
+if __name__ == '__main__':
+    app.run(debug=True)
