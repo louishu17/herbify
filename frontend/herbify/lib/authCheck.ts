@@ -4,6 +4,8 @@ import { fetchSessionIdServerSide } from "@/lib/profileHooks";
 export const withAuth = () => async (context: GetServerSidePropsContext) => {
     try {
         const sessionId = await fetchSessionIdServerSide(context.req.headers.cookie || "");
+        console.log(context.req.headers.cookie);
+        console.log(context);
         
         if (!sessionId) {
             console.log("No session, redirecting to login");
