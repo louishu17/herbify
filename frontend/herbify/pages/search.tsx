@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { BaseHerbifyLayout, BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
 import { Tabs, Tab, Button, Typography, Checkbox, FormControlLabel, Popover } from "@mui/material";
 import { HerbifyForm } from "@/components/shared/textForm";

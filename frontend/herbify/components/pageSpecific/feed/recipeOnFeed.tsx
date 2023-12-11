@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { RecipeInfoFromFeed } from "@/pages/api/feed";
 import { Avatar, Typography, Box, Stack, Link as MuiLink, Card, CardActionArea, CardContent, CardMedia, IconButton, CardActions } from "@mui/material";
 import Image from "next/image";

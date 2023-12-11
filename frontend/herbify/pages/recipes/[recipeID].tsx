@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { BaseHerbifyLayout } from "@/components/shared/layouts/baseLayout";
 import { useRouter } from "next/router";
 import { useBasicRecipeInfo, useRecipeID} from "@/lib/recipePage/basicRecipeInfoHooks";

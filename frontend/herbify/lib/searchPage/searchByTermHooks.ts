@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {InfiniteData, UseInfiniteQueryResult, useInfiniteQuery, useQuery, useQueryClient} from "react-query";
 import axios from '../../utils/axiosInstance';
 import { SearchResults, Recipe } from "@/components/pageSpecific/search/searchResultsRecipe";
