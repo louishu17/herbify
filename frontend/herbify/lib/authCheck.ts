@@ -5,7 +5,9 @@ export const withAuth = () => async (context: GetServerSidePropsContext) => {
     try {
         const sessionId = await fetchSessionIdServerSide(context.req.headers.cookie || "");
         console.log(context.req.headers.cookie);
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         console.log(context);
+        console.log(sessionId);
         
         if (!sessionId) {
             console.log("No session, redirecting to login");

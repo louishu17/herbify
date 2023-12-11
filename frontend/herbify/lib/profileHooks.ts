@@ -72,7 +72,7 @@ export const fetchSessionId = async () : Promise<number> => {
 };
 
 export const fetchSessionIdServerSide = async (cookies: string) : Promise<number> => {
-    const response = await axios.get(`/curr_session`, {headers: {
+    const response = await axios.get(`/curr_session_server`, {headers: {
         'Cookie': cookies,
     },});
     
