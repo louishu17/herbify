@@ -1,9 +1,12 @@
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { fetchSessionIdServerSide } from "@/lib/profileHooks";
+import { cookies } from 'next/headers'
 
 export const withAuth = () => async (context: GetServerSidePropsContext) => {
     try {
         const sessionId = await fetchSessionIdServerSide(context.req.headers.cookie || "");
+        const cookieStore = cookies()
+        console.log(cookieStore.getAll());
         console.log(context.req.headers);
         console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         console.log(context.req.headers.cookie);
