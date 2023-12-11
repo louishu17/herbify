@@ -6,7 +6,7 @@ export const withAuth = () => async (context: GetServerSidePropsContext) => {
         const sessionId = await fetchSessionIdServerSide(context.req.headers.cookie || "");
         console.log(context.req.headers);
         console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        console.log(context);
+        console.log(context.req.headers.cookie);
         console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         console.log(sessionId);
         
