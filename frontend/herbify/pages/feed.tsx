@@ -7,12 +7,18 @@ import React, {useEffect, useRef} from "react";
 import { fetchSessionId } from "@/lib/profileHooks";
 import { withAuth } from '@/lib/authCheck';
 
-export const getServerSideProps = withAuth();
+// export const getServerSideProps = withAuth();
+
 
 export default function FeedPage() {
     //const {data : recipes, isLoading, isError} = useFetchBasicFeed();
     const {data : recipes, isLoading, isError, loadMore} = useFetchPaginatedFeed();
     const loader = useRef(null);
+
+    const getSessionId = async () => {
+        const id = await fetchSessionId();
+    }
+    getSessionId();
 
     useEffect(() => {
         const observer = new IntersectionObserver((entries) => {
