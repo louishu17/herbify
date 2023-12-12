@@ -1,7 +1,7 @@
 import React, {ReactNode} from 'react';
 import { AppBar, Drawer, List, ListItem, Button,IconButton } from '@mui/material'
 import { useRouter, NextRouter } from 'next/router';
-import { useHandleLogout } from '@/lib/logoutHooks';
+import { UseHandleLogout } from '@/lib/logoutHooks';
 import HomeButton from '@/components/shared/homeButton';
 import styles from './HerbifyNavBarGivenOptions.module.css';
 
@@ -66,7 +66,7 @@ HerbifyNavBarGivenOptionDescriptions.defaultProps = {
 }
 
 export const descriptionsToOptions = (optionDescriptions : OptionDescription[], router : NextRouter) : ReactNode => {
-    const handleLogout = useHandleLogout();
+    const handleLogout = UseHandleLogout();
     return (
         <div>
             {optionDescriptions.map((description, index) => {

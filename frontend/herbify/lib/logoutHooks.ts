@@ -2,7 +2,7 @@ import axios from '../utils/axiosInstance';
 import { useAuth } from './authContext';
 import { abortFeedController, resetFeedController } from './feedHooks';
 
-export const useHandleLogout = () => {
+export const UseHandleLogout = () => {
     const { logout } = useAuth();
 
     const handleLogout = async () =>{
