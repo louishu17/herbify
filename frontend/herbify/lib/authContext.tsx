@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             const authorized = await isAuthorized();
             console.log("authContext.tsx: checkAuth: authorized: " + authorized)
             if (!authorized) {
-                if (router.pathname !== '/login') {
+                if (router.pathname !== '/login' && router.pathname !== '/' && router.pathname !== '/register') {
                     router.push('/login');
                 }
             } else {
