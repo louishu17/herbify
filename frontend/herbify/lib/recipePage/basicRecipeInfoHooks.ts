@@ -10,7 +10,7 @@ const fetchBasicRecipeInfo = async (recipeID : number) : Promise<BasicRecipeInfo
     const response = await axios.get(`/recipe/${recipeID}/basicInfo`, {
         withCredentials: true
     });
-    if (response.status === 200) {
+    if (response.status < 300) {
         return response.data;
     } else {
         throw new Error("Failed loading recipe");
@@ -24,7 +24,7 @@ export const useBasicRecipeInfo = (recipeID : number) : UseQueryResult<BasicReci
 
 const fetchIngredients = async (recipeID : number) : Promise<IngredientsData> => {
     const response = await axios.get(`/recipe/${recipeID}/ingredients`);
-    if (response.status === 200) {
+    if (response.status < 300) {
         return response.data;
     } else {
         throw new Error("Failed loading ingredients");
@@ -38,7 +38,7 @@ export const useIngredients = (recipeID : number) : UseQueryResult<IngredientsDa
 
 const fetchDirections = async (recipeID : number) : Promise<DirectionsData> => {
     const response = await axios.get(`/recipe/${recipeID}/directions`);
-    if (response.status === 200) {
+    if (response.status < 300) {
         return response.data;
     } else {
         throw new Error("Failed loading directions");
