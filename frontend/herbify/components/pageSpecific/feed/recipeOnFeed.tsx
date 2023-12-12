@@ -85,35 +85,48 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
         postComment({ recipeID: props.info.recipeID, text, parentID }); // Include recipeID here
     };
 
-    function relativeTime(datetimeStr: string): string {
+    function relativeTime(datetimeStr) {
+        console.log(props.info.recipeID + " : " + datetimeStr)
         const givenTime = new Date(datetimeStr);
         const currentTime = new Date();
+        console.log(props.info.recipeID + " : " + givenTime)
+        console.log(props.info.recipeID + " : " + currentTime)
     
-        const diff = currentTime.getTime() - givenTime.getTime();
+        // Convert both dates to UTC midnight for accurate day comparison
+        const utcGivenTime = new Date(Date.UTC(givenTime.getFullYear(), givenTime.getMonth(), givenTime.getDate()));
+        const utcCurrentTime = new Date(Date.UTC(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate()));
     
-        // Calculate difference in days, hours, minutes
-        const minutesDiff = Math.floor(diff / 60000);
-        const hoursDiff = Math.floor(minutesDiff / 60);
-        const daysDiff = Math.floor(hoursDiff / 24);
+        // Calculate the difference in days
+        const diff = utcCurrentTime - utcGivenTime;
+        const daysDiff = Math.floor(diff / (1000 * 60 * 60 * 24));
     
+        // Rest of your logic...
         if (daysDiff === 0) {
+            // Calculate hours and minutes difference for same day
+            const timeDiff = currentTime.getTime() - givenTime.getTime();
+            const minutesDiff = Math.floor(timeDiff / 60000);
+            const hoursDiff = Math.floor(minutesDiff / 60);
+    
             if (hoursDiff === 0) {
                 if (minutesDiff <= 1) {
                     return "just now";
                 }
                 return `${minutesDiff} minutes ago`;
             }
+            if (hoursDiff === 1) {
+                return "an hour ago";
+            }
             return `${hoursDiff} hours ago`;
         } else if (daysDiff === 1) {
             return "yesterday";
-        } else if (daysDiff < 30) {
+        } else if (daysDiff > 1 && daysDiff < 30) {
             return `${daysDiff} days ago`;
         } else {
-            // Format date as "Month day"
+            // Format date as "Month day" for older dates
             return givenTime.toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
         }
     }
-
+    
 
     useEffect(() => {
         if (info) {

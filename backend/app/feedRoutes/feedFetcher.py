@@ -66,7 +66,7 @@ class RecipeOnFeed:
         """
         self.recipeID = recipeID
         self.postedByUserID = postedByUserID
-        self.createdDate = createdDate.strftime("%Y-%m-%d %H:%M:%S")
+        self.createdDate = createdDate
         self.title = title
         self.caption = caption
         self.imageS3Filename = imageS3Filename
