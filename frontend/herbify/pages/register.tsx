@@ -1,16 +1,14 @@
 import { BaseHerbifyLayout, BaseHerbifyLayoutWithTitle } from "@/components/shared/layouts/baseLayout";
 import { Typography, Box, Button } from "@mui/material";
 import { HerbifyForm } from "@/components/shared/textForm";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {object as YupObject, string as YupString} from 'yup';
 import axios from '../utils/axiosInstance';
 import { useRouter } from "next/router";
-import { withAuthRedirect } from '@/lib/authCheck';
 import PageTransition from '@/components/shared/pageTransition';
 import HerbifyLayout from "@/components/shared/layouts/herbifyLayout";
 import HomeButton from "@/components/shared/homeButton";
-
-export const getServerSideProps = withAuthRedirect();
+import { useAuth } from "@/lib/authContext";
 
 interface RegisterFormValues {
     email: string;
@@ -30,6 +28,13 @@ const registerValidationSchema = YupObject({
 export default function RegisterPage(){
     const [errorMessage, setErrorMessage] = useState<string>("");
     const router = useRouter();
+    const { isAuthenticated} = useAuth(); 
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            router.push('/feed');
+        }
+    }, [isAuthenticated, router]);
 
     // const handleSubmit = (values : RegisterFormValues) => {
     //    setErrorMessage("Register functionality is not finished yet");

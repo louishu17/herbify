@@ -5,9 +5,12 @@ import { useFetchPaginatedFeed} from "@/lib/feedHooks";
 import {Typography, Container, Button} from '@mui/material';
 import React, {useEffect, useRef} from "react";
 import { fetchSessionId } from "@/lib/profileHooks";
-import { withAuth } from '@/lib/authCheck';
+import { useRouter } from "next/router";
+import { is } from "date-fns/locale";
+import { useAuth } from "@/lib/authContext";
 
-// export const getServerSideProps = withAuth();
+
+
 
 
 export default function FeedPage() {
@@ -15,10 +18,10 @@ export default function FeedPage() {
     const {data : recipes, isLoading, isError, loadMore} = useFetchPaginatedFeed();
     const loader = useRef(null);
 
-    const getSessionId = async () => {
-        const id = await fetchSessionId();
-    }
-    getSessionId();
+    const router = useRouter();
+    const { isAuthenticated } = useAuth();
+    
+
 
     useEffect(() => {
         const observer = new IntersectionObserver((entries) => {
@@ -40,6 +43,11 @@ export default function FeedPage() {
 
 
     let body = null;
+
+    if (!isAuthenticated){
+        return null;
+    }
+
     if (!recipes){
         body = <HerbifyLoadingContainer/>
     } else if (recipes){

@@ -9,6 +9,7 @@ import {createWebStoragePersistor} from "react-query/createWebStoragePersistor-e
 import { QueryClient } from 'react-query';
 import { AnimatePresence } from 'framer-motion';
 import 'typeface-roboto';
+import { AuthProvider } from '@/lib/authContext';
 
 
 export default function App({ Component, pageProps, router }: AppProps) {
@@ -26,15 +27,17 @@ export default function App({ Component, pageProps, router }: AppProps) {
   }*/
   
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {/* <AnimatePresence mode="wait"> */}
-          {/* Add 'key' prop to enable correct re-rendering during route changes */}
-          <Component {...pageProps} key={router.route} />
-        {/* </AnimatePresence> */}
-        <ReactQueryDevtools />
-      </ThemeProvider>
-    </QueryClientProvider>
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          {/* <AnimatePresence mode="wait"> */}
+            {/* Add 'key' prop to enable correct re-rendering during route changes */}
+            <Component {...pageProps} key={router.route} />
+          {/* </AnimatePresence> */}
+          <ReactQueryDevtools />
+        </ThemeProvider>
+      </QueryClientProvider>
+    </AuthProvider>
   );
 }

@@ -10,11 +10,10 @@ import { AddTitleForm } from "@/components/pageSpecific/create/addTitleForm";
 import { TimeForm } from "@/components/pageSpecific/create/addTimeForm";
 import axios from '@/utils/axiosInstance';
 import { useRouter } from "next/router";
-import { withAuth } from '@/lib/authCheck';
-
-export const getServerSideProps = withAuth();
+import { useAuth } from "@/lib/authContext";
 
 export default function CreateRecipePage() {
+    const { isAuthenticated } = useAuth();
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [ingredients, setIngredients] = useState<string[]>(['']);
     const [directions, setDirections] = useState<string[]>(['']);
@@ -63,6 +62,9 @@ export default function CreateRecipePage() {
         createRecipe();
     }
 
+    if(!isAuthenticated){
+        return null;
+    }
     return (
         <BaseHerbifyLayoutWithTitle title="Create Recipe">
             <NewRecipeContext.Provider value={{title, setTitle, imageFile, setImageFile, caption, setCaption, ingredients, setIngredients, directions, setDirections, tags, setTags, hours, setHours, minutes, setMinutes}}>

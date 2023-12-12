@@ -6,8 +6,6 @@ import { useState } from "react";
 
 export const INITIAL_TERM = ""
 const fetchLocallyRunningPaginatedSearchRecipe = async (term: string, pageNum : number, searchingByIngredient : boolean, filters: string[]) : Promise<SearchResults> => {
-    console.log("term is " + term);
-    console.log("filters are " + filters);
 
     if (term === INITIAL_TERM){
         return {results : []};
@@ -48,8 +46,6 @@ export const useFetchPaginatedSearchRecipeByTerm  = ()  => {
     const { data: selectedFilters } = useQuery(['SelectedFilters'], () => selectedFilters, {
         initialData: [],
       });
-
-    console.log(selectedFilters);
 
     const queryClient = useQueryClient();
     const setTerm = (t : string) => {

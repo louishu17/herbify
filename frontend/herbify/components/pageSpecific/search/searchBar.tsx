@@ -17,7 +17,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearchSubmit }) => {
   const handleSearchSubmit = (e: React.FormEvent) => {
     // Handle the search logic here
     // For instance, you might call an API to fetch search results based on the searchTerm
-    console.log("Searching for:", searchTerm);
     e.preventDefault();
     onSearchSubmit(searchTerm);
   };

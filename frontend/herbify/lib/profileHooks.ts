@@ -54,7 +54,6 @@ const fetchProfileData = async (userId : number) :  Promise<ProfileData>=> {
     if (response.status > 300){
         throw new Error("Error fetching profile data");
     } 
-    console.log(response.data);
     return response.data;
 }
 
@@ -71,15 +70,14 @@ export const fetchSessionId = async () : Promise<number> => {
     return response.data.session_id;
 };
 
-export const fetchSessionIdServerSide = async (cookies: string) : Promise<number> => {
-    const response = await axios.get(`/curr_session_server`, {headers: {
-        'Cookie': cookies,
-    },});
+export const sessionServerSide = async () : Promise<Boolean> => {
+    const response = await axios.get(`/session_redirect`);
     
     if (response.status > 300){
         throw new Error("Error session id");
     } 
-    return response.data.session_id;
+    return response.data == "True";
+
 };
 
 const fetchFollowStatus = async (profileUserId: number) : Promise<boolean> => {
