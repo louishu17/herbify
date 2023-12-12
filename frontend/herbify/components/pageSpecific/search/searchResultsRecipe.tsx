@@ -5,6 +5,7 @@ import { HerbifyLoadingCircle } from '@/components/shared/loading';
 import Link from "next/link";
 import { useImageForProfilePic, INVALID_S3_FILENAME } from '@/lib/profilePicHooks';
 import Rating from '@mui/material/Rating';
+import { devNull } from 'os';
 
 export interface Recipe {
     recipeID: number;
@@ -61,15 +62,18 @@ export const RecipesList: React.FC<RecipesListProps> = ({ results, isRatings }) 
 
   const { isLoading, isFetchingNextPage, isError, loadMore } = useFetchPaginatedSearchRecipeByTerm();
 
-  if ( (!results || results.length === 0) && !isLoading && !isFetchingNextPage) {
+  if ( (!results || results.length === 0 || (results.length === 1 && results[0] === null)) && !isLoading && !isFetchingNextPage) {
       return <Typography>No recipes found.</Typography>;
   }
+  
 
   return (
       <>
-          <List style={{ marginLeft: '5%' }}>
+          {
+            results.length > 0 && !(results.length === 1 && results[0] === null) &&
+            <List style={{ marginLeft: '5%' }}>
               {results.map(recipe => <RecipeResult key={recipe.recipeID} recipe={recipe} isRatings={isRatings} />)}
-          </List>
+          </List>}
           {isLoading || isFetchingNextPage ? <Typography align="center"><HerbifyLoadingCircle/></Typography> : null}
           {isError ? <Typography align="center">An Error Occurred</Typography> : null}
       </>
