@@ -17,6 +17,7 @@
     "@mui/material": "^5.14.11",
     "@mui/x-date-pickers": "^6.18.4",
     "@types/react-query": "^1.2.9",
+    "@vercel/analytics": "^1.1.1",
     "@vercel/speed-insights": "^1.0.1",
     "aws-sdk": "^2.1489.0",
     "axios": "^1.5.1",

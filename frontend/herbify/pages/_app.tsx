@@ -10,7 +10,8 @@ import { QueryClient } from 'react-query';
 import { AnimatePresence } from 'framer-motion';
 import 'typeface-roboto';
 import { AuthProvider } from '@/lib/authContext';
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from '@vercel/analytics/react';
 
 
 export default function App({ Component, pageProps, router }: AppProps) {
@@ -36,6 +37,7 @@ export default function App({ Component, pageProps, router }: AppProps) {
             {/* Add 'key' prop to enable correct re-rendering during route changes */}
             <Component {...pageProps} key={router.route} />
             <SpeedInsights />
+            <Analytics />
           {/* </AnimatePresence> */}
           <ReactQueryDevtools />
         </ThemeProvider>
