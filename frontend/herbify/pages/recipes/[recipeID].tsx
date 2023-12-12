@@ -13,15 +13,14 @@ import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useEffect, useState } from "react";
-import { withAuth } from '@/lib/authCheck';
 import { CommentsSection } from "@/components/pageSpecific/recipePage/commentsSection";
 import { usePostRating } from "@/lib/recipePage/ratingRecipeHooks";
 import { RatingComponent } from "@/components/pageSpecific/recipePage/ratingComponent";
 import { LikesComponent } from "@/components/pageSpecific/recipePage/likesComponent";
-
-export const getServerSideProps = withAuth();
+import { useAuth } from "@/lib/authContext";
 
 export default function RecipePage() {
+    const { isAuthenticated } = useAuth();
     const recipeID = useRecipeID();
     const {data, isLoading, isError} = useBasicRecipeInfo(recipeID);
     const { mutate: like } = useLikeRecipe();
@@ -71,6 +70,9 @@ export default function RecipePage() {
         });
     };
     
+    if(!isAuthenticated){
+        return null;
+    }
     
     return (
         <BaseHerbifyLayout>

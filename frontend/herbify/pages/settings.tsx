@@ -9,10 +9,8 @@ import { HerbifyLoadingContainer } from '@/components/shared/loading';
 import { object as YupObject, string as YupString, number as YupNumber } from 'yup';
 import { useFetchProfile } from '@/lib/profileHooks';
 import { ProfilePicForm } from "@/components/pageSpecific/settings/profilePicForm";
-import { withAuth } from '@/lib/authCheck';
+import { useAuth } from "@/lib/authContext";
 import { fetchSessionId } from '@/lib/profileHooks';
-
-export const getServerSideProps = withAuth();
 
 interface SetUserProfileFormValues {
     firstName: string;
@@ -54,6 +52,7 @@ export default function SetProfilePage() {
     const [newProfilePicFile, setNewProfilePicFile] = useState<File | null>(null);
     const [sessionUserId, setSessionUserId] = useState(-1);
 
+    const { isAuthenticated } = useAuth();
     const { data: profileData, isLoading, isError } = useFetchProfile(sessionUserId);
 
     useEffect(() => {
@@ -126,6 +125,9 @@ export default function SetProfilePage() {
     };
 
     let body = null;
+    if (!isAuthenticated) {
+        return null;
+    }
     if (isLoading) {
         body = <HerbifyLoadingContainer />
     } else if (isError) {

@@ -5,12 +5,10 @@ import React, {useState, useEffect} from "react";
 import {object as YupObject, string as YupString} from 'yup';
 import axios from '../utils/axiosInstance';
 import { useRouter } from "next/router";
-import { withAuthRedirect } from '@/lib/authCheck';
+import { isAuthorized } from '@/lib/authCheck';
 import PageTransition from '@/components/shared/pageTransition';
 import HerbifyLayout from "@/components/shared/layouts/herbifyLayout";
 import HomeButton from "@/components/shared/homeButton";
-
-export const getServerSideProps = withAuthRedirect();
 
 interface LoginFormValues {
     email: string;
@@ -31,6 +29,17 @@ const loginValidationSchema = YupObject({
 export default function LoginPage(){
     const [errorMessage, setErrorMessage] = useState<string>("");
     const router = useRouter();
+
+    useEffect(() => {
+        const checkAuthorization = async () => {
+            const authorized = await isAuthorized();
+            if (authorized) {
+                router.push('/feed');
+            }
+        };
+
+        checkAuthorization();
+    }, [router]);
 
     const loginUser = async (values: LoginFormValues) => {
         try {

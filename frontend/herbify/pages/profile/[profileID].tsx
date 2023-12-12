@@ -10,9 +10,7 @@ import { ProfileListModal } from '@/components/pageSpecific/profile/followModal'
 import { User } from "@/components/pageSpecific/search/searchResultsUser";
 import { Recipe } from "@/components/pageSpecific/search/searchResultsRecipe";
 import { INVALID_S3_FILENAME, useImageForProfilePic } from '@/lib/profilePicHooks';
-import { withAuth } from '@/lib/authCheck';
-
-export const getServerSideProps = withAuth();
+import { useAuth } from '@/lib/authContext';
 
 const FollowersClickableArea = styled(Button)({
   background: 'none',
@@ -65,6 +63,8 @@ export default function ProfilePage() {
   const [isRecipes, setIsRecipes] = useState<boolean>(true);
   const [isRatings, setisRatings] = useState<boolean>(true);
   const [tabValue, setTabValue] = useState(0);
+
+  const { isAuthenticated } = useAuth();
 
   const handleTabChange = (event: any, newValue: React.SetStateAction<number>) => {
     setTabValue(newValue);
@@ -150,6 +150,10 @@ export default function ProfilePage() {
         </FollowersClickableArea>
       </Grid>
     );
+  }
+
+  if (!isAuthenticated) {
+    return null;
   }
 
   let body = null;

@@ -1,63 +1,12 @@
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { fetchSessionIdServerSide } from "@/lib/profileHooks";
-import { cookies } from 'next/headers'
+import { sessionServerSide } from "@/lib/profileHooks";
 
-export const withAuth = () => async (context: GetServerSidePropsContext) => {
+
+export const isAuthorized = async () => {
     try {
-        const sessionId = await fetchSessionIdServerSide(context.req.headers.cookie || "");
-        const cookieStore = cookies()
-        console.log(cookieStore.getAll());
-        console.log(context.req.headers);
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        console.log(context.req.headers.cookie);
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        console.log(sessionId);
-        
-        if (!sessionId) {
-            console.log("No session, redirecting to login");
-            return {
-                redirect: {
-                    destination: '/login',
-                    permanent: false,
-                },
-            };
-        }
+        const inSession = await sessionServerSide();
+        console.log(inSession);
+        return !!inSession; // Return true if session exists, false otherwise
     } catch (error) {
-        console.log("Error during session check, redirecting to login", error);
-        return {
-            redirect: {
-                destination: '/login',
-                permanent: false,
-            },
-        };
+        return false;
     }
-
-    return { props: {} };
-};
-
-export const withAuthRedirect = () => async (context: GetServerSidePropsContext) => {
-    try {
-        console.log("withAuthRedirect");
-        const sessionId = await fetchSessionIdServerSide(context.req.headers.cookie || "");
-        console.log(sessionId);
-        if (sessionId) {
-            return {
-                redirect: {
-                    destination: '/feed',
-                    permanent: false,
-                },
-            };
-        }
-    } catch (error) {
-        // Handle errors, possibly log them
-        console.log("redirecting to login");
-        return {
-            redirect: {
-                destination: '/login',
-                permanent: false,
-            },
-        };
-    }
-
-    return { props: {} };
 };

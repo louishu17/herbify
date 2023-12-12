@@ -10,9 +10,7 @@ import { SearchPageUsersResults } from "@/components/pageSpecific/search/searchR
 import { FilterPopover } from "@/components/pageSpecific/search/searchFilterPopover";
 import { useFetchPaginatedSearchRecipeByTerm } from "@/lib/searchPage/searchByTermHooks";
 import { useFetchPaginatedSearchUserByTerm } from "@/lib/searchPage/searchUserByTermHooks";
-import { withAuth } from '@/lib/authCheck';
-
-export const getServerSideProps = withAuth();
+import { useAuth } from "@/lib/authContext";
 
 export default function SearchPage() {
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
@@ -22,6 +20,7 @@ export default function SearchPage() {
 
   const { loadMore: loadMoreRecipes, setTerm: setRecipeTerm, setSearchingByIngredient, searchingByIngredient, selectedFilters, setSelectedFilters } = useFetchPaginatedSearchRecipeByTerm();
   const { loadMore: loadMoreUsers, setTerm: setUsersTerm } = useFetchPaginatedSearchUserByTerm();
+  const { isAuthenticated } = useAuth();
 
   const handleSearchRecipesSubmit = async (term: string) => {
     setSearchingByIngredient(false);
@@ -77,6 +76,9 @@ export default function SearchPage() {
     handleCloseFilter();
   };
 
+  if(!isAuthenticated){
+    return null;
+  }
   return (
     <BaseHerbifyLayoutWithTitle title="Search">
       <div style={{ display: 'flex', justifyContent: 'center' }}>

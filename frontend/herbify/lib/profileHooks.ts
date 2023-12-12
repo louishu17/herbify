@@ -71,15 +71,15 @@ export const fetchSessionId = async () : Promise<number> => {
     return response.data.session_id;
 };
 
-export const fetchSessionIdServerSide = async (cookies: string) : Promise<number> => {
-    const response = await axios.get(`/curr_session_server`, {headers: {
-        'Cookie': cookies,
-    },});
+export const sessionServerSide = async () : Promise<Boolean> => {
+    const response = await axios.get(`/session_redirect`);
     
     if (response.status > 300){
         throw new Error("Error session id");
     } 
-    return response.data.session_id;
+    console.log(response.data);
+    return response.data == "True";
+
 };
 
 const fetchFollowStatus = async (profileUserId: number) : Promise<boolean> => {
