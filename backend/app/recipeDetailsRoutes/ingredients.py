@@ -7,7 +7,7 @@ ingredients_blueprint = Blueprint("ingredients_blueprint", __name__)
 
 
 @ingredients_blueprint.route("/recipe/<int:recipeID>/ingredients", methods=["GET"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def feed(recipeID):
     """
     Retrieve ingredients for a specific recipe based on the provided recipe ID.

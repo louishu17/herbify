@@ -7,7 +7,7 @@ directions_blueprint = Blueprint("directions_blueprint", __name__)
 
 
 @directions_blueprint.route("/recipe/<int:recipeID>/directions", methods=["GET"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def feed(recipeID):
     """
     Retrieve directions for a specific recipe based on the provided recipe ID.
