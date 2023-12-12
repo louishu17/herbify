@@ -9,6 +9,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useLikeRecipe, useUnlikeRecipe } from "@/lib/recipePage/likeRecipeHooks";
 import { useEffect, useState } from "react";
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import { useImageForProfilePic } from "@/lib/profilePicHooks";
 import CommentsModal from '../../commentsModal';
 import CommentIcon from '@mui/icons-material/Comment';
@@ -86,11 +87,8 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
     };
 
     function relativeTime(datetimeStr) {
-        console.log(props.info.recipeID + " : " + datetimeStr)
         const givenTime = new Date(datetimeStr);
         const currentTime = new Date();
-        console.log(props.info.recipeID + " : " + givenTime)
-        console.log(props.info.recipeID + " : " + currentTime)
     
         // Convert both dates to UTC midnight for accurate day comparison
         const utcGivenTime = new Date(Date.UTC(givenTime.getFullYear(), givenTime.getMonth(), givenTime.getDate()));
@@ -127,6 +125,11 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
         }
     }
     
+    const totalTime = info.hours * 60 + info.minutes;
+
+    console.log(info.hours * 60 + info.minutes);
+    console.log(info.hours + info.minutes);
+    console.log(info);
 
     useEffect(() => {
         if (info) {
@@ -164,29 +167,52 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
         setModalOpen(false);
     };
     
-    const borderRadiusValue = '5px'; 
+    const borderRadiusValue = '30px'; 
     return (
-        <Card sx={{ width: '100%', maxWidth: 275, m: 2, boxShadow: 3, borderRadius: borderRadiusValue }}>
+        <Card elevation={0} sx={{ 
+            height: 340,
+            width: 320,
+            borderRadius: borderRadiusValue,
+            background: 'linear-gradient(180deg, rgba(255, 250, 247, 0) 0%, #F9E9E0 100%)',
+            marginBottom: 2
+        }}>
             <Box sx={{ position: 'relative' }}>
                 <Link href={`/recipes/${info.recipeID}`} passHref>
                     <MuiLink underline="none">
                         <CardMedia sx={{ borderRadius: borderRadiusValue }}>
-                            <ImageToDisplay imageSrc={recipeImageSrc ?? ""} isLoading={isLoadingRecipeImg} isError={isErrorLoadingRecipeImg} />
+                            <Box sx={{ 
+                                marginTop: 3,
+                                display: 'flex', 
+                                flexDirection: 'column', 
+                                alignItems: 'center', 
+                                justifyContent: 'center', 
+                                height: '100%' // Ensure the container has a height
+                                }}>
+                                <ImageToDisplay sx={{marginTop: '30px',}} imageSrc={recipeImageSrc ?? ""} isLoading={isLoadingRecipeImg} isError={isErrorLoadingRecipeImg} />
+                            </Box>
                         </CardMedia>
                         <CardContent>
-                            <Stack direction="row" spacing={2} marginBottom={2} alignItems="center">
-                                <Avatar
-                                    src={(profilePicImgSrc && !isLoadingProfilePic && !isErrorLoadingProfilePic) ? profilePicImgSrc : INVALID_S3_FILENAME}
-                                    alt="Profile Picture"
-                                    sx={{ width: 50, height: 50, borderRadius: borderRadiusValue }}
-                                />
-                                <Typography variant="h6" noWrap>
-                                    {info.title}
-                                </Typography>
-                            </Stack>
-                            <Typography variant="subtitle1" color="text.secondary" noWrap style={{ marginBottom: '15px' }}>
-                                {info.caption}
+                        <Stack direction="row" spacing={2} alignItems="center">
+                            <Avatar
+                                src={(profilePicImgSrc && !isLoadingProfilePic && !isErrorLoadingProfilePic) ? profilePicImgSrc : INVALID_S3_FILENAME}
+                                alt="Profile Picture"
+                                sx={{ width: 50, height: 50, borderRadius: borderRadiusValue }}
+                            />
+                            <Typography variant="h6" component="div" style={{
+                                color: "#05353B", 
+                                fontSize: "20px",
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                lineHeight: '1.5em',
+                                
+                                }}
+                            >
+                                {info.title}
                             </Typography>
+                            </Stack>
                             {info.createdDate && <Typography variant="caption" color="text.secondary" noWrap>
                                 {relativeTime(info.createdDate)}
                             </Typography>}
@@ -194,18 +220,79 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                     </MuiLink>
                 </Link>
                 {displayLikes && <CardActions disableSpacing>
-                            <IconButton onClick={handleLikeClick} aria-label="add to favorites" disabled={isLoadingRecipeImg}>
-                                {userLiked ? <FavoriteIcon style={{color: "red"}} /> : <FavoriteBorderIcon />}
+                    <Stack direction="column" alignItems="center">
+                            <IconButton 
+                                onClick={handleLikeClick} 
+                                aria-label="add to favorites" 
+                                disabled={isLoadingRecipeImg}
+                                sx={{
+                                    position: 'absolute',
+                                    top: 30, // Adjust top as needed
+                                    right: 33, // Adjust right as needed
+                                    color: 'primary.main', // Or 'error.main' if you want a red heart without userLiked condition
+                                    backgroundColor: 'rgba(255, 255, 255, 0.65)', // Example: white background with 50% opacity
+                                    '&:hover': {
+                                    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Slightly less transparent on hover
+                                    },
+                                    borderRadius: '50%', // Circular button
+                                    padding: '13px',
+                                    
+                                }}
+                            >
+                                {userLiked ? <FavoriteIcon style={{color: "red", fontSize: '20px', position: 'relative', bottom: 7}} /> : <FavoriteBorderIcon style={{color: "gray", fontSize: '20px', position: 'relative', bottom: 7}}/>}
+                                <Typography variant="body2" color="text.secondary" sx={{
+                                    position: 'absolute',
+                                    top: 25, // Adjust top as needed
+                            }}>{likes}</Typography>
                             </IconButton>
-                            <Typography variant="body2" color="text.secondary">
-                                {likes} Likes
-                            </Typography>
-                            <IconButton onClick={handleOpenModal} aria-label="show comments">
-                                <CommentIcon />
+                            <IconButton 
+                                onClick={handleOpenModal} 
+                                aria-label="show comments"
+                                sx={{
+                                    position: 'absolute',
+                                    top: 90, // Adjust top as needed
+                                    right: 33, // Adjust right as needed
+                                    
+                                    backgroundColor: 'rgba(255, 255, 255, 0.65)', // Example: white background with 50% opacity
+                                    '&:hover': {
+                                    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Slightly less transparent on hover
+                                    },
+                                    borderRadius: '50%', // Circular button
+                                    padding: '13px',
+                                    
+                                }}>
+                                <CommentIcon style={{color: "gray"}}/>
                             </IconButton>
-                            {commentsResponse && <CommentsModal open={modalOpen} handleClose={handleCloseModal} comments={commentsResponse.comments} onCommentSubmit={handleCommentSubmit}  />}
-                            {info.numRatings > 0 ?  <Rating name="read-only" value={info.avgRating}  precision={0.5} readOnly />: null}
+                    </Stack>
+                        {info.numRatings > 0 ? 
+                            <Rating 
+                                sx={{
+                                    position: 'relative',
+                                    bottom: 20, // Adjust top as needed
+                                    left: 170, // Adjust right as needed
+                                }}
+                                name="read-only" 
+                                value={info.avgRating}  
+                                precision={0.5} 
+                                readOnly /> 
+                            : null
+                        }
+                        {commentsResponse && <CommentsModal open={modalOpen} handleClose={handleCloseModal} comments={commentsResponse.comments} onCommentSubmit={handleCommentSubmit}  />}
+                        
                 </CardActions>}
+                <Stack direction="row" spacing={1} alignItems="center" sx={
+                    {
+                        position: 'absolute',
+                        bottom: 27,
+                        left: 16,
+                        width: '100%',
+                    }
+                }>
+                    <AccessTimeFilledIcon/>
+                    <Typography variant="body2" color="text.secondary" noWrap>
+                        {totalTime} minutes
+                    </Typography>
+                </Stack>
                 <AttributeTags info={info}/>
             </Box>
         </Card>

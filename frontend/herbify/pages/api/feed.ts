@@ -19,6 +19,8 @@ export interface RecipeInfoFromFeed {
     numRatings : number;
     avgRating : number;
     createdDate : string;
+    hour: number;
+    minute: number;
 }
 
 
