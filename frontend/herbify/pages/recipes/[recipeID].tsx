@@ -13,15 +13,14 @@ import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useEffect, useState } from "react";
-import { withAuth } from '@/lib/authCheck';
 import { CommentsSection } from "@/components/pageSpecific/recipePage/commentsSection";
 import { usePostRating } from "@/lib/recipePage/ratingRecipeHooks";
 import { RatingComponent } from "@/components/pageSpecific/recipePage/ratingComponent";
 import { LikesComponent } from "@/components/pageSpecific/recipePage/likesComponent";
-
-export const getServerSideProps = withAuth();
+import { useAuth } from "@/lib/authContext";
 
 export default function RecipePage() {
+    const { isAuthenticated } = useAuth();
     const recipeID = useRecipeID();
     const {data, isLoading, isError} = useBasicRecipeInfo(recipeID);
     const { mutate: like } = useLikeRecipe();
@@ -45,7 +44,6 @@ export default function RecipePage() {
             // User has already liked the recipe, so unlike it
             unlike(recipeID, {
                 onSuccess: () => {
-                    console.log("unliked");
                     setUserLiked(false);
                     setLikes(likes => likes - 1);
                 }
@@ -54,7 +52,6 @@ export default function RecipePage() {
             // User hasn't liked the recipe, so like it
             like(recipeID, {
                 onSuccess: () => {
-                    console.log("liked");
                     setUserLiked(true);
                     setLikes(likes => likes + 1);
                 }
@@ -65,12 +62,14 @@ export default function RecipePage() {
     const handleRatingChange = (newRating: number) => {
         rate({ rating: newRating }, {
             onSuccess: () => {
-                console.log("Rating updated");
                 setUserRating(newRating);
             }
         });
     };
     
+    if(!isAuthenticated){
+        return null;
+    }
     
     return (
         <BaseHerbifyLayout>

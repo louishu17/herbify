@@ -1,16 +1,23 @@
-import { NextRouter } from 'next/router';
 import axios from '../utils/axiosInstance';
+import { useAuth } from './authContext';
+import { abortFeedController, resetFeedController } from './feedHooks';
 
-export const handleLogout = async (router : NextRouter) => {
-    try {
-        const response = await axios.post('/logout', {}, { withCredentials: true });
-        const data = await response.data;
-        console.log(data.message);
+export const UseHandleLogout = () => {
+    const { logout } = useAuth();
 
-        document.cookie = 'session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    const handleLogout = async () =>{
+        try {
+            const response = await axios.post('/logout', {}, { withCredentials: true });
+            abortFeedController();
+            resetFeedController();
+            const data = await response.data;
 
-        router.push('/login');
-    } catch (error) {
-        console.error('Logout failed', error);
+            document.cookie = 'session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
+            logout();
+        } catch (error) {
+            console.error('Logout failed', error);
+        }
     }
+    return handleLogout
 };

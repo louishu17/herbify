@@ -48,6 +48,23 @@ def curr_session():
     print("getting sessionID")
     try:
         user_id = Users.get_current_user_id()
+        print(session)
+        return jsonify({"session_id": user_id}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@profile_blueprint.route("/session_redirect", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def curr_session_server():
+    try:
+        print(session)
+        if "user" in session:
+            return "True"
+        else:
+            return "False"
+            
+        
+
         return jsonify({"session_id": user_id}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500

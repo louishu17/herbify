@@ -22,7 +22,6 @@ export const RecipeHeader: React.FC<RecipeHeaderProps> = (props: RecipeHeaderPro
     const iconStyle = { width: '24px', height: '24px' };
 
     const handlePrint = () => {
-        console.log('print');
         window.print();
     };
 

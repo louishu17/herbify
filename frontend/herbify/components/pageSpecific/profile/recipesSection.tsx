@@ -32,7 +32,6 @@ export const LikedPostsSection: React.FC = () => {
     } else if (isError) {
         return <Typography>Error loading the liked posts</Typography>;
     } else if (data && data.length > 0 && data[0]) {
-        console.log(data);
         return <RecipesContainer recipes={data} />;
     } else {
         return <Box style={{justifyContent: 'center', container: 'flex'}}><Typography >No liked posts found</Typography></Box>;
