@@ -232,8 +232,7 @@ class FeedFetcher:
             list: A list of RecipeOnFeed objects representing the specified set of recipes from people you follow.
         """
 
-        #uid = Users.get_current_user_id()
-        uid = 19
+        uid = Users.get_current_user_id()
         lower_limit = 8 * i
         upper_limit = 8 * (i + 1) - 1
         rows = app.db.execute(
