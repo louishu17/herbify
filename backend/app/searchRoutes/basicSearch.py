@@ -7,7 +7,7 @@ basic_search_blueprint = Blueprint("search", __name__)
 
 
 @basic_search_blueprint.route("/search", methods=["GET"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def search():
     """
     Retrieve recipes based on a search term.
@@ -32,7 +32,7 @@ def search():
 
 
 @basic_search_blueprint.route("/search_user", methods=["GET"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def search_user():
     """
     Retrieve users based on a search term.

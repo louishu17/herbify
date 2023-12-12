@@ -7,7 +7,7 @@ leaderboard_blueprint = Blueprint("leaderboard", __name__)
 
 
 @leaderboard_blueprint.route("/leading_users", methods=["GET"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def leading_users():
     """
     Get a list of leading users based on some criteria.
@@ -27,7 +27,7 @@ def leading_users():
 
 
 @leaderboard_blueprint.route("/leading_posts", methods=["GET"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def leading_posts():
     """
     Get a list of leading posts based on some criteria.
@@ -47,7 +47,7 @@ def leading_posts():
 
 
 @leaderboard_blueprint.route("/create_view", methods=["GET"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def create_recipes_view():
     """
     Create a view in the database for leaderboard by posts.
@@ -71,29 +71,29 @@ def create_recipes_view():
                     FROM \"Recipes\"
                     LEFT JOIN \"Likes\"
                     ON \"Recipes\".\"recipeID\" = \"Likes\".\"postID\"
-                    GROUP BY \"Recipes\".\"recipeID\" 
+                    GROUP BY \"Recipes\".\"recipeID\"
                 ), \"AvgRating\" AS (
                     SELECT \"recipeID\", COALESCE(COUNT(\"Ratings\".\"RatedByUserID\"), 0) AS numRatings, COALESCE(AVG(\"Ratings\".\"rating\"), 0) AS avgRating
                     FROM \"Recipes\"
                     LEFT JOIN \"Ratings\"
                     ON \"Recipes\".\"recipeID\" = \"Ratings\".\"RecipeID\"
-                    GROUP BY \"Recipes\".\"recipeID\"   
+                    GROUP BY \"Recipes\".\"recipeID\"
                 ), \"RecipesWithNumLikes\" AS (
-                    SELECT * 
+                    SELECT *
                     FROM \"Recipes\"
                     NATURAL JOIN \"NumLikes\"
                 ), \"RecipesWithNumLikesAndRatings\" AS (
-                    SELECT * 
+                    SELECT *
                     FROM \"RecipesWithNumLikes\"
                     NATURAL JOIN \"AvgRating\"
                 )
-            
+
                 SELECT \"recipeID\", \"postedByUserID\", \"fullRecipeString\", \"createdDate\", \"title\", \"caption\", \"imageS3Filename\", \"firstName\", \"lastName\", \"profilePicS3Filename\", numRatings, avgRating, numLikes
                 FROM \"RecipesWithNumLikesAndRatings\"
                 NATURAL JOIN \"RecipesWithUserNamesAndProfilePic\"
             )
-                       
-            
+
+
                        ''')
         )
         leaders = LeaderboardFetcher.get_leaders()
@@ -105,7 +105,7 @@ def create_recipes_view():
 
 
 @leaderboard_blueprint.route("/delete_view", methods=["GET"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def delete_recipes_view():
     """
     Delete a view in the database for leaderboard by posts.

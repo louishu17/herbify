@@ -35,7 +35,7 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = config('SECRET_KEY')
 
-cors = CORS(app, supports_credentials=True, origins=["http://127.0.0.1:3000", "https://herbify-ten.vercel.app/"])
+cors = CORS(app, supports_credentials=True, origins=["http://127.0.0.1:3000", "https://herbify-ten.vercel.app/", "https://herbify-git-authcheck-branch-louishu17.vercel.app/"])
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['SESSION_TYPE'] = 'redis'
 app.config['SESSION_PERMANENT'] = False

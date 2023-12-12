@@ -8,7 +8,7 @@ paginated_search_blueprint = Blueprint("paginated search", __name__)
 
 
 @paginated_search_blueprint.route("/search/<int:pageNum>", methods=["GET"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def paginated_search(pageNum):
     """
     Retrieve paginated search results for recipes based on a search term.
@@ -39,7 +39,7 @@ def paginated_search(pageNum):
 
 
 @paginated_search_blueprint.route("/search_user/<int:pageNum>", methods=["GET"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def search_user(pageNum):
     """
     Retrieve paginated search results for users based on a search term.
@@ -63,7 +63,7 @@ def search_user(pageNum):
 
 
 @paginated_search_blueprint.route("/search_ingredient/<int:pageNum>", methods=["GET"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def search_ingredient(pageNum):
     """
     Retrieve paginated search results for recipes by ingredient based on a search term.
