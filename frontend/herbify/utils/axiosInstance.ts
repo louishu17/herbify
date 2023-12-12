@@ -8,23 +8,3 @@ const instance = axios.create({
 });
 
 export default instance;
-
-// Function to make a request with an AbortController signal
-export const makeRequest = async (url: string, method: string = 'get', data?: any, signal?: AbortSignal) => {
-    try {
-        const response = await instance({
-            method: method,
-            url: url,
-            data: data,
-            ...(signal && { signal: signal }) // Conditionally add the signal
-        });
-        return response.data;
-    } catch (error) {
-        if (axios.isCancel(error)) {
-            // console.log('Request canceled', error.message);
-        } else {
-            // Handle other errors
-            throw error;
-        }
-    }
-};

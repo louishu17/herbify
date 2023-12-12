@@ -93,7 +93,7 @@ export default function SetProfilePage() {
         if (newProfilePicFile){
             const formData = new FormData();
             formData.append('imageFile', newProfilePicFile);    
-            axios.post('/set-profile-pic', formData, {withCredentials: true});
+            axiosInstance.post('/set-profile-pic', formData, {withCredentials: true});
         }
     }
     const setUserProfile = async (values: SetUserProfileFormValues) => {
