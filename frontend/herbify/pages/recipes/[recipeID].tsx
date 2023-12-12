@@ -44,7 +44,6 @@ export default function RecipePage() {
             // User has already liked the recipe, so unlike it
             unlike(recipeID, {
                 onSuccess: () => {
-                    console.log("unliked");
                     setUserLiked(false);
                     setLikes(likes => likes - 1);
                 }
@@ -53,7 +52,6 @@ export default function RecipePage() {
             // User hasn't liked the recipe, so like it
             like(recipeID, {
                 onSuccess: () => {
-                    console.log("liked");
                     setUserLiked(true);
                     setLikes(likes => likes + 1);
                 }
@@ -64,7 +62,6 @@ export default function RecipePage() {
     const handleRatingChange = (newRating: number) => {
         rate({ rating: newRating }, {
             onSuccess: () => {
-                console.log("Rating updated");
                 setUserRating(newRating);
             }
         });

@@ -19,8 +19,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const router = useRouter();
 
-    console.log("authContext.tsx: isAuthenticated: " + isAuthenticated)
-
     const logout = () => {
         // Reset the authentication state
         setIsAuthenticated(false);
@@ -31,7 +29,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     useEffect(() => {
         const checkAuth = async () => {
             const authorized = await isAuthorized();
-            console.log("authContext.tsx: checkAuth: authorized: " + authorized)
             if (!authorized) {
                 if (router.pathname !== '/login' && router.pathname !== '/' && router.pathname !== '/register') {
                     router.push('/login');

@@ -54,7 +54,6 @@ const fetchProfileData = async (userId : number) :  Promise<ProfileData>=> {
     if (response.status > 300){
         throw new Error("Error fetching profile data");
     } 
-    console.log(response.data);
     return response.data;
 }
 
@@ -77,7 +76,6 @@ export const sessionServerSide = async () : Promise<Boolean> => {
     if (response.status > 300){
         throw new Error("Error session id");
     } 
-    console.log(response.data);
     return response.data == "True";
 
 };

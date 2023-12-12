@@ -6,13 +6,11 @@ export const UseHandleLogout = () => {
     const { logout } = useAuth();
 
     const handleLogout = async () =>{
-        console.log("Logging out")
         try {
             const response = await axios.post('/logout', {}, { withCredentials: true });
             abortFeedController();
             resetFeedController();
             const data = await response.data;
-            console.log(data.message);
 
             document.cookie = 'session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 

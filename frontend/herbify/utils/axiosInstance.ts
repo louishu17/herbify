@@ -21,7 +21,7 @@ export const makeRequest = async (url: string, method: string = 'get', data?: an
         return response.data;
     } catch (error) {
         if (axios.isCancel(error)) {
-            console.log('Request canceled', error.message);
+            // console.log('Request canceled', error.message);
         } else {
             // Handle other errors
             throw error;
