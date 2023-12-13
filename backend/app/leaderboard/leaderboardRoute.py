@@ -60,7 +60,7 @@ def create_recipes_view():
     try:
         app.db.execute(
             app.db.execute('''
-            CREATE VIEW RecipesForFeed AS (
+            CREATE VIEW RecipesOnFeed AS (
                 WITH \"RecipesWithUserNamesAndProfilePic\" AS (
                     SELECT \"recipeID\", \"firstName\", \"lastName\", \"profilePicS3Filename\"
                     FROM \"Recipes\"
@@ -88,7 +88,7 @@ def create_recipes_view():
                     NATURAL JOIN \"AvgRating\"
                 )
 
-                SELECT \"recipeID\", \"postedByUserID\", \"fullRecipeString\", \"createdDate\", \"title\", \"caption\", \"imageS3Filename\", \"firstName\", \"lastName\", \"profilePicS3Filename\", numRatings, avgRating, numLikes
+                SELECT *
                 FROM \"RecipesWithNumLikesAndRatings\"
                 NATURAL JOIN \"RecipesWithUserNamesAndProfilePic\"
             )
