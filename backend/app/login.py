@@ -1,4 +1,4 @@
-from flask import request, jsonify, Blueprint, session
+from flask import request, jsonify, Blueprint, session, redirect, url_for
 from werkzeug.security import check_password_hash
 from models.users import Users
 from flask_cors import cross_origin
@@ -8,8 +8,6 @@ login_blueprint = Blueprint("login", __name__)
 @login_blueprint.route('/login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def login():
-    print("Logging in")
-
     try:
         data = request.get_json()
         email = data.get("email")
