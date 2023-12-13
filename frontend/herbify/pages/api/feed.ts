@@ -21,15 +21,25 @@ export interface RecipeInfoFromFeed {
     createdDate : string;
     hour: number;
     minute: number;
+    hours : number;
+    minutes : number;
+    isDairyFree : boolean;
+    isGlutenFree : boolean;
+    isHealthy : boolean;
+    isHighProtein : boolean;
+    isKeto : boolean;
+    isKidFriendly : boolean;
+    isNutFree : boolean;
+    isSpicy : boolean;
+    isVegan : boolean;
+    isVegetarian : boolean;
 }
 
 
 
 export default function getFeedRecipeIDs(req: NextApiRequest, res: NextApiResponse<FeedData>) {
     setTimeout(() => {
-        res.status(200).json({descriptions : [
-            {recipeID : 1, title: "Pasta", caption: "Yum!", imageS3Filename : INVALID_S3_FILENAME, numLikes: 0, userLiked: false, postedByUserID : 19, nameOfPoster: "Taddy", profilePicS3Filename : "profilePics/profilePic.jpg", numRatings : 5, avgRating : 3.7, createdDate : "2023-11-09 20:05:42"},
-        ]})
+        res.status(200).json({descriptions : [ ]})
 
     }, 200);
 

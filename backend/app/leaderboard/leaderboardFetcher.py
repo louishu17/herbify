@@ -73,7 +73,7 @@ class LeaderboardFetcher:
     def get_leading_posts():
         rows = app.db.execute(
             """
-            SELECT * FROM RecipesForFeed
+            SELECT * FROM RecipesOnFeed
             ORDER BY numLikes DESC
             LIMIT 10
             

@@ -14,15 +14,6 @@ class RecipeOnFeed:
         title,
         caption,
         imageS3Filename="none",
-        firstName="",
-        lastName="",
-        profilePicS3Filename="",
-        numRatings=0,
-        avgRating=0,
-        numLikes=0,
-        userLiked=False,
-        hours=0,
-        minutes=0,
         isGlutenFree=False,
         isVegan=False,
         isHighProtein=False,
@@ -33,6 +24,16 @@ class RecipeOnFeed:
         isHealthy=False,
         isDairyFree=False,
         isNutFree=False,
+        hours=0,
+        minutes=0,
+        numLikes=0,
+        numRatings=0,
+        avgRating=0,
+        firstName="",
+        lastName="",
+        profilePicS3Filename="",
+        row_num=0,
+        userLiked=False,
     ):
         """
         Initialize a RecipeOnFeed object.
@@ -125,8 +126,7 @@ class RecipeOnFeed:
             "isDairyFree": self.isDairyFree,
             "isNutFree": self.isNutFree,
             "numRatings" : self.numRatings,
-            "avgRating" : self.avgRating,
-            "createdDate": self.createdDate,
+            "avgRating" : self.avgRating
         }
 
     @staticmethod
@@ -143,7 +143,8 @@ class RecipeOnFeed:
         recipe_info_list = []
         for row in rows:
             recipeID = row[0]
-            recipe_info = RecipeOnFeed(*row, userLiked=Users.check_user_liked_recipe(recipeID))
+            recipe_info = RecipeOnFeed(*row)
+            recipe_info.userLiked = Users.check_user_liked_recipe(recipeID)
             recipe_info_list.append(recipe_info)
         return recipe_info_list
 
@@ -205,10 +206,10 @@ class FeedFetcher:
         upper_limit = 8 * (i + 1) - 1
         rows = app.db.execute(
             """
-                SELECT \"recipeID\", \"postedByUserID\", \"fullRecipeString\", \"createdDate\", \"title\", \"caption\", \"imageS3Filename\", \"firstName\", \"lastName\", \"profilePicS3Filename\", numRatings, avgRating, numLikes
+                SELECT *
                 FROM (
-                    SELECT *, ROW_NUMBER() OVER (ORDER BY RecipesForFeed."createdDate" DESC) AS row_num
-                    FROM RecipesForFeed
+                    SELECT *, ROW_NUMBER() OVER (ORDER BY \"createdDate\" DESC) AS row_num
+                    FROM RecipesOnFeed
                 ) AS ranked_posts
                 WHERE row_num BETWEEN :lower_limit AND :upper_limit
             
@@ -233,14 +234,15 @@ class FeedFetcher:
         """
 
         uid = Users.get_current_user_id()
+        #uid = 19
         lower_limit = 8 * i
         upper_limit = 8 * (i + 1) - 1
         rows = app.db.execute(
             """
-                SELECT \"recipeID\", \"postedByUserID\", \"fullRecipeString\", \"createdDate\", \"title\", \"caption\", \"imageS3Filename\", \"firstName\", \"lastName\", \"profilePicS3Filename\", numRatings, avgRating, numLikes
+                SELECT *
                 FROM (
                     SELECT *, ROW_NUMBER() OVER (ORDER BY \"createdDate\" DESC) AS \"row_num\"
-                    FROM RecipesForFeed
+                    FROM RecipesOnFeed
                     INNER JOIN (
                         SELECT \"followedID\"
                         FROM \"Follows\"

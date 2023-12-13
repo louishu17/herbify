@@ -29,22 +29,29 @@ interface RecipeOnFeedProps {
 
 const AttributeTags = ({ info }) => {
     const attributes = [
-        { key: 'isGlutenFree', color: '#ddcc66' },
-        { key: 'isVegan', color: '#006c47' },
-        { key: 'isHighProtein', color: '#964B00' },
-        { key: 'isKeto', color: 'purple' },
-        { key: 'isKidFriendly', color: 'orange' },
-        { key: 'isNutFree', color: 'brown' },
-        { key: 'isSpicy', color: '#ff1111' },
-        { key: 'isVegetarian', color: '#90EE90' }
+        { key: 'isGlutenFree', color: '#f6e8b1' }, // pastel yellow
+        { key: 'isVegan', color: '#a4d5ba' }, // pastel green
+        { key: 'isHighProtein', color: '#d2a679' }, // pastel brown
+        { key: 'isKeto', color: '#c3aed6' }, // pastel purple
+        { key: 'isKidFriendly', color: '#ffdab9' }, // pastel peach
+        { key: 'isNutFree', color: '#a9a9a9' }, // pastel grey
+        { key: 'isSpicy', color: '#ffcccc' }, // pastel red
+        { key: 'isVegetarian', color: '#c6ecc6' } // pastel mint
     ];
 
     const tagElements = attributes
         .filter(attr => info[attr.key])
         .map(attr => (
-            <Box key={attr.key} sx={{ borderRadius: '5px', backgroundColor: attr.color, color: 'white', padding: '2px 5px', margin: '5px' }}>
+            <Box key={attr.key} sx={{ 
+                borderRadius: '7.5px', // Half of the original 10px
+                backgroundColor: attr.color,
+                color: '#05353B',
+                padding: '1px 2.5px', // Half of the original 2px 5px
+                margin: '2.5px', // Half of the original 5px
+                fontSize: '0.75rem' // Optional: adjust font size to scale down the text as well
+              }}>
                 {attr.key.replace('is', '').replace(/([a-z])([A-Z])/g, '$1 $2')}
-            </Box>
+              </Box>
         ));
 
     return (
@@ -126,10 +133,6 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
     }
     
     const totalTime = info.hours * 60 + info.minutes;
-
-    console.log(info.hours * 60 + info.minutes);
-    console.log(info.hours + info.minutes);
-    console.log(info);
 
     useEffect(() => {
         if (info) {
@@ -289,7 +292,7 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                 <Stack direction="row" spacing={1} alignItems="center" sx={
                     {
                         position: 'absolute',
-                        bottom: 27,
+                        bottom: 26,
                         left: 16,
                         width: '100%',
                     }
@@ -299,7 +302,13 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                         {totalTime} minutes
                     </Typography>
                 </Stack>
-                <AttributeTags info={info}/>
+                <Box   sx={
+                    {
+                        position: 'absolute',
+                        bottom: -8,
+                        left: 14,
+                    }}><AttributeTags info={info}/></Box>
+                
             </Box>
         </Card>
     );
