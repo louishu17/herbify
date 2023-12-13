@@ -24,6 +24,9 @@ export interface RecipeOnProfileData{
     postedByUserID : number;
     recipeID : number;
     title : string;
+    hour : number;
+    minute : number;
+    profilePicS3Filename : string;
 }
 
 export interface UserOnProfileData {
@@ -51,6 +54,7 @@ export interface ProfileData {
 
 const fetchProfileData = async (userId : number) :  Promise<ProfileData>=> {
     const response = await axios.get(`/profile/${userId}`);
+    console.log(response.data.recipes)
     if (response.status > 300){
         throw new Error("Error fetching profile data");
     } 

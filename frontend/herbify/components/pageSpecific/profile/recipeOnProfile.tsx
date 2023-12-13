@@ -19,6 +19,8 @@ export const RecipeOnProfile : React.FC<RecipeOnProfileProps> = (props : RecipeO
             title : props.recipeSpecificData.title, 
             profilePicS3Filename : props.profilePicS3Filename,
             postedByUserID : props.recipeSpecificData.postedByUserID,
+            hours: props.recipeSpecificData.hours,
+            minutes: props.recipeSpecificData.minutes,
             
         }} isProfile = {true} ></RecipeOnFeed>
 
