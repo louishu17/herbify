@@ -67,13 +67,19 @@ export const useFetchPaginatedFeed = () : usePaginatedFeedResult => {
     const [pageNumber, setPageNumber] = useState<number>(0);
     const [descriptions, setDescriptions] = useState<RecipeInfoFromFeed[]>([]);
 
+
     const {data : queryData, isLoading, isFetchingNextPage , isError, refetch, fetchNextPage} = useInfiniteQuery<FeedData>(
         ["fetchFeed", pageNumber, fetchingCustomized], 
         ({pageParam = 0}) => fetchLocallyRunningPaginatedFeed(pageParam, fetchingCustomized), 
         {
             onSuccess : (data) => {
                 let newRecipes : RecipeInfoFromFeed[] = [];
-                data.pages[data.pages.length -1].descriptions.forEach((recipe) => newRecipes.push(recipe));
+                data.pages[data.pages.length -1].descriptions.forEach((newRecipe) => {
+                    if (descriptions.filter((oldRecipe) => oldRecipe.recipeID === newRecipe.recipeID).length < 1){
+                        //remove duplicates
+                        newRecipes.push(newRecipe)
+                    }  
+                });
                 setDescriptions([...descriptions, ...newRecipes])
             },
             getNextPageParam: (lastPage, pages) => {
