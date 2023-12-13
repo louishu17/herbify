@@ -335,6 +335,7 @@ export const ImageToDisplay: React.FC<FeedImageProps> = ({ isLoading, isError, i
         return (
             <div style={{ borderRadius: borderRadiusValue, overflow: 'hidden', width: 275, height: 170, position: 'relative' }}>
                 <Image 
+                    unoptimized
                     src={imageSrc} 
                     alt="Recipe" 
                     width={275}

@@ -52,6 +52,7 @@ export const ImageForm: React.FC = () => {
             <Box display="flex" justifyContent="center" mt={3}>
                 {imageUrl && (
                     <Image 
+                        unoptimized 
                         src={imageUrl} 
                         alt="Uploaded Recipe" 
                         width={250} 
