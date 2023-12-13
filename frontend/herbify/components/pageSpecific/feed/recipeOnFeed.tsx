@@ -173,7 +173,7 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
             height: 340,
             width: 320,
             borderRadius: borderRadiusValue,
-            background: 'linear-gradient(180deg, rgba(255, 250, 247, 0) 0%, #F9E9E0 100%)',
+            background: 'linear-gradient(180deg, #FEF6F0 0%, #F9E9E0 100%)',
             marginBottom: 2
         }}>
             <Box sx={{ position: 'relative' }}>
@@ -213,13 +213,16 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                                 {info.title}
                             </Typography>
                             </Stack>
-                            {info.createdDate && <Typography variant="caption" color="text.secondary" noWrap>
-                                {relativeTime(info.createdDate)}
-                            </Typography>}
+                            
+                            {info.createdDate ? <Typography variant="caption" color="text.secondary" noWrap>
+                            {relativeTime(info.createdDate)}
+                            </Typography>: <Typography variant="caption" color="text.secondary" noWrap> {" "} </Typography>}
+                            
+                            
                         </CardContent>
                     </MuiLink>
                 </Link>
-                {displayLikes && <CardActions disableSpacing>
+                {displayLikes ? <CardActions disableSpacing>
                     <Stack direction="column" alignItems="center">
                             <IconButton 
                                 onClick={handleLikeClick} 
@@ -275,11 +278,14 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                                 value={info.avgRating}  
                                 precision={0.5} 
                                 readOnly /> 
-                            : null
+                            : <Box sx={{
+                                height: 27
+                            }}/>
                         }
                         {commentsResponse && <CommentsModal open={modalOpen} handleClose={handleCloseModal} comments={commentsResponse.comments} onCommentSubmit={handleCommentSubmit}  />}
                         
-                </CardActions>}
+                </CardActions> : <Box sx={{
+                                    height: 60}}></Box>}
                 <Stack direction="row" spacing={1} alignItems="center" sx={
                     {
                         position: 'absolute',

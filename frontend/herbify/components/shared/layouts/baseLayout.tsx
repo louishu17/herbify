@@ -18,7 +18,7 @@ export const BaseHerbifyLayout : React.FC<BaseLayoutProps> = (props:BaseLayoutPr
           component="main"
         >
             <BasicHerbifyNavBar/>
-            <div style={{ width: '100%', maxWidth: '800px', margin: 'auto' }}> {/* Ensure this div takes full width */}
+            <div style={{ width: '100%', maxWidth: '850px', margin: 'auto' }}> {/* Ensure this div takes full width */}
                 {props.children}
             </div>
             <Footer/>

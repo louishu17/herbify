@@ -272,3 +272,15 @@ class Users:
                 raise e
         print(user_rating_recipe_result)
         return user_rating_recipe_result[0][0] if user_rating_recipe_result else None
+
+    @staticmethod
+    def get_profile_pic(uid):
+        rows = app.db.execute(
+            """
+        SELECT \"profilePicS3Filename\"
+        FROM \"Users\"
+        WHERE uid = :uid
+        """,
+            uid=uid,
+        )
+        return rows[0][0] if rows else None

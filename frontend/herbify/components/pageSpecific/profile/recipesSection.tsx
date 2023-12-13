@@ -47,7 +47,7 @@ const RecipesGrid = styled(Grid)(({ theme }) => ({
 }));
 
 const StyledRecipesContainer = styled(Box)({
-    width: '900px', // Adjust as per your design
+    width: '1050px', // Adjust as per your design
     margin: '0 auto', // Center the container
 });
 

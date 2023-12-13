@@ -143,6 +143,9 @@ class Recipes:
             "title": self.title,
             "caption": self.caption,
             "imageS3Filename": self.imageS3Filename,
+            "profilePicS3Filename": Users.get_profile_pic(self.postedByUserID),
+            "hours": self.hours if self.hours else 0,
+            "minutes": self.minutes if self.minutes else 0,
         }
 
     @staticmethod
@@ -260,6 +263,7 @@ WHERE \"postedByUserID\" = :uid
 """,
             uid=uid,
         )
+        print(rows)
         return [Recipes(*row) for row in rows]
 
     @staticmethod
@@ -585,6 +589,8 @@ WHERE \"postID\" = :recipeID
                         "recipeID": recipe.recipeID,
                         "profilePicS3Filename": recipe.profilePicS3Filename,
                         "postedByUserID": recipe.postedByUserID,
+                        "hours": recipe.hours if recipe.hours else 0,
+                        "minutes": recipe.minutes if recipe.minutes else 0,
                     }
                     for recipe in rows
                 ]
