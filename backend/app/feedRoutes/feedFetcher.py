@@ -202,6 +202,7 @@ class FeedFetcher:
         Returns:
             list: A list of RecipeOnFeed objects representing the specified set of recipes.
         """
+        uid = Users.get_current_user_id()
         lower_limit = 8 * i
         upper_limit = 8 * (i + 1) - 1
         rows = app.db.execute(
@@ -210,10 +211,12 @@ class FeedFetcher:
                 FROM (
                     SELECT *, ROW_NUMBER() OVER (ORDER BY \"createdDate\" DESC) AS row_num
                     FROM RecipesOnFeed
+                    WHERE \"postedByUserID\" <> :uid
                 ) AS ranked_posts
                 WHERE row_num BETWEEN :lower_limit AND :upper_limit
             
             """,
+            uid=uid,
             lower_limit=lower_limit,
             upper_limit=upper_limit,
         )
