@@ -92,7 +92,6 @@ export const useFetchPaginatedFeed = () : usePaginatedFeedResult => {
             }
         },
     );
-    console.log(descriptions);
     return {data : {descriptions : descriptions}, isLoading : isLoading || isFetchingNextPage, isError, loadMore : fetchNextPage}
 }
 
