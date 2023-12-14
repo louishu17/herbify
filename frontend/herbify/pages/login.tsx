@@ -28,27 +28,28 @@ const loginValidationSchema = YupObject({
 
 export default function LoginPage(){
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const router = useRouter();
 
     useEffect(() => {
         const checkAuthorization = async () => {
-            const authorized = await isAuthorized();
-            if (authorized) {
-                router.push('/feed');
+            if (isAuthenticated) {
+                const authorized = await isAuthorized();
+                if (authorized) {
+                    router.push('/feed');
+                }
             }
         };
 
         checkAuthorization();
-    }, [router]);
+    }, [router, isAuthenticated]);
 
     const loginUser = async (values: LoginFormValues) => {
         try {
             const response = await axios.post('/login', values, {withCredentials: true});
             setErrorMessage("User logged in");
 
-            setTimeout(() => {
-                router.push("/feed");
-            }, 0);
+            setIsAuthenticated(true);
         } catch (error) {
             console.error(error);
 
