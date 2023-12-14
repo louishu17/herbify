@@ -59,6 +59,14 @@ export default function CreateRecipePage() {
     }
 
     const handleSubmit = () => {
+        // Check if image file is selected
+        if (!imageFile) {
+            setErrorMessage("Please select an image for the recipe.");
+            return; // Prevent form submission
+        }
+        // Clear previous error messages
+        setErrorMessage("");
+        // Proceed with recipe creation
         createRecipe();
     }
 
@@ -85,6 +93,11 @@ export default function CreateRecipePage() {
                             <TagsForm />
                         </Box>
                     </Stack>
+                    {errorMessage && (
+                    <Box style={{ color: 'red', marginBottom: '10px' }}>
+                        {errorMessage}
+                    </Box>
+                    )}
                     <Box style={{ width: '100%', maxWidth: 400, marginTop: 40, marginBottom: 40 }}>
                         <Button 
                             variant="contained" 
