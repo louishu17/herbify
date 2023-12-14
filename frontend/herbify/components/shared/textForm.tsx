@@ -83,6 +83,7 @@ export const HerbifyForm: React.FC<HerbifyFormProps<any>> = ({ handleSubmit, ini
                                 <ErrorMessage name={fieldProps.name} component={Typography} />
                             </Box>
                             ))}
+                            {errorMessage && <Typography color="red" sx={{marginBottom: 2}}>{errorMessage}</Typography>}
 
                             <Button 
                                 type="submit" 
