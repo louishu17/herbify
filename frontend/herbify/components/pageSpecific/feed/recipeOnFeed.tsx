@@ -274,7 +274,7 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                             <Rating 
                                 sx={{
                                     position: 'relative',
-                                    bottom: 20, // Adjust top as needed
+                                    bottom: 23, // Adjust top as needed
                                     left: 170, // Adjust right as needed
                                 }}
                                 name="read-only" 
@@ -292,7 +292,7 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                 <Stack direction="row" spacing={1} alignItems="center" sx={
                     {
                         position: 'absolute',
-                        bottom: 26,
+                        bottom: 29,
                         left: 16,
                         width: '100%',
                     }
@@ -305,7 +305,7 @@ export const RecipeOnFeed : React.FC<RecipeOnFeedProps> = (props : RecipeOnFeedP
                 <Box   sx={
                     {
                         position: 'absolute',
-                        bottom: -8,
+                        bottom: -4,
                         left: 14,
                     }}><AttributeTags info={info}/></Box>
                 
