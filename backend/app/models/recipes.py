@@ -83,11 +83,6 @@ class Recipes:
         title,
         caption,
         imageS3Filename="none",
-        hours=0,
-        minutes=0,
-        row_num=0,
-        numLikes=0,
-        userLiked=False,
         isGlutenFree=False,
         isVegan=False,
         isHighProtein=False,
@@ -98,6 +93,10 @@ class Recipes:
         isHealthy=False,
         isDairyFree=False,
         isNutFree=False,
+        hours=0,
+        minutes=0,
+        numLikes=0,
+        userLiked=False,
     ):
         """
         Initializes a Recipes object with the provided attributes.
@@ -263,7 +262,6 @@ WHERE \"postedByUserID\" = :uid
 """,
             uid=uid,
         )
-        print(rows)
         return [Recipes(*row) for row in rows]
 
     @staticmethod
