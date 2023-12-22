@@ -3,14 +3,15 @@ from models.recipes import Recipes
 from models.users import Users
 from datetime import datetime
 from flask_cors import cross_origin
+from decouple import config
 import json
 import boto3
 import random
 
 s3 = boto3.client(
     "s3",
-    aws_access_key_id="AKIAU27D2SNFHMEYHDEU",
-    aws_secret_access_key="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",
+    aws_access_key_id=config('AWS_S3_BACKEND_ACCESS_KEY'),
+    aws_secret_access_key=config('AWS_S3_BACKEND_SECRET_KEY'),
     region_name="us-east-1",
 )
 

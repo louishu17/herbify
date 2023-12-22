@@ -4,8 +4,8 @@ export const API_ROUTE = "http://localhost:5000/";
 
 // Initialize the AWS SDK
 AWS.config.update({
-    accessKeyId: 'AKIAU27D2SNFLJFMFZV6',
-    secretAccessKey: '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',
+    accessKeyId: process.env.AWS_S3_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_S3_SECRET_KEY,
     region: 'us-east-1'
 });
   
