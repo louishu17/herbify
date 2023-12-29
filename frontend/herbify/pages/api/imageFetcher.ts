@@ -4,7 +4,9 @@ import AWS from 'aws-sdk';
 
 // Initialize the AWS SDK
 AWS.config.update({
-
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_S3_ACCESS_KEY,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_S3_SECRET_KEY,
+    region: 'us-east-1'
 });
   
 const s3 = new AWS.S3();
