@@ -1,5 +1,5 @@
 import {useQuery, useQueryClient, UseQueryResult} from "react-query";
-import { s3 } from "./API_CONFIG";
+
 
 
 const fetchMockImageForRecipe = async (recipeID : number) : Promise<string> => {
@@ -29,12 +29,16 @@ const fetchPictureForImagelessRecipe = async () : Promise<string> => {
 export const INVALID_S3_FILENAME = "none";
 
 const fetchS3ImageForRecipe = async (imageS3Filename : string) : Promise<string> => {
-    const params = {
-        Bucket: 'herbify-images',
-        Key: imageS3Filename,
-        Expires: 3600, // URL expiration time in seconds (adjust as needed)
-    };
-    return s3.getSignedUrlPromise('getObject', params);
+    const response = await fetch('/api/imageFetcher', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ imageS3Filename }),
+    });
+
+    const data = await response.json();
+    return data.signedUrl;
 }
 
 
