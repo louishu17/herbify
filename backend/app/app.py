@@ -42,8 +42,8 @@ app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_USE_SIGNER'] = True
 app.config['SESSION_REDIS'] = redis.Redis(
     host='redis-19435.c325.us-east-1-4.ec2.cloud.redislabs.com:19435',
-    port=18045,
-    password='kfH6jONl9ziC5VtqkPIHibM6sHEanVgJ'
+    port=19435,
+    password='j7mW4fQViZDYb2UgXZTddScR8ZpdviCv'
 )
 app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
